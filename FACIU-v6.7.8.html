@@ -22,6 +22,8 @@
   .app-shell{ width:min(100%,var(--shell-max)); margin-inline:auto; padding-inline:var(--gutter); }
   main.app-shell{ padding-top:clamp(16px,1.6vw,26px); padding-bottom:clamp(20px,2vw,34px); }
   .tree-grid{ display:grid; grid-template-columns:minmax(260px,310px) minmax(0,1fr); gap:var(--section-gap); align-items:start; }
+  .tree-grid.auto-hide-sidebar { grid-template-columns: 1fr !important; }
+  .tree-grid.auto-hide-sidebar .tree-editor { display: none !important; }
   .tree-editor{ position:sticky; top:78px; }
   .steps{ width:100%; }
   .step{ flex:1 1 190px; min-width:0; }
@@ -3444,6 +3446,7 @@ background:#eef4ff;border:1px solid #c9d9f5;color:#1c3a6e}
 <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
 <div class="flex items-center gap-2"><i class="w-5 h-5" data-lucide="workflow" style="color:var(--navy2)"></i><h2 class="text-lg font-bold" style="color:var(--navy)">Árvore de Causa</h2></div>
 <div class="flex gap-2 tree-toolbar">
+<button class="btn btn-ghost" onclick="toggleAutoHideSidebar()" title="Ocultar editor automaticamente quando nenhum bloco estiver selecionado" id="autoHideToggleBtn"><i class="w-4 h-4" id="autoHideToggleIcon" data-lucide="panel-right-close"></i> Auto-Ocultar</button>
 <button class="btn btn-ghost" onclick="cyFit()"><i class="w-4 h-4" data-lucide="maximize"></i> Ajustar</button>
 <button class="btn btn-ghost" onclick="relayout()"><i class="w-4 h-4" data-lucide="layout-dashboard"></i> Reorganizar</button>
 <button class="btn btn-ghost" onclick="exportPNG()"><i class="w-4 h-4" data-lucide="image-down"></i> PNG</button>
@@ -4127,7 +4130,25 @@ function disp(n){
   else if(n.estado==='Descartada')detail='✕ Descartada';
   const whyCount=whysForNode(n.id).length;const marker=whyCount?'5P × '+whyCount:'';return [head,title,detail,marker].filter(Boolean).join('\n');
 }
-function cyFromState(){if(!cy)return;const issues=validateTreeStructure(),bad=new Set(issues.filter(x=>x.edgeId).map(x=>x.edgeId)),els=[];state.tree.nodes.forEach(n=>els.push({data:{id:n.id,kind:n.kind,label:n.label,disp:disp(n),root:n.kind==='raiz',estado:stateMeta(n.estado).key,status:n.status||''}}));state.tree.edges.forEach(e=>{const p=node(e.source);els.push({data:{id:e.id,source:e.source,target:e.target,gate:e.gate||'',legacyInvalid:bad.has(e.id),fromDiscarded:p?.estado==='Descartada'}})});cy.elements().remove();cy.add(els);styleCy();semanticLayout(false);renderStructureAlert(issues)}
+/* ==========================================
+// REGION: CYTOSCAPE ENGINE & RENDER
+// ========================================== */
+function cyFromState() {
+  if (!cy) return;
+  // Yield main thread to improve FCP/TBT metrics
+  requestAnimationFrame(() => {
+    const issues = validateTreeStructure();
+    const bad = new Set(issues.filter(x => x.edgeId).map(x => x.edgeId));
+    const els = [];
+    state.tree.nodes.forEach(n => els.push({ data: { id: n.id, kind: n.kind, label: n.label, disp: disp(n), root: n.kind === 'raiz', estado: stateMeta(n.estado).key, status: n.status || '' } }));
+    state.tree.edges.forEach(e => { const p = node(e.source); els.push({ data: { id: e.id, source: e.source, target: e.target, gate: e.gate || '', legacyInvalid: bad.has(e.id), fromDiscarded: p?.estado === 'Descartada' } }) });
+    cy.elements().remove();
+    cy.add(els);
+    styleCy();
+    semanticLayout(false);
+    renderStructureAlert(issues);
+  });
+}
 function childrenOf(id){return state.tree.edges.filter(e=>e.source===id).map(e=>node(e.target)).filter(Boolean)}
 function semanticLayout(animate=true){
   if(!cy) return;
@@ -4402,7 +4423,55 @@ function openNodeModal(id,origin){
 function isNodeModalDirty(){return modalNodeId&&JSON.stringify(modalValues())!==modalSnapshot;}
 function requestCloseNodeModal(){if(isNodeModalDirty()&&!confirm('Descartar as alterações não salvas?'))return;closeNodeModal();}
 function closeNodeModal(){document.getElementById('nodeModal').hidden=true;document.body.classList.remove('modal-open');modalNodeId=null;modalSnapshot='';const f=modalReturnFocus;modalReturnFocus=null;if(f?.focus)setTimeout(()=>f.focus(),0);}
-function saveNodeModal(ev){ev?.preventDefault();const n=node(modalNodeId);if(!n)return;const v=modalValues();if(!v.label.trim()){toast('Informe o título.');document.getElementById('nm_label').focus();return;}if(n.kind==='raiz'&&!v.classificacao){toast('Selecione uma classificação ou informe uma personalizada.');(val('nm_classificacao')==='__custom__'?document.getElementById('nm_custom_titulo'):document.getElementById('nm_classificacao')).focus();return;}const before={...n};if((before.estado==='Confirmada'&&v.estado==='Descartada')||(before.estado==='Descartada'&&v.estado==='Confirmada')){if(!confirm('Alterar o estado diretamente de '+before.estado+' para '+v.estado+'?'))return}Object.assign(n,v,{label:v.label.trim(),root:n.kind==='raiz'});if(n.kind==='acao'){n.causaRaizIds=v.causaRaizIds;n.causaRaizId=n.causaRaizIds[0]||'';state.tree.edges=state.tree.edges.filter(e=>!(e.target===n.id&&node(e.source)?.kind==='raiz'));n.causaRaizIds.forEach(rId=>{if(!state.tree.edges.some(e=>e.source===rId&&e.target===n.id))state.tree.edges.push({id:'e_'+rId+'_'+n.id,source:rId,target:n.id,gate:'OU'})});}if(n.kind==='raiz'){const chosenContribs=Array.from(document.getElementById('nm_root_contrib').selectedOptions).map(o=>o.value);state.tree.edges=state.tree.edges.filter(e=>!(e.target===n.id&&node(e.source)?.kind==='contrib'));chosenContribs.forEach(cId=>{if(!state.tree.edges.some(e=>e.source===cId&&e.target===n.id))state.tree.edges.push({id:'e_'+cId+'_'+n.id,source:cId,target:n.id,gate:'OU'})});}const changed=Object.keys(v).filter(k=>String(before[k]||'')!==String(n[k]||''));if(changed.length)audit('node.updated',n.id,'Bloco atualizado: '+n.label,changed);save();cyPatch(n);cyFromState();refreshLinkSelectors();renderRaias();closeNodeModal();toast('Alterações salvas.');}
+/* ==========================================
+// REGION: NODE MUTATIONS
+// ========================================== */
+function validateNodeModalState(n, v, before) {
+  if (!v.label.trim()) { toast('Informe o título.'); document.getElementById('nm_label').focus(); return false; }
+  if (n.kind === 'raiz' && !v.classificacao) { toast('Selecione uma classificação ou informe uma personalizada.'); (val('nm_classificacao') === '__custom__' ? document.getElementById('nm_custom_titulo') : document.getElementById('nm_classificacao')).focus(); return false; }
+  if ((before.estado === 'Confirmada' && v.estado === 'Descartada') || (before.estado === 'Descartada' && v.estado === 'Confirmada')) {
+    if (!confirm('Alterar o estado diretamente de ' + before.estado + ' para ' + v.estado + '?')) return false;
+  }
+  return true;
+}
+
+function updateNodeRelations(n, v) {
+  if (n.kind === 'acao') {
+    n.causaRaizIds = v.causaRaizIds;
+    n.causaRaizId = n.causaRaizIds[0] || '';
+    state.tree.edges = state.tree.edges.filter(e => !(e.target === n.id && node(e.source)?.kind === 'raiz'));
+    n.causaRaizIds.forEach(rId => { if (!state.tree.edges.some(e => e.source === rId && e.target === n.id)) state.tree.edges.push({ id: 'e_' + rId + '_' + n.id, source: rId, target: n.id, gate: 'OU' }); });
+  }
+  if (n.kind === 'raiz') {
+    const chosenContribs = Array.from(document.getElementById('nm_root_contrib').selectedOptions).map(o => o.value);
+    state.tree.edges = state.tree.edges.filter(e => !(e.target === n.id && node(e.source)?.kind === 'contrib'));
+    chosenContribs.forEach(cId => { if (!state.tree.edges.some(e => e.source === cId && e.target === n.id)) state.tree.edges.push({ id: 'e_' + cId + '_' + n.id, source: cId, target: n.id, gate: 'OU' }); });
+  }
+}
+
+function saveNodeModal(ev) {
+  ev?.preventDefault();
+  const n = node(modalNodeId);
+  if (!n) return;
+  const v = modalValues();
+  const before = { ...n };
+  
+  if (!validateNodeModalState(n, v, before)) return;
+  
+  Object.assign(n, v, { label: v.label.trim(), root: n.kind === 'raiz' });
+  updateNodeRelations(n, v);
+  
+  const changed = Object.keys(v).filter(k => String(before[k] || '') !== String(n[k] || ''));
+  if (changed.length) audit('node.updated', n.id, 'Bloco atualizado: ' + n.label, changed);
+  
+  save();
+  cyPatch(n);
+  cyFromState();
+  refreshLinkSelectors();
+  renderRaias();
+  closeNodeModal();
+  toast('Alterações salvas.');
+}
 function setField(id,k,v){ const n=node(id); if(!n) return; n[k]=v; save(); if(k==='label'||k==='desc') cyPatch(n); if(k==='label') refreshLinkSelectors(); }
 function quickToggleRoot(id){ selectNode(id); toggleRoot(); }
 function quickDelete(id){ const n=node(id); if(!n)return; if(!confirm('Excluir '+n.label+' e toda a subárvore vinculada?'))return; if(modalNodeId===id)closeNodeModal(); selectNode(id); deleteSelected(); }
@@ -5360,11 +5429,35 @@ window.addChild=addChildFlexible;window.addSibling=addSiblingFlexible;
 function refreshKinds(parent){const sel=document.getElementById('childKind'),btn=document.querySelector('button[onclick="addChild()"]');if(!sel)return;const owner=parent?.kind==='gate'?branchOwner(parent.id):parent;let allowed=owner?allowedChildren(owner.kind).filter(k=>k!=='gate'):[];if(parent?.kind==='gate')allowed=allowedChildren('gate').filter(k=>k!=='gate');sel.replaceChildren();allowed.forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=kindOf(k).rot;sel.append(o)});sel.disabled=!allowed.length||owner?.estado==='Descartada';if(btn)btn.disabled=sel.disabled}
 window.refreshChildKindOptions=refreshKinds;
 function renderBranchEditor(selected){document.getElementById('treeBranchEditorV42')?.remove();document.getElementById('gateEditorV4')?.remove();const info=document.getElementById('selInfo');if(!selected||!info)return;const owner=branchOwner(selected.id);if(!owner||owner.kind==='acao'||owner.kind==='raiz')return;const count=logicalChildren(owner.id).length,mode=branchMode(owner.id),box=document.createElement('section');box.id='treeBranchEditorV42';box.className='tree-branch-editor';box.innerHTML='<h4>Ramificação dos filhos</h4><p class="field-help">Escolha ligação direta, alternativas causais (OU) ou condições combinadas (E).</p><label class="lbl" for="treeBranchMode">Forma de ligação</label><select class="inp" id="treeBranchMode"><option value="NONE">Sem conector lógico</option><option value="OU">OU · alternativas causais</option><option value="E">E · condições combinadas</option></select><div class="tree-branch-count">'+count+' filho(s) ligado(s) a esta ramificação.</div>'+(mode==='E'&&count===1?'<div class="tree-branch-warning">Advertência: conector E com somente um ramo.</div>':'')+'<button class="btn btn-ghost" type="button" id="applyTreeBranchMode">Aplicar alteração</button>';box.querySelector('select').value=mode;box.querySelector('button').onclick=()=>setBranchMode(owner.id,box.querySelector('select').value);info.after(box);const legacy=document.getElementById('childGate');if(legacy){legacy.innerHTML='<option value="NONE">Sem conector</option><option value="OU">OU</option><option value="E">E</option>';legacy.value=mode;legacy.hidden=true}}
-const previousSelect=window.selectNode;window.selectNode=function(id){previousSelect(id);const n=id?node(id):null;refreshKinds(n);renderBranchEditor(n)};
+let autoHideSidebar = localStorage.getItem('faciu_auto_hide_sidebar') === 'true';
+window.toggleAutoHideSidebar = function() {
+    autoHideSidebar = !autoHideSidebar;
+    localStorage.setItem('faciu_auto_hide_sidebar', autoHideSidebar);
+    renderSidebarVisibility();
+    if(typeof cyFit === 'function') setTimeout(cyFit, 100);
+};
+window.renderSidebarVisibility = function() {
+    const grid = document.querySelector('.tree-grid');
+    const toggleBtn = document.getElementById('autoHideToggleBtn');
+    if(!grid) return;
+    if (autoHideSidebar && !selectedId) {
+        grid.classList.add('auto-hide-sidebar');
+    } else {
+        grid.classList.remove('auto-hide-sidebar');
+    }
+    if (toggleBtn) {
+        const iconName = autoHideSidebar ? 'panel-right-open' : 'panel-right-close';
+        const text = autoHideSidebar ? ' Mostrar Editor' : ' Ocultar Editor';
+        toggleBtn.innerHTML = `<i class="w-4 h-4" id="autoHideToggleIcon" data-lucide="${iconName}"></i>${text}`;
+        if(window.lucide) lucide.createIcons();
+    }
+};
+
+const previousSelect=window.selectNode;window.selectNode=function(id){previousSelect(id);const n=id?node(id):null;refreshKinds(n);renderBranchEditor(n);renderSidebarVisibility();};
 const previousValidation=window.validateTreeStructure;window.validateTreeStructure=function(){const base=previousValidation(),extra=[];state.tree.nodes.filter(n=>n.kind==='gate').forEach(g=>{const incoming=state.tree.edges.filter(e=>e.target===g.id),out=state.tree.edges.filter(e=>e.source===g.id),type=g.gateType||g.label;if(!['E','OU'].includes(type))extra.push({severity:'error',text:'Conector lógico inválido: '+g.id+'.',nodeId:g.id});if(incoming.length!==1)extra.push({severity:'error',text:'Conector deve possuir exatamente uma entrada: '+g.label+'.',nodeId:g.id});if(!out.length)extra.push({severity:'error',text:'Conector sem saída: '+g.label+'.',nodeId:g.id});if(type==='E'&&out.length===1)extra.push({severity:'warning',text:'Conector E com somente um ramo.',nodeId:g.id});if(g.label!==type)g.label=type});return [...base,...extra]};
 
 function migrateBranches(){state.tree.nodes.filter(n=>n.kind==='gate').forEach(g=>{g.gateType=['E','OU'].includes(g.gateType)?g.gateType:(g.label==='E'?'E':'OU');g.label=g.gateType;state.tree.edges.filter(e=>e.source===g.id||e.target===g.id).forEach(e=>e.gate=g.gateType)});save()}
-function init(){migrateBranches();const legacy=document.getElementById('childGate');if(legacy){legacy.innerHTML='<option value="NONE">Sem conector</option><option value="OU">OU</option><option value="E">E</option>';legacy.value='NONE';legacy.hidden=true}if(cy){cyFromState();setTimeout(cyFit,100)}if(selectedId)selectNode(selectedId)}
+function init(){migrateBranches();const legacy=document.getElementById('childGate');if(legacy){legacy.innerHTML='<option value="NONE">Sem conector</option><option value="OU">OU</option><option value="E">E</option>';legacy.value='NONE';legacy.hidden=true}if(cy){cyFromState();setTimeout(cyFit,100)}if(selectedId)selectNode(selectedId);renderSidebarVisibility();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
