@@ -7430,7 +7430,7 @@ function marcarOrigem(t){ const e=$('#origem'); if(e) e.textContent=t; }
 /* ---------- renderização dos blocos ---------- */
 function pintarBloco(b){
   const w = cria('div','bl');
-  if(b.tipo==='texto'){ const p=cria('p'); p.textContent=b.conteudo; w.append(p); }
+  if(b.tipo==='texto'){ const p=cria('p'); p.innerHTML=b.conteudo; w.append(p); }
   else if(b.tipo==='subtitulo'){ const h=cria('h3'); h.textContent=b.titulo; w.append(h); }
   else if(b.tipo==='destaque'){
     const d=cria('div','destaque'), b1=cria('b'), s=cria('span');
