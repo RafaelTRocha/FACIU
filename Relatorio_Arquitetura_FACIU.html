@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Arquitetura e Dívida Técnica - FACIU</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --primary: #3b82f6;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --border: #e2e8f0;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        header {
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            color: var(--primary);
+            margin: 0 0 0.5rem 0;
+            font-size: 2.2rem;
+        }
+        h2 {
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary);
+        }
+        .stat-card.danger { border-left-color: var(--danger); }
+        .stat-card.warning { border-left-color: var(--warning); }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .debt-item {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+        .debt-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--danger);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .refactor-step {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--success);
+        }
+        .step-number {
+            background: var(--success);
+            color: white;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .step-content h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--text-main);
+        }
+        .step-content p { margin: 0; color: var(--text-muted); }
+        
+        code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            color: #d97706;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Relatório de Arquitetura e Dívida Técnica</h1>
+            <p>Análise estrutural do módulo monolítico <strong>FACIU-v6.7.8.html</strong></p>
+        </header>
+
+        <section>
+            <h2>Radiografia do Código</h2>
+            <div class="summary-grid">
+                <div class="stat-card">
+                    <div class="stat-value">8.344</div>
+                    <div class="stat-label">Linhas Totais</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-value">7.295</div>
+                    <div class="stat-label">Linhas de JavaScript</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-value">31</div>
+                    <div class="stat-label">Blocos de &lt;script&gt; independentes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">552</div>
+                    <div class="stat-label">Linhas de CSS</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>A Maior Dívida Técnica</h2>
+            <div class="debt-item">
+                <div class="debt-title">🚨 O Padrão "Teia de Aranha" (Global State + Patching Excessivo)</div>
+                <p>A maior ameaça à sustentabilidade do FACIU não é o fato de ser um arquivo único (Single-File App), mas sim a <strong>falta de encapsulamento e isolamento de escopo</strong> dentro desse arquivo.</p>
+                <ul>
+                    <li><strong>31 Blocos de Script:</strong> Ao longo do tempo, novas features (como o <code>faciuUnifiedHelpScript</code>, <code>faciuRiaGenerator</code>, <code>faciuAppHelpPageScript</code>) foram sendo adicionadas como "patches" sequenciais (novas tags <code>&lt;script&gt;</code>) no final do arquivo.</li>
+                    <li><strong>Conflitos de Ciclo de Vida:</strong> O código possui dezenas de <code>document.addEventListener('DOMContentLoaded')</code> disparando de forma assíncrona, dependendo da ordem de carregamento do navegador para não quebrar o estado.</li>
+                    <li><strong>Acoplamento Extremo (DOM + Lógica):</strong> A lógica de negócio (o que define uma causa raiz) está misturada no mesmo bloco de código que injeta HTML na tela (<code>innerHTML</code>) e lê do <code>localStorage</code>.</li>
+                    <li><strong>Estado Global Mutável:</strong> Variáveis vitais ficam expostas no escopo global. Qualquer bloco de script pode, a qualquer momento, alterar dados críticos da investigação silenciosamente.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>Plano de Refatoração (Por onde começar)</h2>
+            <p>Considerando que o formato SFA (arquivo único .html) tem enorme valor tático para distribuição offline, a refatoração <strong>não deve</strong> envolver a separação em dezenas de arquivos externos. Ela deve focar em <strong>organizar a arquitetura interna do JavaScript</strong>.</p>
+
+            <div class="refactor-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Consolidar o Ciclo de Vida (Lifecycle)</h3>
+                    <p>Remover os mais de 10 listeners soltos de <code>DOMContentLoaded</code>. Criar uma única função <code>initFaciuApp()</code> que orquestra a ordem exata de inicialização: <code>carregarEstado() &rarr; iniciarModulos() &rarr; aplicarConfiguracoes() &rarr; renderizarTelaAtual()</code>. Isso elimina condições de corrida e falhas silenciosas no carregamento.</p>
+                </div>
+            </div>
+
+            <div class="refactor-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Unificar o Gerenciamento de Estado (Store)</h3>
+                    <p>Parar de acessar o <code>localStorage</code> e variáveis globais espalhadas em 50 lugares diferentes. Criar um objeto <code>FaciuStore</code> centralizado. Todo módulo que quiser salvar ou ler algo deve perguntar ao <code>FaciuStore</code>. Isso torna o código previsível e facilita a implementação futura de "Desfazer/Refazer" e autosave confiável.</p>
+                </div>
+            </div>
+
+            <div class="refactor-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Isolar Módulos em Namespaces</h3>
+                    <p>Juntar os 31 blocos de <code>&lt;script&gt;</code> em um escopo estruturado. Em vez de funções globais flutuando, agrupar responsabilidades: <code>Faciu.Graph</code>, <code>Faciu.RIA</code>, <code>Faciu.AI</code>, <code>Faciu.UI</code>. Uma função no gerador de RIA nunca deve acessar diretamente um elemento HTML escondido na aba de 5 Porquês.</p>
+                </div>
+            </div>
+
+            <div class="refactor-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Remover Eventos Inline (Unobtrusive JS)</h3>
+                    <p>Limpar o HTML de chamadas como <code>onclick="goStep(...)"</code>. O JavaScript deve ser responsável por buscar os botões (via <code>data-action="next-step"</code>) e atrelar os eventos. Isso limpa drasticamente o tamanho do HTML e separa visualização de comportamento.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
