@@ -1,0 +1,888 @@
+{
+  "fileType": "brava-investigacao-causas",
+  "schemaVersion": "1.1",
+  "appVersion": "6.36.12",
+  "exportedAt": "2026-10-09T11:36:50.018Z",
+  "study": {
+    "versao": "6.36.12",
+    "mainMethodology": "tree",
+    "whysPrimary": null,
+    "whysAuxiliary": [],
+    "triagem": {
+      "cii": "CII-2026-OP-055",
+      "titulo": "Desarme Involuntário do Turbogerador TG-01 por Queda de Pressão no Sistema de Óleo Lubrificante",
+      "ocorr": "2026-09-18T14:20",
+      "reg": "2026-09-18T15:00",
+      "site": "FPSO Brava Spirit (Campo de Papa-Terra)",
+      "local": "Módulo M-02 - Geração Principal de Energia",
+      "atividade": "Operação em Carga Nominal e Teste Periódico de Comutação de Bombas de Óleo Lubrificante",
+      "pt": "PT-2026-5120",
+      "regpor": "Rafael Rocha (Engenheiro de Segurança de Processo)",
+      "contratada": "Turbinas & Energia Serviços Industriais Ltda",
+      "descricao": "Durante o teste periódico de partida da bomba auxiliar de óleo lubrificante (B-01B) do turbogerador TG-01, ocorreu retardo de pressurização devido a ar retido na sucção e calibração de banda morta estreita no pressostato PSL-0201. A pressão de óleo caiu abaixo de 1,2 bar por 4 segundos, provocando o desarme de emergência (trip) da turbina e apagão parcial na planta com transferência automática de carga para os geradores auxiliares.",
+      "tipo": "real",
+      "dim": "cat18",
+      "tipoc": "m07-r19",
+      "criterio": "m07-r19-s1",
+      "sev": "1",
+      "nivel": "Leve",
+      "metodos": [
+        "5 Porquês",
+        "Mapa de causa-raiz (ABS)",
+        "Árvore de Causa / Falha"
+      ],
+      "dimLabel": "Interrupção das Operações",
+      "tipocLabel": "Parada não Programada - Parada total ou parcial não programada de uma instalação por período superior a 24 (vinte e quatro) horas.",
+      "criterioLabel": "• Parada total ou parcial não programada de uma instalação por período de 24 (vinte e quatro)  a 48 (quarenta e oito) horas.",
+      "classificacaoSchema": 2,
+      "comunicante": {
+        "nome": "",
+        "funcao": "",
+        "telefone": ""
+      }
+    },
+    "classificacaoV2": {
+      "matrixRevision": "07",
+      "assessments": [
+        {
+          "id": "cls_1791545765904",
+          "nature": "real",
+          "category": "Interrupção das Operações",
+          "occurrence": "Parada não Programada - Parada total ou parcial não programada de uma instalação por período superior a 24 (vinte e quatro) horas.",
+          "criterionId": "m07-r19-s1",
+          "criterion": "• Parada total ou parcial não programada de uma instalação por período de 24 (vinte e quatro)  a 48 (quarenta e oito) horas.",
+          "severity": 1,
+          "matrixRevision": "07"
+        }
+      ],
+      "calculatedSeverity": 1,
+      "reviewedSeverity": null,
+      "finalSeverity": 1,
+      "overrideReason": "",
+      "legacy": false
+    },
+    "commissionExceptions": {},
+    "externalReferences": [
+      {
+        "id": "ref_pt_5120",
+        "externalSystem": "SGM",
+        "title": "Permissão de Trabalho PT-2026-5120",
+        "reference": "Pasta Módulo M-02 / Geração",
+        "status": "available",
+        "linkedNodeIds": [
+          "hip1",
+          "fs1"
+        ]
+      },
+      {
+        "id": "ref_pop_tg",
+        "externalSystem": "GED Corporativo",
+        "title": "POP-ELET-012 Procedimento de Operação e Testes de Turbogeradores",
+        "reference": "Rev. 05",
+        "status": "available",
+        "linkedNodeIds": [
+          "cr1",
+          "a1",
+          "a3"
+        ]
+      },
+      {
+        "id": "ref_fd_psl",
+        "externalSystem": "Engenharia de Automação",
+        "title": "Folha de Dados e Malha de Intertravamento do PSL-0201",
+        "reference": "FD-AUTO-M02-042",
+        "status": "available",
+        "linkedNodeIds": [
+          "fs2",
+          "cr2",
+          "a2"
+        ]
+      }
+    ],
+    "chronology": [
+      {
+        "id": "chr_1",
+        "dateTime": "2026-09-18T13:45",
+        "phase": "before",
+        "description": "Alinhamento em painel e liberação da PT-2026-5120 para teste quinzenal de comutação da bomba de óleo B-01B.",
+        "externalSource": "SGM",
+        "externalReference": "PT-2026-5120",
+        "linkedNodeId": "evt",
+        "endOfResponse": false,
+        "contextual": false,
+        "notes": "Supervisão de Operações autorizou o início do teste programado."
+      },
+      {
+        "id": "chr_2",
+        "dateTime": "2026-09-18T14:10",
+        "phase": "before",
+        "description": "Comando de partida manual local enviado à bomba auxiliar B-01B com TG-01 operando a 85% de carga.",
+        "externalSource": "SDCD",
+        "externalReference": "TAG TG-01",
+        "linkedNodeId": "imed",
+        "endOfResponse": false,
+        "contextual": false,
+        "notes": "Bomba principal B-01A mantida alinhada em paralelo."
+      },
+      {
+        "id": "chr_3",
+        "dateTime": "2026-09-18T14:18",
+        "phase": "during",
+        "description": "Oscilação hidráulica na linha comum de óleo e queda de pressão de 3,5 bar para 1,1 bar durante a comutação.",
+        "externalSource": "SDCD",
+        "externalReference": "PIT-0201",
+        "linkedNodeId": "hip1",
+        "endOfResponse": false,
+        "contextual": false,
+        "notes": "Ar na tubulação de sucção impediu a pressurização imediata da B-01B."
+      },
+      {
+        "id": "chr_4",
+        "dateTime": "2026-09-18T14:20",
+        "phase": "during",
+        "description": "Atuação do intertravamento de segurança (trip) por atuação instantânea do pressostato PSL-0201 (<1,2 bar por 4s).",
+        "externalSource": "Logic Solver ESD",
+        "externalReference": "PSL-0201",
+        "linkedNodeId": "evt",
+        "endOfResponse": false,
+        "contextual": false,
+        "notes": "Válvula de combustível fechou por ESD nível 2."
+      },
+      {
+        "id": "chr_5",
+        "dateTime": "2026-09-18T14:25",
+        "phase": "during",
+        "description": "Entrada em operação dos geradores a diesel auxiliares e estabilização das barras essenciais da plataforma.",
+        "externalSource": "SDCD",
+        "externalReference": "Alarme Blackout Parcial",
+        "linkedNodeId": "evt",
+        "endOfResponse": false,
+        "contextual": false,
+        "notes": "Cargas essenciais mantidas sem descontinuidade de segurança."
+      },
+      {
+        "id": "chr_6",
+        "dateTime": "2026-09-18T16:50",
+        "phase": "after",
+        "description": "Drenagem e purga completa da linha de óleo, recomissionamento da malha de controle e partida segura do TG-01.",
+        "externalSource": "Relatório de Operação",
+        "externalReference": "BO-2026-095",
+        "linkedNodeId": "evt",
+        "endOfResponse": true,
+        "contextual": false,
+        "notes": "Geração normalizada após 2h30m de interrupção."
+      }
+    ],
+    "conclusion": {
+      "summary": "O desarme involuntário do turbogerador TG-01 decorreu da queda transitória de pressão no circuito de óleo lubrificante durante o teste de comutação da bomba B-01B. O retardo de pressurização foi provocado pelo acúmulo de ar na tubulação de sucção standby e ausência de etapa mandante de desaeração no procedimento operacional, associado a um limiar de desarme por tempo excessivamente sensível no sistema de proteção.",
+      "contributors": "Ausência de purga pré-teste na linha de sucção da bomba auxiliar, teste executado com turbogerador em regime de alta carga e calibração de desarme rápido sem temporizador de histerese hidráulica.",
+      "roots": "1) Deficiência procedural no POP-ELET-012 por omitir barreira operacional mandatória de drenagem e purga de ar antes de testes de comutação de bombas; 2) Falha de engenharia na malha de trip por não prever temporização mínima de amortecimento contra transitórios normais de transferência.",
+      "actions": "Revisão do POP-ELET-012 com checklist formal de desaeração, implantação de temporizador de 5 segundos no Logic Solver do ESD e treinamento de 100% da equipe de operação.",
+      "limitations": "Incidente estritamente operacional com impacto restrito à continuidade de geração, sem ocorrência de danos mecânicos nas bronzinas ou mancais do turbogerador e sem impactos ambientais ou a pessoas.",
+      "references": "PT-2026-5120, POP-ELET-012, Folha de Dados FD-AUTO-M02-042.",
+      "generated": false
+    },
+    "equipe": [
+      {
+        "nome": "Carlos Eduardo Mendes",
+        "func": "Coordenador da Comissão",
+        "area": "Engenharia de Confiabilidade",
+        "qual": "Atende",
+        "commissionCoordinator": true,
+        "investigationManager": false,
+        "technicalKnowledge": true,
+        "rcaQualified": true,
+        "cipaRepresentative": false,
+        "areaRepresentative": true,
+        "contractorRepresentative": false
+      },
+      {
+        "nome": "Mariana Albuquerque",
+        "func": "Gestor da investigação",
+        "area": "Operações Offshore",
+        "qual": "Atende",
+        "commissionCoordinator": false,
+        "investigationManager": true,
+        "technicalKnowledge": true,
+        "rcaQualified": true,
+        "cipaRepresentative": false,
+        "areaRepresentative": false,
+        "contractorRepresentative": false
+      },
+      {
+        "nome": "Fernando Silva",
+        "func": "Especialista em Automação e Turbomáquinas",
+        "area": "Manutenção Elétrica e Automação",
+        "qual": "Atende",
+        "commissionCoordinator": false,
+        "investigationManager": false,
+        "technicalKnowledge": true,
+        "rcaQualified": false,
+        "cipaRepresentative": false,
+        "areaRepresentative": false,
+        "contractorRepresentative": false
+      },
+      {
+        "nome": "Rodrigo Silveira",
+        "func": "Supervisor de Operações de Utilidades",
+        "area": "Produção / Utilidades",
+        "qual": "Atende",
+        "commissionCoordinator": false,
+        "investigationManager": false,
+        "technicalKnowledge": false,
+        "rcaQualified": false,
+        "cipaRepresentative": true,
+        "areaRepresentative": true,
+        "contractorRepresentative": false
+      }
+    ],
+    "tree": {
+      "nodes": [
+        {
+          "id": "evt",
+          "kind": "evt",
+          "label": "Desarme por Trip do Turbogerador TG-01",
+          "desc": "Desarme Involuntário do Turbogerador TG-01 por Queda de Pressão no Sistema de Óleo Lubrificante",
+          "gate": null,
+          "root": false,
+          "estado": "Confirmada",
+          "origem": "",
+          "justificativa": "Fato comprovado no registro de alarmes do SDCD e abertura de disjuntor geral",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": "",
+          "linkedRefIds": [],
+          "confirmationCondition": "",
+          "pendingReferenceNote": ""
+        },
+        {
+          "id": "imed",
+          "kind": "imediata",
+          "label": "Queda Transiente da Pressão de Óleo Lubrificante (< 1,2 bar)",
+          "desc": "Pressão na linha principal caiu abaixo do setpoint crítico de 1,2 bar por mais de 3 segundos",
+          "gate": null,
+          "root": false,
+          "estado": "Confirmada",
+          "origem": "",
+          "justificativa": "Historiador de dados registrou queda momentânea para 1,1 bar às 14:18:22",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": "",
+          "linkedRefIds": [],
+          "confirmationCondition": "",
+          "pendingReferenceNote": ""
+        },
+        {
+          "id": "hip1",
+          "kind": "hipotese",
+          "label": "Retardo de Pressurização na Comutação para a Bomba Auxiliar B-01B",
+          "desc": "A bomba auxiliar demorou 6 segundos para atingir a pressão de regime de 3,5 bar após partida",
+          "gate": null,
+          "root": false,
+          "estado": "Confirmada",
+          "origem": "",
+          "justificativa": "Testes periciais confirmaram compressão de bolhas de ar na tubulação de sucção",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": "",
+          "linkedRefIds": [
+            "ref_pt_5120"
+          ],
+          "confirmationCondition": "",
+          "pendingReferenceNote": ""
+        },
+        {
+          "id": "fal1",
+          "kind": "falha",
+          "label": "Falha Mecânica Catastrófica ou Cavitação na Bomba Principal",
+          "desc": "Quebra de acoplamento ou desgaste interno severo das engrenagens da bomba B-01A",
+          "gate": null,
+          "root": false,
+          "estado": "Descartada",
+          "origem": "",
+          "justificativa": "Inspeção mecânica e teste de bancada comprovaram integridade total da bomba B-01A",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": "",
+          "linkedRefIds": [],
+          "confirmationCondition": "",
+          "pendingReferenceNote": ""
+        },
+        {
+          "id": "hip2",
+          "kind": "hipotese",
+          "label": "Sinal Falso ou Drift Eletrônico no Transmissor de Pressão",
+          "desc": "Descalibração ou falha eletrônica no transmissor de pressão PIT-0201 gerando medição errônea",
+          "gate": null,
+          "root": false,
+          "estado": "Descartada",
+          "origem": "",
+          "justificativa": "Calibração em campo atestou erro inferior a 0,15% e reposta dinâmica em conformidade",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": "",
+          "linkedRefIds": [],
+          "confirmationCondition": "",
+          "pendingReferenceNote": ""
+        },
+        {
+          "id": "fat1",
+          "kind": "fatores",
+          "label": "Fatores Operacionais e de Automação no Procedimento",
+          "desc": "Condições de execução do teste e sensibilidade da malha de proteção instrumental",
+          "gate": null,
+          "root": false,
+          "estado": "Confirmada",
+          "origem": "",
+          "justificativa": "Análise da malha de ESD e do procedimento operacional identificou lacunas de controle",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": "",
+          "linkedRefIds": [],
+          "confirmationCondition": "",
+          "pendingReferenceNote": ""
+        },
+        {
+          "id": "fs1",
+          "kind": "fator_sub",
+          "label": "ORGANIZACIONAL",
+          "desc": "Procedimento POP-ELET-012 omite a etapa mandatória de sangria e purga de ar da linha de sucção",
+          "gate": null,
+          "root": false,
+          "estado": "Confirmada",
+          "origem": "",
+          "justificativa": "Verificado no texto da Rev. 05 do POP-ELET-012",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": "",
+          "linkedRefIds": [
+            "ref_pop_tg"
+          ],
+          "confirmationCondition": "",
+          "pendingReferenceNote": ""
+        },
+        {
+          "id": "fs2",
+          "kind": "fator_sub",
+          "label": "TECNOLÓGICO",
+          "desc": "Lógica de desarme do Logic Solver com temporização nula (trip instantâneo sem histerese para transientes normais)",
+          "gate": null,
+          "root": false,
+          "estado": "Confirmada",
+          "origem": "",
+          "justificativa": "Confirmado no diagrama de lógica e parâmetros do Logic Solver ESD",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": "",
+          "linkedRefIds": [
+            "ref_fd_psl"
+          ],
+          "confirmationCondition": "",
+          "pendingReferenceNote": ""
+        },
+        {
+          "id": "cc1",
+          "kind": "contrib",
+          "label": "Presença de Ar Retido na Linha de Sucção Standby",
+          "desc": "Válvula de bloqueio da sucção permaneceu isolada sem despressurização/purga prévia ao giro",
+          "gate": null,
+          "root": false,
+          "estado": "Confirmada",
+          "origem": "",
+          "justificativa": "Comprovada purga de expressivo volume gasoso após a desmontagem do dreno",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": "",
+          "linkedRefIds": [],
+          "confirmationCondition": "",
+          "pendingReferenceNote": ""
+        },
+        {
+          "id": "cc2",
+          "kind": "contrib",
+          "label": "Tempo de Resposta Elevado na Partida Auxiliar (> 4s)",
+          "desc": "Curva de escorvamento lento da bomba centrífuga com fluido bifásico transitório",
+          "gate": null,
+          "root": false,
+          "estado": "Confirmada",
+          "origem": "",
+          "justificativa": "Causa contribuinte direta para a sustentação da pressão abaixo de 1,2 bar",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": "",
+          "linkedRefIds": [],
+          "confirmationCondition": "",
+          "pendingReferenceNote": ""
+        },
+        {
+          "id": "cr1",
+          "kind": "raiz",
+          "label": "Falta de Barreira Operacional de Purga de Linhas Standby",
+          "desc": "Inexistência de procedimento de controle de qualidade e desaeração obrigatória antes de comutação de bombas críticas sob carga",
+          "gate": null,
+          "root": true,
+          "estado": "Confirmada",
+          "origem": "",
+          "justificativa": "Causa-raiz fundamental: lacuna normativa no padrão operacional de turbomáquinas",
+          "classificacao": "1.2.3 Falha de Procedimento / Controle de Qualidade",
+          "sgsoCorrelation": "SGSO 10 - Integridade Mecânica",
+          "corporateStandard": "PAD-CORP-MAN-002",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": "",
+          "linkedRefIds": [
+            "ref_pop_tg"
+          ],
+          "confirmationCondition": "",
+          "pendingReferenceNote": ""
+        },
+        {
+          "id": "cc3",
+          "kind": "contrib",
+          "label": "Inexistência de Filtro de Amortecimento de Transitórios no ESD",
+          "desc": "Ausência de atraso configurável na lógica de trip instrumental do pressostato PSL-0201",
+          "gate": null,
+          "root": false,
+          "estado": "Confirmada",
+          "origem": "",
+          "justificativa": "Diagrama de intertravamento atesta atuação instantânea sem temporização de histerese",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": "",
+          "linkedRefIds": [
+            "ref_fd_psl"
+          ],
+          "confirmationCondition": "",
+          "pendingReferenceNote": ""
+        },
+        {
+          "id": "cr2",
+          "kind": "raiz",
+          "label": "Ausência de Filtro de Amortecimento de Transientes no Trip",
+          "desc": "Deficiência de projeto de automação na malha de intertravamento de segurança por não contemplar filtro de atraso (delay de 5s)",
+          "gate": null,
+          "root": true,
+          "estado": "Confirmada",
+          "origem": "",
+          "justificativa": "Causa-raiz de engenharia: disparo espúrio em transitório que não causaria dano mecânico às bronzinas",
+          "classificacao": "3.1.2 Falha de Engenharia / Projeto de Automação",
+          "sgsoCorrelation": "SGSO 09 - Projeto, Construção e Modificação",
+          "corporateStandard": "PAD-CORP-AUT-005",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": "",
+          "linkedRefIds": [
+            "ref_fd_psl"
+          ],
+          "confirmationCondition": "",
+          "pendingReferenceNote": ""
+        },
+        {
+          "id": "a1",
+          "kind": "acao",
+          "label": "Revisar POP-ELET-012 incluindo Etapa Mandatória de Purga",
+          "desc": "Revisar o procedimento operacional adicionando checklist mandante com purga visual e verificação de escorvamento antes de partidas programadas",
+          "gate": null,
+          "root": false,
+          "estado": "",
+          "origem": "",
+          "justificativa": "",
+          "classificacao": "",
+          "responsavel": "Carlos Eduardo Mendes",
+          "prazo": "2026-10-25",
+          "status": "Proposta",
+          "causaRaizId": "cr1",
+          "causaRaizIds": [
+            "cr1"
+          ],
+          "studyId": "",
+          "actionType": "Preventiva",
+          "effectivenessCriterion": "100% dos testes quinzenais de bombas com checklist de purga assinado e arquivado por 6 meses",
+          "verificationDate": "2026-11-20",
+          "verificationResponsible": "Mariana Albuquerque",
+          "implementationReference": "MOC-2026-088",
+          "effectivenessResult": "Pendente",
+          "effectivenessNotes": "",
+          "confirmationCondition": "",
+          "pendingReferenceNote": "",
+          "linkedRefIds": [],
+          "requiresNewAction": false,
+          "complementaryAction": ""
+        },
+        {
+          "id": "a2",
+          "kind": "acao",
+          "label": "Parametrizar Temporizador de 5s no Logic Solver do ESD",
+          "desc": "Implementar atraso configurado de 5 segundos no PSL-0201 do Logic Solver para absorção de transientes hidráulicos de comutação",
+          "gate": null,
+          "root": false,
+          "estado": "",
+          "origem": "",
+          "justificativa": "",
+          "classificacao": "",
+          "responsavel": "Fernando Silva",
+          "prazo": "2026-11-10",
+          "status": "Proposta",
+          "causaRaizId": "cr2",
+          "causaRaizIds": [
+            "cr2"
+          ],
+          "studyId": "",
+          "actionType": "Corretiva",
+          "effectivenessCriterion": "Comprovação em teste comissionado de absorção de transitório de 3s sem atuação indevida do trip",
+          "verificationDate": "2026-11-25",
+          "verificationResponsible": "Carlos Eduardo Mendes",
+          "implementationReference": "OS-AUTO-2026-441",
+          "effectivenessResult": "Pendente",
+          "effectivenessNotes": "",
+          "confirmationCondition": "",
+          "pendingReferenceNote": "",
+          "linkedRefIds": [],
+          "requiresNewAction": false,
+          "complementaryAction": ""
+        },
+        {
+          "id": "a3",
+          "kind": "acao",
+          "label": "Treinar Equipe de Operações e Elétrica no Novo Procedimento",
+          "desc": "Realizar treinamento formal e reciclagem operacional sobre comutação de bombas e controle de transientes de lubrificação",
+          "gate": null,
+          "root": false,
+          "estado": "",
+          "origem": "",
+          "justificativa": "",
+          "classificacao": "",
+          "responsavel": "Rodrigo Silveira",
+          "prazo": "2026-10-30",
+          "status": "Proposta",
+          "causaRaizId": "cr1",
+          "causaRaizIds": [
+            "cr1"
+          ],
+          "studyId": "",
+          "actionType": "Abrangente",
+          "effectivenessCriterion": "100% dos operadores de painel e de campo avaliados com aproveitamento superior a 85%",
+          "verificationDate": "2026-11-15",
+          "verificationResponsible": "Mariana Albuquerque",
+          "implementationReference": "TREIN-SMS-2026-12",
+          "effectivenessResult": "Pendente",
+          "effectivenessNotes": "",
+          "confirmationCondition": "",
+          "pendingReferenceNote": "",
+          "linkedRefIds": [],
+          "requiresNewAction": false,
+          "complementaryAction": ""
+        }
+      ],
+      "edges": [
+        {
+          "id": "e_evt_imed",
+          "source": "evt",
+          "target": "imed",
+          "gate": "",
+          "logic": "",
+          "kind": "causal"
+        },
+        {
+          "id": "e_imed_hip1",
+          "source": "imed",
+          "target": "hip1",
+          "gate": "OU",
+          "logic": "OU",
+          "kind": "causal"
+        },
+        {
+          "id": "e_imed_fal1",
+          "source": "imed",
+          "target": "fal1",
+          "gate": "OU",
+          "logic": "OU",
+          "kind": "causal"
+        },
+        {
+          "id": "e_imed_hip2",
+          "source": "imed",
+          "target": "hip2",
+          "gate": "OU",
+          "logic": "OU",
+          "kind": "causal"
+        },
+        {
+          "id": "e_imed_fat1",
+          "source": "imed",
+          "target": "fat1",
+          "gate": "OU",
+          "logic": "OU",
+          "kind": "causal"
+        },
+        {
+          "id": "e_fat1_fs1",
+          "source": "fat1",
+          "target": "fs1",
+          "gate": "",
+          "logic": "",
+          "kind": "causal"
+        },
+        {
+          "id": "e_fat1_fs2",
+          "source": "fat1",
+          "target": "fs2",
+          "gate": "",
+          "logic": "",
+          "kind": "causal"
+        },
+        {
+          "id": "e_hip1_cc1",
+          "source": "hip1",
+          "target": "cc1",
+          "gate": "",
+          "logic": "",
+          "kind": "causal"
+        },
+        {
+          "id": "e_cc1_cc2",
+          "source": "cc1",
+          "target": "cc2",
+          "gate": "",
+          "logic": "",
+          "kind": "causal"
+        },
+        {
+          "id": "e_cc2_cr1",
+          "source": "cc2",
+          "target": "cr1",
+          "gate": "",
+          "logic": "",
+          "kind": "causal"
+        },
+        {
+          "id": "e_cr1_a1",
+          "source": "cr1",
+          "target": "a1",
+          "gate": "",
+          "logic": "",
+          "kind": "causal"
+        },
+        {
+          "id": "e_cr2_a2",
+          "source": "cr2",
+          "target": "a2",
+          "gate": "",
+          "logic": "",
+          "kind": "causal"
+        },
+        {
+          "id": "e_cr1_a3",
+          "source": "cr1",
+          "target": "a3",
+          "gate": "",
+          "logic": "",
+          "kind": "causal"
+        },
+        {
+          "id": "e_fs2_cc3",
+          "source": "fs2",
+          "target": "cc3",
+          "gate": "",
+          "logic": "",
+          "kind": "causal"
+        },
+        {
+          "id": "e_cc3_cr2",
+          "source": "cc3",
+          "target": "cr2",
+          "gate": "",
+          "logic": "",
+          "kind": "causal"
+        }
+      ]
+    },
+    "whys": [],
+    "audit": [
+      {
+        "id": "log_init_01",
+        "timestamp": "2026-09-18T15:30:00.000Z",
+        "action": "investigation.started",
+        "nodeId": "",
+        "summary": "Investigação formal por Árvore de Causas iniciada para CII-2026-OP-055",
+        "fields": []
+      },
+      {
+        "id": "log_1791545765904_dlpru",
+        "timestamp": "2026-10-09T11:36:05.904Z",
+        "action": "classification.created",
+        "nodeId": "cls_1791545765904",
+        "summary": "Consequência nível 1",
+        "fields": [
+          "classification"
+        ]
+      }
+    ],
+    "step": 2,
+    "ria": {
+      "schemaVersion": 2,
+      "template": {
+        "code": "FORM-CORP-SMS-088",
+        "revision": "08"
+      },
+      "control": {
+        "status": "draft",
+        "reportNumber": "RIA-2026-055",
+        "preparedBy": "Carlos Eduardo Mendes",
+        "reviewedBy": "Mariana Albuquerque",
+        "issuedAt": "",
+        "lastValidatedAt": "2026-10-09T11:36:48.665Z",
+        "revision": 0,
+        "dirtyAfterIssue": false
+      },
+      "initialData": {
+        "incidentDate": "2026-09-18",
+        "incidentTime": "14:20",
+        "records": {
+          "siso": "SISO-2026-0918",
+          "siema": "",
+          "idema": "",
+          "inema": "",
+          "semace": ""
+        },
+        "concessionaireName": "Brava Energia S.A.",
+        "concessionaireAddress": "Praia de Botafogo, 300 - Botafogo, Rio de Janeiro / RJ - CEP 22250-040",
+        "issuer": {
+          "name": "Carlos Eduardo Mendes",
+          "position": "Coordenador de Investigação de SMS",
+          "company": "Brava Energia",
+          "phone": "+55 21 99876-5432",
+          "email": "carlos.mendes@bravaenergia.com.br"
+        }
+      },
+      "communications": [
+        {
+          "system": "SISO",
+          "protocol": "SISO-2026-0918",
+          "communicatedAt": "2026-09-18T16:00",
+          "evidence": "Comunicação tempestiva ANP via sistema SISO"
+        }
+      ],
+      "installation": {
+        "name": "FPSO Brava Spirit",
+        "cnpj": "12.345.678/0001-90",
+        "imo": "9345678",
+        "anpCode": "BR-FPSO-042",
+        "anpAuthorization": "AUT-ANP-2024-88",
+        "explorationProductionContract": "CONTRATO-BM-C-36",
+        "equipmentTag": "TG-01",
+        "latitude": "-23.8541",
+        "longitude": "-41.9823",
+        "otherAuthorities": "Capitania dos Portos de Macaé"
+      },
+      "investigationPeriod": {
+        "startedAt": "",
+        "endedAt": "",
+        "start": "2026-09-18",
+        "end": "2026-09-22"
+      },
+      "description": {
+        "technicalDescription": "Durante a execução de teste programado de comutação da bomba de óleo lubrificante B-01B do turbogerador principal TG-01, ocorreu retardo de pressurização com queda instantânea de pressão abaixo de 1,2 bar por 4 segundos. O sistema de proteção contra baixa pressão de óleo atuou desarmando o turbogerador por trip de segurança, ocasionando perda parcial de geração elétrica na plataforma e acionamento automático dos geradores de emergência.",
+        "wellInformation": "Incidente estritamente restrito ao sistema de geração elétrica de superfície no módulo M-02.",
+        "mitigatingMeasures": "Acionamento automático dos geradores auxiliares a diesel, isolamento do módulo e purga manual do circuito de óleo lubrificante.",
+        "obtainedResults": "Manutenção das cargas essenciais de segurança e restabelecimento pleno do turbogerador TG-01 em 2h30m.",
+        "expectedShortTermResults": "Revisão do procedimento operacional com inclusão de sangria mandante e teste satisfatório comissionado."
+      },
+      "consequences": {
+        "continuity": "Parada de 2h30m do turbogerador TG-01 com limitação de processamento de óleo sem transbordo.",
+        "durationBand": "1 a 4 horas",
+        "people": {
+          "ownInjured": "0",
+          "ownFatalities": "0",
+          "contractorInjured": "0",
+          "contractorFatalities": "0",
+          "thirdInjured": "0",
+          "thirdFatalities": "0"
+        },
+        "releases": [],
+        "releaseStatus": "Não aplicável",
+        "releaseInterruptedAt": "",
+        "releaseExpectedAt": "",
+        "plumeBehavior": "Sem emissões ou vazamentos de qualquer natureza.",
+        "affectedEnvironments": "Nenhum ambiente externo ou industrial contaminado.",
+        "solidWaste": "Zero geração de resíduos contaminados.",
+        "otherConsequences": "Sem perdas patrimoniais permanentes nas bronzinas ou mancais."
+      },
+      "incidentHistory": "",
+      "protectionSystems": [
+        {
+          "name": "Pressostato de Baixa Pressão de Óleo PSL-0201",
+          "assessment": "existed-worked",
+          "reason": "Atuou dentro dos parâmetros ajustados sinalizando queda abaixo de 1,2 bar"
+        },
+        {
+          "name": "Sistema de Trip do Logic Solver ESD Nível 2",
+          "assessment": "existed-worked",
+          "reason": "Comandou o corte de gás combustível e abertura do disjuntor com sucesso"
+        },
+        {
+          "name": "Geradores Diesel de Emergência e Cargas Essenciais",
+          "assessment": "existed-worked",
+          "reason": "Partiram e assumiram o barramento vital em 12 segundos"
+        }
+      ],
+      "investigation": {
+        "methodologyDescription": "Árvore de Causas estruturada em conformidade com as diretrizes do SGSO da ANP, desdobrando o evento topo em causas imediatas, hipóteses concorrentes, falhas de projeto, fatores organizacionais e tecnológicos, causas contribuintes e causas-raiz.",
+        "relevantFacts": "",
+        "potentialConsequences": "Caso a geração de emergência não partisse tempestivamente, haveria risco de perda de controle de processo na planta de estabilização.",
+        "preventiveMeasures": "",
+        "sgsoCorrelation": "",
+        "corporateStandards": "",
+        "causalGroups": [],
+        "humanFactors": "Pressa na execução do roteiro de teste sem conferência prévia da purga dos drenos de sucção da bomba auxiliar."
+      },
+      "measuresAdopted": "Drenagem e purga das bolhas de ar na linha de sucção da bomba B-01B, inspeção boroscópica dos mancais do turbogerador e religamento com sucesso.",
+      "lessonsLearned": "Circuitos hidráulicos em espera (standby) sob risco de acúmulo gasoso devem possuir procedimentos formais e rastreáveis de desaeração antes de testes dinâmicos.",
+      "emergencyResponseEvaluation": "Tempo de resposta de 12 segundos para a comutação das cargas vitais para a geração de emergência, plenamente satisfatório.",
+      "riskStudy": {
+        "asset": "FPSO Brava Spirit - Sistema de Geração Principal TG-01",
+        "reviewRequired": "Sim",
+        "technicalJustification": "Revisão da análise de camada de proteção (LOPA) e estudo de confiabilidade da malha de trip de baixa pressão."
+      },
+      "otherRelevantInformation": "Relatório elaborado para envio regulatório à ANP e arquivamento corporativo de SMS da Brava Energia.",
+      "photoRegister": "Registros do painel de controle, gráfico de pressão de óleo do historiador e fotos da purga arquivados no repositório.",
+      "photos": [],
+      "photoIntro": "",
+      "conclusion": "A comissão de investigação conclui que o evento resultou de retardo de pressurização da bomba reserva por ar acumulado na sucção somado à ausência de temporizador de absorção de transitórios no sistema de segurança.",
+      "referencesText": "PT-2026-5120, POP-ELET-012, FD-AUTO-M02-042, Historiador SDCD.",
+      "attachmentsText": "Anexo 1: Diagrama da Árvore de Causas da Falha de Pressão; Anexo 2: Registros de Calibração e Tendência Histórica do SDCD.",
+      "attachments": [],
+      "attachmentsMigrated": true,
+      "fieldReviews": {},
+      "validation": {
+        "issues": [],
+        "lastResult": "ready"
+      },
+      "emissions": []
+    }
+  }
+}

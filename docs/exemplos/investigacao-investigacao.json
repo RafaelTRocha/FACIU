@@ -1,0 +1,416 @@
+{
+  "fileType": "brava-investigacao-causas",
+  "schemaVersion": "1.1",
+  "appVersion": "6.36.4",
+  "exportedAt": "2026-10-08T01:01:03.595Z",
+  "study": {
+    "versao": "6.36.4",
+    "mainMethodology": "tree",
+    "whysPrimary": null,
+    "whysAuxiliary": [],
+    "triagem": {
+      "cii": "",
+      "titulo": "",
+      "ocorr": "",
+      "reg": "",
+      "site": "",
+      "local": "",
+      "atividade": "",
+      "pt": "",
+      "regpor": "",
+      "contratada": "",
+      "descricao": "",
+      "tipo": "real",
+      "dim": "",
+      "tipoc": "",
+      "criterio": "",
+      "sev": "",
+      "nivel": "",
+      "metodos": [],
+      "comunicante": {
+        "nome": "",
+        "funcao": "",
+        "telefone": ""
+      }
+    },
+    "classificacaoV2": {
+      "matrixRevision": "07",
+      "assessments": [],
+      "calculatedSeverity": null,
+      "reviewedSeverity": null,
+      "finalSeverity": null,
+      "overrideReason": "",
+      "legacy": false
+    },
+    "commissionExceptions": {},
+    "externalReferences": [],
+    "chronology": [],
+    "conclusion": {
+      "summary": "",
+      "contributors": "",
+      "roots": "",
+      "actions": "",
+      "limitations": "",
+      "references": "",
+      "generated": false
+    },
+    "equipe": [],
+    "tree": {
+      "nodes": [
+        {
+          "id": "evt",
+          "kind": "evt",
+          "label": "Evento topo",
+          "desc": "",
+          "gate": null,
+          "root": false,
+          "estado": "",
+          "origem": "",
+          "justificativa": "",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": ""
+        },
+        {
+          "id": "imed",
+          "kind": "imediata",
+          "label": "Causa imediata",
+          "desc": "",
+          "gate": null,
+          "root": false,
+          "estado": "",
+          "origem": "",
+          "justificativa": "",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": ""
+        },
+        {
+          "id": "hip",
+          "kind": "hipotese",
+          "label": "HIPÓTESES",
+          "desc": "",
+          "gate": null,
+          "root": false,
+          "estado": "",
+          "origem": "",
+          "justificativa": "",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": ""
+        },
+        {
+          "id": "fal",
+          "kind": "falha",
+          "label": "FALHA DE PROJETO",
+          "desc": "",
+          "gate": null,
+          "root": false,
+          "estado": "",
+          "origem": "",
+          "justificativa": "",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": ""
+        },
+        {
+          "id": "fat",
+          "kind": "fatores",
+          "label": "FATORES HUMANOS",
+          "desc": "",
+          "gate": null,
+          "root": false,
+          "estado": "",
+          "origem": "",
+          "justificativa": "",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": ""
+        },
+        {
+          "id": "fs1",
+          "kind": "fator_sub",
+          "label": "ORGANIZACIONAL",
+          "desc": "",
+          "gate": null,
+          "root": false,
+          "estado": "",
+          "origem": "",
+          "justificativa": "",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": ""
+        },
+        {
+          "id": "fs2",
+          "kind": "fator_sub",
+          "label": "AMBIENTAL",
+          "desc": "",
+          "gate": null,
+          "root": false,
+          "estado": "",
+          "origem": "",
+          "justificativa": "",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": ""
+        },
+        {
+          "id": "fs3",
+          "kind": "fator_sub",
+          "label": "TECNOLÓGICO",
+          "desc": "",
+          "gate": null,
+          "root": false,
+          "estado": "",
+          "origem": "",
+          "justificativa": "",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": ""
+        },
+        {
+          "id": "fs4",
+          "kind": "fator_sub",
+          "label": "INDIVIDUAL",
+          "desc": "",
+          "gate": null,
+          "root": false,
+          "estado": "",
+          "origem": "",
+          "justificativa": "",
+          "classificacao": "",
+          "responsavel": "",
+          "prazo": "",
+          "status": "",
+          "causaRaizId": ""
+        }
+      ],
+      "edges": [
+        {
+          "id": "e_evt_imed",
+          "source": "evt",
+          "target": "imed",
+          "gate": "",
+          "logic": "",
+          "kind": "causal"
+        },
+        {
+          "id": "e_imed_hip",
+          "source": "imed",
+          "target": "hip",
+          "gate": "OU",
+          "logic": "OU",
+          "kind": "causal"
+        },
+        {
+          "id": "e_imed_fal",
+          "source": "imed",
+          "target": "fal",
+          "gate": "OU",
+          "logic": "OU",
+          "kind": "causal"
+        },
+        {
+          "id": "e_imed_fat",
+          "source": "imed",
+          "target": "fat",
+          "gate": "OU",
+          "logic": "OU",
+          "kind": "causal"
+        },
+        {
+          "id": "e_fat_fs1",
+          "source": "fat",
+          "target": "fs1",
+          "gate": "",
+          "logic": "",
+          "kind": "causal"
+        },
+        {
+          "id": "e_fat_fs2",
+          "source": "fat",
+          "target": "fs2",
+          "gate": "",
+          "logic": "",
+          "kind": "causal"
+        },
+        {
+          "id": "e_fat_fs3",
+          "source": "fat",
+          "target": "fs3",
+          "gate": "",
+          "logic": "",
+          "kind": "causal"
+        },
+        {
+          "id": "e_fat_fs4",
+          "source": "fat",
+          "target": "fs4",
+          "gate": "",
+          "logic": "",
+          "kind": "causal"
+        }
+      ]
+    },
+    "whys": [],
+    "audit": [],
+    "step": 1,
+    "ria": {
+      "schemaVersion": 2,
+      "template": {
+        "code": "FORM-CORP-SMS-088",
+        "revision": "08"
+      },
+      "control": {
+        "status": "draft",
+        "reportNumber": "",
+        "preparedBy": "",
+        "reviewedBy": "",
+        "issuedAt": "",
+        "lastValidatedAt": "2026-10-08T01:01:03.443Z",
+        "revision": 0,
+        "dirtyAfterIssue": false
+      },
+      "initialData": {
+        "incidentDate": "",
+        "incidentTime": "",
+        "records": {
+          "siso": "",
+          "siema": "",
+          "idema": "",
+          "inema": "",
+          "semace": ""
+        },
+        "concessionaireName": "",
+        "concessionaireAddress": "",
+        "issuer": {
+          "name": "",
+          "position": "",
+          "company": "",
+          "phone": "",
+          "email": ""
+        }
+      },
+      "communications": [],
+      "installation": {
+        "name": "",
+        "cnpj": "",
+        "imo": "",
+        "anpCode": "",
+        "anpAuthorization": "",
+        "explorationProductionContract": "",
+        "equipmentTag": "",
+        "latitude": "",
+        "longitude": "",
+        "otherAuthorities": ""
+      },
+      "investigationPeriod": {
+        "startedAt": "",
+        "endedAt": ""
+      },
+      "description": {
+        "technicalDescription": "",
+        "wellInformation": "",
+        "mitigatingMeasures": "",
+        "obtainedResults": "",
+        "expectedShortTermResults": ""
+      },
+      "consequences": {
+        "continuity": "",
+        "durationBand": "",
+        "people": {
+          "ownInjured": "",
+          "ownFatalities": "",
+          "contractorInjured": "",
+          "contractorFatalities": "",
+          "thirdInjured": "",
+          "thirdFatalities": ""
+        },
+        "releases": [],
+        "releaseStatus": "",
+        "releaseInterruptedAt": "",
+        "releaseExpectedAt": "",
+        "plumeBehavior": "",
+        "affectedEnvironments": "",
+        "solidWaste": "",
+        "otherConsequences": ""
+      },
+      "incidentHistory": "",
+      "protectionSystems": [],
+      "investigation": {
+        "methodologyDescription": "",
+        "relevantFacts": "",
+        "potentialConsequences": "",
+        "preventiveMeasures": "",
+        "sgsoCorrelation": "",
+        "corporateStandards": "",
+        "causalGroups": []
+      },
+      "measuresAdopted": "",
+      "lessonsLearned": "",
+      "emergencyResponseEvaluation": "",
+      "riskStudy": {
+        "asset": "",
+        "reviewRequired": "",
+        "technicalJustification": ""
+      },
+      "otherRelevantInformation": "",
+      "photoRegister": "",
+      "photos": [],
+      "photoIntro": "",
+      "conclusion": "",
+      "referencesText": "",
+      "attachmentsText": "",
+      "attachments": [],
+      "attachmentsMigrated": false,
+      "fieldReviews": {},
+      "validation": {
+        "issues": [
+          "CII não informado",
+          "Título do estudo não informado",
+          "Data e hora da ocorrência não informadas",
+          "Site ou instalação não informado",
+          "Descrição do evento incompleta",
+          "Classificação não concluída",
+          "Gestor definido conforme o nível pendente",
+          "Coordenador definido pendente",
+          "Quantidade mínima atendida pendente",
+          "Equipe da área do incidente representada pendente",
+          "Conhecimento da atividade presente pendente",
+          "Qualificação em investigação e causa-raiz pendente",
+          "Nenhuma causa-raiz identificada",
+          "O plano de ações está vazio",
+          "Existem causas-raiz sem ação vinculada",
+          "Emitente do RIA não informado",
+          "Descrição técnica do RIA incompleta",
+          "Período da investigação incompleto",
+          "Metodologia não descrita no RIA",
+          "Conclusão do RIA não informada",
+          "Estudo de risco não avaliado no RIA",
+          "Cronologia sem marcos",
+          "Fim do atendimento não informado",
+          "Local específico não informado"
+        ],
+        "lastResult": "pending"
+      },
+      "emissions": []
+    }
+  }
+}

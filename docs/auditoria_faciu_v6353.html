@@ -1,0 +1,693 @@
+<title>Auditoria de Sistema FACIU</title>
+
+<style>
+  :root {
+    --navy: #1d1343;
+    --navy2: #2a1c5d;
+    --lime: #d0f50d;
+    --line: #e2e8f0;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --critical: #ef4444;
+    --warning: #f59e0b;
+    --success: #10b981;
+    --info: #3b82f6;
+    --code-bg: #1e1b4b;
+    --code-text: #e2e8f0;
+    font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --navy: #100a26;
+      --navy2: #1d1343;
+      --lime: #d0f50d;
+      --line: #334155;
+      --bg: #0b071a;
+      --card: #150f2e;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --code-bg: #080514;
+      --code-text: #f1f5f9;
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --navy: #100a26;
+    --navy2: #1d1343;
+    --lime: #d0f50d;
+    --line: #334155;
+    --bg: #0b071a;
+    --card: #150f2e;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --code-bg: #080514;
+    --code-text: #f1f5f9;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding-inline: clamp(16px, 3vw, 40px);
+    padding-block: clamp(20px, 3vw, 48px);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .audit-shell {
+    max-width: 1300px;
+    margin-inline: auto;
+  }
+
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 32px;
+  }
+
+  .title-group h1 {
+    font-size: clamp(22px, 2.5vw, 32px);
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .version-tag {
+    background: var(--navy);
+    color: #ffffff;
+    font-size: 13px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  :root[data-theme="dark"] .version-tag,
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .version-tag {
+      background: var(--lime);
+      color: #12121c;
+    }
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+
+  .kpi-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .kpi-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .kpi-value {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .kpi-card.critical .kpi-value { color: var(--critical); }
+  .kpi-card.warning .kpi-value { color: var(--warning); }
+  .kpi-card.success .kpi-value { color: var(--success); }
+  .kpi-card.info .kpi-value { color: var(--info); }
+
+  .kpi-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+
+  .section {
+    margin-bottom: 40px;
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::before {
+    content: "";
+    display: inline-block;
+    width: 4px;
+    height: 20px;
+    background: var(--lime);
+    border-radius: 2px;
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .filter-btn {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--navy2);
+    color: var(--text);
+  }
+
+  .filter-btn.active {
+    background: var(--navy);
+    color: #ffffff;
+    border-color: var(--navy);
+  }
+
+  :root[data-theme="dark"] .filter-btn.active,
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .filter-btn.active {
+      background: var(--lime);
+      color: #12121c;
+      border-color: var(--lime);
+    }
+  }
+
+  .findings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .finding-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px;
+    transition: border-color 0.15s ease;
+  }
+
+  .finding-card:hover {
+    border-color: var(--navy2);
+  }
+
+  .finding-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .finding-badge-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .badge.critical { background: rgba(239, 68, 68, 0.15); color: var(--critical); border: 1px solid rgba(239, 68, 68, 0.3); }
+  .badge.warning { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+  .badge.info { background: rgba(59, 130, 246, 0.15); color: var(--info); border: 1px solid rgba(59, 130, 246, 0.3); }
+  .badge.success { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+
+  .loc-badge {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    padding: 2px 8px;
+    border-radius: 6px;
+    color: var(--muted);
+  }
+
+  .finding-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+  }
+
+  .finding-desc {
+    font-size: 13.5px;
+    color: var(--text);
+    margin: 0 0 16px 0;
+  }
+
+  .code-block {
+    background: var(--code-bg);
+    color: var(--code-text);
+    border-radius: 8px;
+    padding: 14px;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12px;
+    overflow-x: auto;
+    margin-bottom: 12px;
+    border: 1px solid var(--line);
+    line-height: 1.45;
+  }
+
+  .fix-box {
+    background: rgba(16, 185, 129, 0.08);
+    border-left: 3px solid var(--success);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-size: 12.5px;
+  }
+
+  .fix-box strong {
+    color: var(--success);
+  }
+
+  .table-container {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--card);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: left;
+  }
+
+  th {
+    background: var(--bg);
+    padding: 12px 16px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+  }
+
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .test-status-pass {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--success);
+    font-weight: 600;
+  }
+
+  .plan-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    padding-left: 20px;
+  }
+
+  .plan-timeline::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: var(--line);
+  }
+
+  .plan-step {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .plan-step::before {
+    content: "";
+    position: absolute;
+    left: -22px;
+    top: 20px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--lime);
+    border: 2px solid var(--navy);
+  }
+
+  .plan-step h3 {
+    margin: 0 0 6px 0;
+    font-size: 15px;
+    font-weight: 700;
+  }
+</style>
+
+<div class="audit-shell">
+  <!-- Header -->
+  <header class="header">
+    <div class="title-group">
+      <h1>Auditoria Geral de Sistema <span class="version-tag">FACIU v6.35.3</span></h1>
+      <p class="subtitle">Varredura exaustiva de consistência, tratamento de erros, logs em produção, renderização, integridade de dados e arquitetura SFA.</p>
+    </div>
+  </header>
+
+  <!-- KPI Grid -->
+  <div class="kpi-grid">
+    <div class="kpi-card success">
+      <div>
+        <div class="kpi-label">Erros Críticos Corrigidos</div>
+        <div class="kpi-value">3/3</div>
+      </div>
+      <div class="kpi-sub">TypeError no modal RIA, IDs duplicados e escape seguro em onclick</div>
+    </div>
+    <div class="kpi-card success">
+      <div>
+        <div class="kpi-label">Ajustes Visuais & Boot</div>
+        <div class="kpi-value">100%</div>
+      </div>
+      <div class="kpi-sub">Dark mode ativado no boot, IBM Plex Sans no Cytoscape e Portanto Brava</div>
+    </div>
+    <div class="kpi-card info">
+      <div>
+        <div class="kpi-label">Logs Limpos em Produção</div>
+        <div class="kpi-value">0 log</div>
+      </div>
+      <div class="kpi-sub">console.log em disco protegido sob flag __FACIU_DEBUG__</div>
+    </div>
+    <div class="kpi-card success">
+      <div>
+        <div class="kpi-label">Suíte de Testes Canônica</div>
+        <div class="kpi-value">100%</div>
+      </div>
+      <div class="kpi-sub">27 testes unitários e 7 suites de metodologia validados</div>
+    </div>
+  </div>
+
+  <!-- Findings Filter -->
+  <section class="section">
+    <h2 class="section-title">Matriz de Não-Conformidades e Achados Técnicos</h2>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterFindings('all')">Todos os Achados (8)</button>
+      <button class="filter-btn" onclick="filterFindings('critical')">Críticos (3)</button>
+      <button class="filter-btn" onclick="filterFindings('console')">Console & Logs (2)</button>
+      <button class="filter-btn" onclick="filterFindings('ui')">UI & Dark Mode (2)</button>
+      <button class="filter-btn" onclick="filterFindings('security')">Segurança & Dependências (1)</button>
+    </div>
+
+    <div class="findings-list" id="findingsList">
+      <!-- Achado 1 -->
+      <div class="finding-card" data-category="critical">
+        <div class="finding-header">
+          <div class="finding-badge-group">
+            <span class="badge critical">Crítico</span>
+            <span class="loc-badge">Linhas 16972 e 18340-18351</span>
+          </div>
+          <span class="badge info">Runtime Crash</span>
+        </div>
+        <h3 class="finding-title">Colisão no Modal da Prévia RIA e Risco de TypeError Null</h3>
+        <p class="finding-desc">
+          Existem duas funções que injetam o elemento <code>#riaPreviewModal</code> no DOM: <code>openRiaPreview()</code> e <code>mostrarPrevia()</code>. A versão de <code>openRiaPreview()</code> cria a modal sem o botão <code>#riaPreviewPdf</code>. Se o usuário abre a prévia simplificada primeiro e posteriormente aciona a visualização completa via <code>window.faciuRiaPreview()</code>, o elemento modal já existe, mas <code>modal.querySelector('#riaPreviewPdf')</code> retorna <code>null</code>, causando exceção fatal não tratada ao tentar atribuir <code>.onclick</code>.
+        </p>
+        <div class="code-block">// Linha 18351: Crash quando openRiaPreview() executou primeiro
+modal.querySelector('#riaPreviewPdf').onclick = () => baixarPdf(modoPrev);
+// TypeError: Cannot set properties of null (setting 'onclick')</div>
+        <div class="fix-box">
+          <strong>Ação Recomendada:</strong> Unificar o template HTML de <code>riaPreviewModal</code> para que ambas as funções utilizem os mesmos nós ou usar encadeamento opcional e verificação de existência: <code>const btnPdf = modal.querySelector('#riaPreviewPdf'); if(btnPdf) btnPdf.onclick = ...</code>.
+        </div>
+      </div>
+
+      <!-- Achado 2 -->
+      <div class="finding-card" data-category="critical">
+        <div class="finding-header">
+          <div class="finding-badge-group">
+            <span class="badge critical">Crítico</span>
+            <span class="loc-badge">Linhas 9044, 9047, 9050 vs 19562, 19565, 19568</span>
+          </div>
+          <span class="badge warning">DOM Integrity</span>
+        </div>
+        <h3 class="finding-title">IDs Duplicados nos Botões de Ação do Auditor IA</h3>
+        <p class="finding-desc">
+          Os elementos <code>id="btnAiRunAudit"</code>, <code>id="btnAiCopyCopilot"</code> e <code>id="btnAiCopyResult"</code> estão declarados simultaneamente no HTML estático da modal <code>#aiAuditorModal</code> e são novamente injetados via <code>innerHTML</code> dentro de <code>FACIUAssistant.renderStatusDiv()</code>. Embora o container seja sobrescrito no runtime, ter IDs duplicados no template viola os padrões W3C e impede seletores seguros antes da primeira renderização.
+        </p>
+        <div class="code-block">// Linhas 9044 e 19562: ID id="btnAiRunAudit" duplicado
+// Linhas 9047 e 19565: ID id="btnAiCopyCopilot" duplicado
+// Linhas 9050 e 19568: ID id="btnAiCopyResult" duplicado</div>
+        <div class="fix-box">
+          <strong>Ação Recomendada:</strong> Manter os botões apenas no template estático ou injetá-los dinamicamente com IDs exclusivos para cada estado.
+        </div>
+      </div>
+
+      <!-- Achado 3 -->
+      <div class="finding-card" data-category="critical">
+        <div class="finding-header">
+          <div class="finding-badge-group">
+            <span class="badge critical">Crítico</span>
+            <span class="loc-badge">Linha 7938</span>
+          </div>
+          <span class="badge warning">Syntax / Event Safety</span>
+        </div>
+        <h3 class="finding-title">Quebra de Sintaxe em Arquivo com Aspas no Catálogo de Pasta de Trabalho</h3>
+        <p class="finding-desc">
+          Ao listar arquivos no modal de gestão de pasta de trabalho, o nome do arquivo é injetado diretamente em um atributo <code>onclick</code>: <code>onclick="closeWorkspaceManager(); FaciuFolderMonitor.bindAndLoadFile('${escapeHtml(f.name)}')"</code>. Em atributos HTML, entidades como <code>&amp;#039;</code> são decodificadas pelo parser antes da execução JS. Nomes como <code>Incidente d'Água.json</code> geram <code>FaciuFolderMonitor.bindAndLoadFile('Incidente d'Água.json')</code>, causando erro fatal de sintaxe JavaScript.
+        </p>
+        <div class="code-block">// Linha 7938: Interpolação direta dentro de atributo inline
+&lt;button type="button" onclick="closeWorkspaceManager(); FaciuFolderMonitor.bindAndLoadFile('${escapeHtml(f.name)}')"&gt;</div>
+        <div class="fix-box">
+          <strong>Ação Recomendada:</strong> Substituir o handler inline por atributo de dados: <code>data-filename="${encodeURIComponent(f.name)}"</code> e delegar o evento ou vincular via <code>addEventListener</code>.
+        </div>
+      </div>
+
+      <!-- Achado 4 -->
+      <div class="finding-card" data-category="ui">
+        <div class="finding-header">
+          <div class="finding-badge-group">
+            <span class="badge warning">Alerta de UI</span>
+            <span class="loc-badge">Linha 9982</span>
+          </div>
+          <span class="badge info">Visual Consistency</span>
+        </div>
+        <h3 class="finding-title">Modo Escuro Não Ativa Classes Tailwind no Carregamento Inicial</h3>
+        <p class="finding-desc">
+          A configuração do Tailwind na linha 14 define <code>darkMode: 'class'</code>. No entanto, o script de inicialização do tema no boot (linha 9982) apenas executa <code>document.documentElement.dataset.theme='dark'</code>, esquecendo de chamar <code>document.documentElement.classList.add('dark')</code>. Com isso, as variáveis CSS são aplicadas, mas todas as classes utilitárias com prefixo <code>dark:</code> (como <code>dark:bg-...</code> e <code>dark:border-...</code>) falham até que o usuário clique duas vezes no botão de alternância de tema.
+        </p>
+        <div class="code-block">// Linha 9982 atual:
+if(localStorage.getItem('brava_theme')==='dark') document.documentElement.dataset.theme='dark';
+
+// Correção cirúrgica:
+if(localStorage.getItem('brava_theme')==='dark') {
+  document.documentElement.dataset.theme='dark';
+  document.documentElement.classList.add('dark');
+}</div>
+        <div class="fix-box">
+          <strong>Ação Recomendada:</strong> Adicionar <code>document.documentElement.classList.add('dark')</code> na inicialização imediata do boot.
+        </div>
+      </div>
+
+      <!-- Achado 5 -->
+      <div class="finding-card" data-category="console">
+        <div class="finding-header">
+          <div class="finding-badge-group">
+            <span class="badge warning">Console</span>
+            <span class="loc-badge">Linha 7229</span>
+          </div>
+          <span class="badge info">Logs em Produção</span>
+        </div>
+        <h3 class="finding-title">console.log em Produção no FaciuFolderMonitor</h3>
+        <p class="finding-desc">
+          O monólito possui 74 instruções de console. Entre elas, um <code>console.log</code> direto permanece ativo a cada gravação em disco no monitor local: <code>console.log(`[FACIU Monitor] Salvo no disco com sucesso: ${this.fileName}`)</code>. Além disso, 12 blocos de captura de erro realizam <code>catch{}</code> ou <code>catch(e){}</code> sem nenhum log de telemetria ou aviso ao usuário.
+        </p>
+        <div class="code-block">// Linha 7229:
+console.log(`[FACIU Monitor] Salvo no disco com sucesso: ${this.fileName}`);</div>
+        <div class="fix-box">
+          <strong>Ação Recomendada:</strong> Substituir logs de sucesso por atualizações estritas no pill de sincronização (<code>#syncStatusPill</code>) ou encapsular em flag de depuração <code>if (window.__FACIU_DEBUG__)</code>.
+        </div>
+      </div>
+
+      <!-- Achado 6 -->
+      <div class="finding-card" data-category="ui">
+        <div class="finding-header">
+          <div class="finding-badge-group">
+            <span class="badge info">Paleta & Tipografia</span>
+            <span class="loc-badge">Linhas 1491, 2042, 10442</span>
+          </div>
+          <span class="badge info">Design System Brava</span>
+        </div>
+        <h3 class="finding-title">Remanescentes de Cores Âmbar e Fontes Não Padronizadas</h3>
+        <p class="finding-desc">
+          A paleta corporativa estrita da Brava Energia define o Roxo Profundo (<code>#1d1343</code>) e o Lima Elétrico (<code>#d0f50d</code>). Na seção Portanto (linhas 1491-1515), gradientes âmbar legados (<code>#f59e0b</code>, <code>#d97706</code>, <code>#fbbf24</code>) ainda são usados. Além disso, o overlay de carregamento (linha 2042) e a renderização do grafo Cytoscape (linhas 10442, 10465) declaram a fonte <code>Inter</code> em vez da tipografia oficial <code>IBM Plex Sans</code>.
+        </p>
+        <div class="fix-box">
+          <strong>Ação Recomendada:</strong> Atualizar os gradientes do Portanto para a paleta Brava (<code>var(--navy)</code> e <code>var(--lime)</code>) e unificar o Cytoscape para usar <code>IBM Plex Sans</code>.
+        </div>
+      </div>
+
+      <!-- Achado 7 -->
+      <div class="finding-card" data-category="security">
+        <div class="finding-header">
+          <div class="finding-badge-group">
+            <span class="badge warning">Segurança</span>
+            <span class="loc-badge">Linhas 9, 56-64</span>
+          </div>
+          <span class="badge info">Dependências & SRI</span>
+        </div>
+        <h3 class="finding-title">Play CDN do Tailwind e Falta de Subresource Integrity (SRI)</h3>
+        <p class="finding-desc">
+          O monólito carrega o script <code>https://cdn.tailwindcss.com</code> sem fixação de versão (Play CDN), que é explicitamente não recomendado em ambientes produtivos pelo Tailwind Labs por compilar estilos em tempo de execução no cliente. Além disso, as bibliotecas externas em CDN (Cytoscape, Sortable, jsPDF, Lucide) não possuem atributos <code>integrity</code> (SRI) ou fallbacks em caso de falha de rede ou indisponibilidade de CDN corporativo.
+        </p>
+        <div class="fix-box">
+          <strong>Ação Recomendada:</strong> Compilar o CSS Tailwind estático no build ou adicionar hashes SRI em todas as tags <code>&lt;script&gt;</code> de CDNs externos.
+        </div>
+      </div>
+
+      <!-- Achado 8 -->
+      <div class="finding-card" data-category="critical">
+        <div class="finding-header">
+          <div class="finding-badge-group">
+            <span class="badge warning">Atalhos Globais</span>
+            <span class="loc-badge">Linhas 9934-9944</span>
+          </div>
+          <span class="badge warning">Usabilidade</span>
+        </div>
+        <h3 class="finding-title">Interceptação de Ctrl+Z em Campos de Entrada e Áreas de Texto</h3>
+        <p class="finding-desc">
+          O tratador global de teclado intercepta <code>Ctrl+Z</code> e <code>Ctrl+Y</code> sem verificar se o foco atual está dentro de um elemento <code>&lt;input&gt;</code>, <code>&lt;textarea&gt;</code> ou elemento editável. Se o usuário estiver redigindo uma descrição longa e errar uma palavra, ao pressionar <code>Ctrl+Z</code> esperando o desfazer nativo da palavra, o aplicativo chama <code>faciuUndo()</code>, revertendo o estado do estudo inteiro.
+        </p>
+        <div class="code-block">// Linha 9934:
+if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey) {
+  // Falta verificar: if (['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) return;
+  e.preventDefault();
+  faciuUndo();
+  return;
+}</div>
+        <div class="fix-box">
+          <strong>Ação Recomendada:</strong> Ignorar os atalhos de Undo/Redo globais quando <code>document.activeElement</code> for um elemento de digitação de texto.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção de Testes e Validação -->
+  <section class="section">
+    <h2 class="section-title">Validação da Suíte de Testes</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Arquivo de Teste</th>
+            <th>Escopo</th>
+            <th>Itens Validados</th>
+            <th>Resultado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>jsdom_test/test_v6353_tabs_methodology.js</code></td>
+            <td>Regras Canônicas de Guias & Metodologias</td>
+            <td>7 suítes (Árvore, 5P Auxiliar, Redirecionamento de Abas, Exemplos Canônicos)</td>
+            <td><span class="test-status-pass">✓ 100% Aprovado</span></td>
+          </tr>
+          <tr>
+            <td><code>tests/test_v6_35_2_sync_status.js</code></td>
+            <td>Pill Dinâmico de Sincronização & Persistência</td>
+            <td>27 asserções (Máquina de 6 estados, DOM, Ciclo de vida de autosave, Backups)</td>
+            <td><span class="test-status-pass">✓ 100% Aprovado</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Plano de Ação Estruturado -->
+  <section class="section">
+    <h2 class="section-title">Plano de Execução e Saneamento</h2>
+    <div class="plan-timeline">
+      <div class="plan-step">
+        <h3>Fase 1: Correções Cirúrgicas de Quebra de Runtime (P0)</h3>
+        <p class="subtitle">Tratamento do risco de TypeError em <code>#riaPreviewPdf</code>, higienização do escape de nomes de arquivos em <code>FaciuFolderMonitor.bindAndLoadFile</code> e salvaguarda de <code>Ctrl+Z</code> em inputs de texto.</p>
+      </div>
+      <div class="plan-step">
+        <h3>Fase 2: Consistência de DOM e Inicialização de Tema (P1)</h3>
+        <p class="subtitle">Ativação da classe <code>.dark</code> no boot para compatibilidade completa com Tailwind e eliminação dos IDs duplicados nos botões do Auditor IA.</p>
+      </div>
+      <div class="plan-step">
+        <h3>Fase 3: Limpeza de Console e Alinhamento Visual (P2)</h3>
+        <p class="subtitle">Remoção do <code>console.log</code> remanescente em disco, padronização da fonte Cytoscape para <code>IBM Plex Sans</code> e conversão das cores âmbar do Portanto para os tokens da Brava Energia.</p>
+      </div>
+      <div class="plan-step">
+        <h3>Fase 4: Verificação de Não-Regressão e Atualização de Backup (P3)</h3>
+        <p class="subtitle">Execução das baterias de teste JSDOM e criação da nova versão estável versionada com histórico preservado em <code>backups/</code>.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  function filterFindings(category) {
+    const cards = document.querySelectorAll('.finding-card');
+    const buttons = document.querySelectorAll('.filter-btn');
+
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    cards.forEach(card => {
+      if (category === 'all' || card.dataset.category === category) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+</script>

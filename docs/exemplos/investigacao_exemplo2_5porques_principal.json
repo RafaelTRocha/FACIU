@@ -1,0 +1,685 @@
+{
+  "fileType": "brava-investigacao-causas",
+  "schemaVersion": "1.1",
+  "appVersion": "6.31.2",
+  "exportedAt": "2026-09-24T22:27:00Z",
+  "study": {
+    "versao": "6.31.2",
+    "mainMethodology": "whys",
+    "whysPrimary": {
+      "id": "why_pri_p3101b_pump",
+      "code": "5P-01",
+      "title": "5 Porquês: Parada Não Planejada da Bomba de Injeção de Químicos (P-3101B)",
+      "problem": "Desarme por Sobrecarga Térmica da Bomba P-3101B",
+      "mode": "independent",
+      "link": {
+        "mode": "independent",
+        "nodeId": "",
+        "investigationCii": "CII-2026-MN-019",
+        "investigationTitle": "Parada Não Planejada da Bomba P-3101B"
+      },
+      "status": "completed",
+      "createdAt": "2026-09-10T14:30:00.000Z",
+      "updatedAt": "2026-09-11T11:00:00.000Z",
+      "steps": [
+        {
+          "id": "ws_p3101b_1",
+          "order": 1,
+          "question": "Por que a bomba dosadora P-3101B desarmou durante a operação?",
+          "answer": "Porque o relé térmico do motor elétrico atuou por corrente elevada de sobrecarga mecânica.",
+          "rationale": "Registro do painel elétrico acusou desarme por I > 115% da corrente nominal por mais de 30 segundos.",
+          "notes": "Motor de 7.5 kW.",
+          "result": "continue"
+        },
+        {
+          "id": "ws_p3101b_2",
+          "order": 2,
+          "question": "Por que ocorreu sobrecarga mecânica na bomba dosadora?",
+          "answer": "Porque a contrapressão na linha de descarga aumentou de 45 bar para 85 bar devido à restrição do fluxo de injeção.",
+          "rationale": "Manômetro local PI-3101-04 indicou pico de pressão prévio ao desarme.",
+          "notes": "Válvula de alívio não abriu adequadamente.",
+          "result": "continue"
+        },
+        {
+          "id": "ws_p3101b_3",
+          "order": 3,
+          "question": "Por que ocorreu restrição de fluxo na linha de descarga?",
+          "answer": "Porque a válvula de retenção de descarga travou parcialmente aberta com incrustação e polimerização de produto químico.",
+          "rationale": "Desmontagem da válvula no workshop revelou presença de goma espessa aderida à sede esférica.",
+          "notes": "Produto sequestrante de H2S.",
+          "result": "continue"
+        },
+        {
+          "id": "ws_p3101b_4",
+          "order": 4,
+          "question": "Por que o produto químico polimerizou no interior da válvula?",
+          "answer": "Porque o lote do sequestrante de H2S estocado no tanque diário sofreu degradação térmica e oxidação prévia ao abastecimento.",
+          "rationale": "Análise laboratorial de amostra do tanque diário indicou viscosidade cinemática 3x acima do limite de especificação do produto.",
+          "notes": "Armazenamento prolongado no convés.",
+          "result": "continue"
+        },
+        {
+          "id": "ws_p3101b_5",
+          "order": 5,
+          "question": "Por que o produto degradado e oxidado foi alimentado no sistema sem detecção?",
+          "answer": "Porque o protocolo de recebimento offshore de produtos químicos não previa teste obrigatório de viscosidade e aparência antes do descarregamento para tanques de consumo.",
+          "rationale": "A sistemática aceitava o Certificado de Análise da fábrica sem checagem de integridade após o transporte marítimo.",
+          "notes": "Falha no controle de recebimento de insumos críticos.",
+          "result": "cause-candidate"
+        }
+      ],
+      "causes": [
+        {
+          "id": "5pc_p3101b_root",
+          "order": 1,
+          "type": "root",
+          "title": "Ausência de Controle de Qualidade no Recebimento Offshore de Insumos Químicos Críticos",
+          "description": "Falta de procedimento operacional para amostragem e teste de viscosidade/oxidação prévio à estocagem de sequestrantes instáveis.",
+          "status": "confirmed",
+          "sgsoCorrelation": "SGSO 08 - Procedimentos Operacionais",
+          "corporateStandard": "PAD-CORP-QUI-002",
+          "rationale": "Causa fundamental da entrada do fluido degradado no processo.",
+          "actions": [
+            "act_w1",
+            "act_w2"
+          ]
+        }
+      ],
+      "actions": [
+        {
+          "id": "act_w1",
+          "causeId": "5pc_p3101b_root",
+          "causaRaizId": "5pc_p3101b_root",
+          "title": "Instituir Protocolo de Teste de Viscosidade no Recebimento Offshore",
+          "label": "Instituir Protocolo de Teste de Viscosidade no Recebimento Offshore",
+          "responsible": "Aline Vasconcelos",
+          "responsavel": "Aline Vasconcelos",
+          "dueDate": "2026-10-20",
+          "prazo": "2026-10-20",
+          "status": "Em andamento",
+          "actionType": "Preventiva",
+          "details": "Criar formulário de inspeção e teste rápido com viscosímetro de campo na chegada de insumos químicos à plataforma antes da transferência para tanques diários",
+          "desc": "Criar formulário de inspeção e teste rápido com viscosímetro de campo na chegada de insumos químicos à plataforma antes da transferência para tanques diários",
+          "effectivenessCriterion": "100% dos lotes de químicos críticos testados com registro formal arquivado no LIMS",
+          "verificationResponsible": "Marcelo Farias",
+          "verificationDate": "2026-11-10",
+          "implementationReference": "PAD-CORP-QUI-002-REV03",
+          "effectivenessResult": "Pendente",
+          "effectivenessNotes": "",
+          "linkedRefIds": [
+            "ref_lab_01"
+          ]
+        },
+        {
+          "id": "act_w2",
+          "causeId": "5pc_p3101b_root",
+          "causaRaizId": "5pc_p3101b_root",
+          "title": "Revisar Plano de Manutenção Preventiva das Válvulas de Retenção de Injeção",
+          "label": "Revisar Plano de Manutenção Preventiva das Válvulas de Retenção de Injeção",
+          "responsible": "Julio Cesar Nogueira",
+          "responsavel": "Julio Cesar Nogueira",
+          "dueDate": "2026-10-15",
+          "prazo": "2026-10-15",
+          "status": "Pendente",
+          "actionType": "Corretiva",
+          "details": "Reduzir a periodicidade de inspeção e limpeza interna das válvulas de dosagem de sequestrante de 6 para 3 meses",
+          "desc": "Reduzir a periodicidade de inspeção e limpeza interna das válvulas de dosagem de sequestrante de 6 para 3 meses",
+          "effectivenessCriterion": "Zero falhas por colmatação de válvulas de retenção nos próximos 12 meses",
+          "verificationResponsible": "Marcelo Farias",
+          "verificationDate": "2026-11-01",
+          "implementationReference": "PM-P50-QUI-044",
+          "effectivenessResult": "Pendente",
+          "effectivenessNotes": "",
+          "linkedRefIds": []
+        }
+      ],
+      "references": [],
+      "identity": {
+        "code": "5P-01",
+        "title": "5 Porquês: Parada Não Planejada da Bomba P-3101B",
+        "owner": "Julio Cesar Nogueira",
+        "participants": [
+          "Aline Vasconcelos",
+          "Marcelo Farias"
+        ],
+        "createdAt": "2026-09-10T14:30:00.000Z",
+        "updatedAt": "2026-09-11T11:00:00.000Z",
+        "status": "completed"
+      },
+      "context": {
+        "problem": "Desarme por Sobrecarga Térmica da Bomba P-3101B",
+        "impact": "Interrupção de 4 horas na dosagem de sequestrante no manifold de produção",
+        "expectedCondition": "Injeção estável a 45 bar com viscosidade de 15 cSt",
+        "observedCondition": "Pico de pressão a 85 bar por polimerização na válvula de retenção",
+        "scope": "Sistema de Injeção de Químicos - Plataforma P-50",
+        "area": "Tratamento de Gás",
+        "location": "Skid de Injeção Química"
+      },
+      "conclusionData": {
+        "summary": "A parada da bomba P-3101B foi provocada pela restrição de fluxo por polimerização do sequestrante de H2S, permitida pela ausência de barreira de controle analítico na recepção de insumos químicos a bordo.",
+        "limitations": "Sem impacto no teor de H2S do gás exportado devido à entrada imediata da bomba reserva P-3101A."
+      },
+      "audit": [],
+      "schemaVersion": "2.0"
+    },
+    "whysAuxiliary": [],
+    "triagem": {
+      "cii": "CII-2026-MN-019",
+      "titulo": "Parada Não Planejada da Bomba de Injeção de Sequestrante de H2S (P-3101B)",
+      "ocorr": "2026-09-10T14:10",
+      "reg": "2026-09-10T14:30",
+      "site": "Ativo Parque das Conchas - Plataforma P-50",
+      "local": "Skid de Injeção Química - Convés Principal",
+      "atividade": "Injeção contínua de sequestrante químico de H2S em linha de alta pressão",
+      "pt": "N/A - Operação de Rotina",
+      "regpor": "Aline Vasconcelos (Supervisora de Química e Meio Ambiente)",
+      "contratada": "N/A - Operação Própria Brava Energia",
+      "descricao": "Durante operação normal de tratamento, a bomba dosadora P-3101B desarmou por sobrecarga elétrica decorrente de sobrepressão gerada por polimerização de produto químico na válvula de retenção de descarga. A bomba reserva foi alinhada em 15 minutos.",
+      "tipo": "real",
+      "dim": "cat18",
+      "tipoc": "m07-r19",
+      "criterio": "m07-r19-s1",
+      "sev": 1,
+      "nivel": 1,
+      "metodos": [
+        "whys"
+      ]
+    },
+    "classificacaoV2": {
+      "matrixRevision": "07",
+      "assessments": [
+        {
+          "categoryId": "cat18",
+          "categoryLabel": "Interrupção das Operações",
+          "occurrenceId": "m07-r19",
+          "occurrenceLabel": "Parada não programada de instalação ou equipamento de processo",
+          "criteriaId": "m07-r19-s1",
+          "criteriaText": "• Parada parcial da produção por período inferior a 24 horas sem impacto contratual.",
+          "severity": 1,
+          "matrixRevision": "07"
+        }
+      ],
+      "calculatedSeverity": 1,
+      "reviewedSeverity": null,
+      "finalSeverity": 1,
+      "overrideReason": "",
+      "legacy": false
+    },
+    "commissionExceptions": {},
+    "externalReferences": [
+      {
+        "id": "ref_lab_01",
+        "externalSystem": "LIMS Laboratório",
+        "title": "Boletim Analítico LAB-2026-904",
+        "reference": "Amostragem Lote SEQ-8841",
+        "status": "available",
+        "linkedNodeIds": [
+          "act_w1"
+        ]
+      }
+    ],
+    "chronology": [
+      {
+        "id": "chr_w1",
+        "dateTime": "2026-09-10T13:50",
+        "phase": "before",
+        "description": "Elevação gradual da contrapressão no manômetro de descarga da bomba P-3101B.",
+        "externalSource": "SDCD",
+        "externalReference": "PI-3101-04",
+        "linkedNodeId": "",
+        "endOfResponse": false,
+        "contextual": true,
+        "notes": "Operador de Painel observou pressão subindo."
+      },
+      {
+        "id": "chr_w2",
+        "dateTime": "2026-09-10T14:10",
+        "phase": "during",
+        "description": "Desarme do motor elétrico da bomba P-3101B por sobrecarga térmica.",
+        "externalSource": "CCM Elétrico",
+        "externalReference": "Relé Térmico",
+        "linkedNodeId": "",
+        "endOfResponse": false,
+        "contextual": true,
+        "notes": "Motor desarmou por sobrecorrente prolongada."
+      },
+      {
+        "id": "chr_w3",
+        "dateTime": "2026-09-10T14:25",
+        "phase": "during",
+        "description": "Partida e alinhamento manual da bomba dosadora reserva P-3101A.",
+        "externalSource": "Log de Operação",
+        "externalReference": "Turno T1",
+        "linkedNodeId": "",
+        "endOfResponse": false,
+        "contextual": true,
+        "notes": "Vazão de sequestrante normalizada."
+      },
+      {
+        "id": "chr_w4",
+        "dateTime": "2026-09-10T16:30",
+        "phase": "after",
+        "description": "Desmontagem da retenção, constatação de produto polimerizado e encerramento da intervenção.",
+        "externalSource": "OS Manutenção",
+        "externalReference": "OS-2026-44120",
+        "linkedNodeId": "act_w1",
+        "endOfResponse": true,
+        "contextual": true,
+        "notes": "Fim do atendimento e liberação para análise laboratorial."
+      }
+    ],
+    "conclusion": {
+      "summary": "O desarme da bomba foi causado pelo travamento da retenção por polimerização do sequestrante, originado pela falta de teste de recepção offshore.",
+      "contributors": "Exposição dos contêineres a calor e umidade durante o transporte de suprimento marítimo.",
+      "roots": "Ausência de protocolo analítico para recebimento e liberação de insumos químicos instáveis a bordo.",
+      "actions": "Criação de protocolo de inspeção rápida de viscosidade pré-tanque e revisão da especificação de embalagem.",
+      "limitations": "Sem liberação ao meio ambiente e sem impacto no atendimento de especificação de exportação de óleo e gás.",
+      "references": "Boletim LAB-2026-904, Procedimento PAD-CORP-QUI-002.",
+      "generated": false
+    },
+    "equipe": [
+      {
+        "nome": "Julio Cesar Nogueira",
+        "func": "Coordenador da Comissão",
+        "area": "Manutenção e Integridade",
+        "qual": "Atende",
+        "commissionCoordinator": true,
+        "investigationManager": false,
+        "technicalKnowledge": true,
+        "rcaQualified": true,
+        "cipaRepresentative": false,
+        "areaRepresentative": true,
+        "contractorRepresentative": false
+      },
+      {
+        "nome": "Marcelo Farias",
+        "func": "Gerente da Instalação",
+        "area": "Operações",
+        "qual": "Atende",
+        "commissionCoordinator": false,
+        "investigationManager": true,
+        "technicalKnowledge": true,
+        "rcaQualified": true,
+        "cipaRepresentative": false,
+        "areaRepresentative": true,
+        "contractorRepresentative": false
+      },
+      {
+        "nome": "Aline Vasconcelos",
+        "func": "Supervisora de Química",
+        "area": "Química e Meio Ambiente",
+        "qual": "Atende",
+        "commissionCoordinator": false,
+        "investigationManager": false,
+        "technicalKnowledge": true,
+        "rcaQualified": true,
+        "cipaRepresentative": false,
+        "areaRepresentative": true,
+        "contractorRepresentative": false
+      }
+    ],
+    "tree": {
+      "nodes": [
+        {
+          "id": "act_w1",
+          "kind": "acao",
+          "label": "Instituir Protocolo de Teste de Viscosidade no Recebimento Offshore",
+          "title": "Instituir Protocolo de Teste de Viscosidade no Recebimento Offshore",
+          "desc": "Criar formulário de inspeção e teste rápido com viscosímetro de campo na chegada de insumos químicos à plataforma antes da transferência para tanques diários",
+          "details": "Criar formulário de inspeção e teste rápido com viscosímetro de campo na chegada de insumos químicos à plataforma antes da transferência para tanques diários",
+          "gate": null,
+          "root": false,
+          "estado": "",
+          "origem": "",
+          "justificativa": "",
+          "classificacao": "",
+          "responsavel": "Aline Vasconcelos",
+          "responsible": "Aline Vasconcelos",
+          "prazo": "2026-10-20",
+          "dueDate": "2026-10-20",
+          "status": "Proposta",
+          "causaRaizId": "5pc_p3101b_root",
+          "causeId": "5pc_p3101b_root",
+          "causaRaizIds": [
+            "5pc_p3101b_root"
+          ],
+          "studyId": "why_pri_p3101b_pump",
+          "actionType": "Preventiva",
+          "effectivenessCriterion": "100% dos lotes de químicos críticos testados com registro formal arquivado no LIMS",
+          "verificationDate": "2026-11-10",
+          "verificationResponsible": "Marcelo Farias",
+          "implementationReference": "PAD-CORP-QUI-002-REV03",
+          "effectivenessResult": "Pendente",
+          "effectivenessNotes": "",
+          "linkedRefIds": [
+            "ref_lab_01"
+          ]
+        },
+        {
+          "id": "act_w2",
+          "kind": "acao",
+          "label": "Revisar Plano de Manutenção Preventiva das Válvulas de Retenção de Injeção",
+          "title": "Revisar Plano de Manutenção Preventiva das Válvulas de Retenção de Injeção",
+          "desc": "Reduzir a periodicidade de inspeção e limpeza interna das válvulas de dosagem de sequestrante de 6 para 3 meses",
+          "details": "Reduzir a periodicidade de inspeção e limpeza interna das válvulas de dosagem de sequestrante de 6 para 3 meses",
+          "gate": null,
+          "root": false,
+          "estado": "",
+          "origem": "",
+          "justificativa": "",
+          "classificacao": "",
+          "responsavel": "Julio Cesar Nogueira",
+          "responsible": "Julio Cesar Nogueira",
+          "prazo": "2026-10-15",
+          "dueDate": "2026-10-15",
+          "status": "Proposta",
+          "causaRaizId": "5pc_p3101b_root",
+          "causeId": "5pc_p3101b_root",
+          "causaRaizIds": [
+            "5pc_p3101b_root"
+          ],
+          "studyId": "why_pri_p3101b_pump",
+          "actionType": "Corretiva",
+          "effectivenessCriterion": "Zero falhas por colmatação de válvulas de retenção nos próximos 12 meses",
+          "verificationDate": "2026-11-01",
+          "verificationResponsible": "Marcelo Farias",
+          "implementationReference": "PM-P50-QUI-044",
+          "effectivenessResult": "Pendente",
+          "effectivenessNotes": "",
+          "linkedRefIds": []
+        }
+      ],
+      "edges": []
+    },
+    "whys": [
+      {
+        "id": "why_pri_p3101b_pump",
+        "code": "5P-01",
+        "title": "5 Porquês: Parada Não Planejada da Bomba de Injeção de Químicos (P-3101B)",
+        "problem": "Desarme por Sobrecarga Térmica da Bomba P-3101B",
+        "mode": "independent",
+        "link": {
+          "mode": "independent",
+          "nodeId": "",
+          "investigationCii": "CII-2026-MN-019",
+          "investigationTitle": "Parada Não Planejada da Bomba P-3101B"
+        },
+        "status": "completed",
+        "createdAt": "2026-09-10T14:30:00.000Z",
+        "updatedAt": "2026-09-11T11:00:00.000Z",
+        "steps": [
+          {
+            "id": "ws_p3101b_1",
+            "order": 1,
+            "question": "Por que a bomba dosadora P-3101B desarmou durante a operação?",
+            "answer": "Porque o relé térmico do motor elétrico atuou por corrente elevada de sobrecarga mecânica.",
+            "rationale": "Registro do painel elétrico acusou desarme por I > 115% da corrente nominal por mais de 30 segundos.",
+            "notes": "Motor de 7.5 kW.",
+            "result": "continue"
+          },
+          {
+            "id": "ws_p3101b_2",
+            "order": 2,
+            "question": "Por que ocorreu sobrecarga mecânica na bomba dosadora?",
+            "answer": "Porque a contrapressão na linha de descarga aumentou de 45 bar para 85 bar devido à restrição do fluxo de injeção.",
+            "rationale": "Manômetro local PI-3101-04 indicou pico de pressão prévio ao desarme.",
+            "notes": "Válvula de alívio não abriu adequadamente.",
+            "result": "continue"
+          },
+          {
+            "id": "ws_p3101b_3",
+            "order": 3,
+            "question": "Por que ocorreu restrição de fluxo na linha de descarga?",
+            "answer": "Porque a válvula de retenção de descarga travou parcialmente aberta com incrustação e polimerização de produto químico.",
+            "rationale": "Desmontagem da válvula no workshop revelou presença de goma espessa aderida à sede esférica.",
+            "notes": "Produto sequestrante de H2S.",
+            "result": "continue"
+          },
+          {
+            "id": "ws_p3101b_4",
+            "order": 4,
+            "question": "Por que o produto químico polimerizou no interior da válvula?",
+            "answer": "Porque o lote do sequestrante de H2S estocado no tanque diário sofreu degradação térmica e oxidação prévia ao abastecimento.",
+            "rationale": "Análise laboratorial de amostra do tanque diário indicou viscosidade cinemática 3x acima do limite de especificação do produto.",
+            "notes": "Armazenamento prolongado no convés.",
+            "result": "continue"
+          },
+          {
+            "id": "ws_p3101b_5",
+            "order": 5,
+            "question": "Por que o produto degradado e oxidado foi alimentado no sistema sem detecção?",
+            "answer": "Porque o protocolo de recebimento offshore de produtos químicos não previa teste obrigatório de viscosidade e aparência antes do descarregamento para tanques de consumo.",
+            "rationale": "A sistemática aceitava o Certificado de Análise da fábrica sem checagem de integridade após o transporte marítimo.",
+            "notes": "Falha no controle de recebimento de insumos críticos.",
+            "result": "cause-candidate"
+          }
+        ],
+        "causes": [
+          {
+            "id": "5pc_p3101b_root",
+            "order": 1,
+            "type": "root",
+            "title": "Ausência de Controle de Qualidade no Recebimento Offshore de Insumos Químicos Críticos",
+            "description": "Falta de procedimento operacional para amostragem e teste de viscosidade/oxidação prévio à estocagem de sequestrantes instáveis.",
+            "status": "confirmed",
+            "sgsoCorrelation": "SGSO 08 - Procedimentos Operacionais",
+            "corporateStandard": "PAD-CORP-QUI-002",
+            "rationale": "Causa fundamental da entrada do fluido degradado no processo.",
+            "actions": [
+              "act_w1",
+              "act_w2"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "id": "act_w1",
+            "causeId": "5pc_p3101b_root",
+            "causaRaizId": "5pc_p3101b_root",
+            "title": "Instituir Protocolo de Teste de Viscosidade no Recebimento Offshore",
+            "label": "Instituir Protocolo de Teste de Viscosidade no Recebimento Offshore",
+            "responsible": "Aline Vasconcelos",
+            "responsavel": "Aline Vasconcelos",
+            "dueDate": "2026-10-20",
+            "prazo": "2026-10-20",
+            "status": "Proposta",
+            "actionType": "Preventiva",
+            "details": "Criar formulário de inspeção e teste rápido com viscosímetro de campo na chegada de insumos químicos à plataforma antes da transferência para tanques diários",
+            "desc": "Criar formulário de inspeção e teste rápido com viscosímetro de campo na chegada de insumos químicos à plataforma antes da transferência para tanques diários",
+            "effectivenessCriterion": "100% dos lotes de químicos críticos testados com registro formal arquivado no LIMS",
+            "verificationResponsible": "Marcelo Farias",
+            "verificationDate": "2026-11-10",
+            "implementationReference": "PAD-CORP-QUI-002-REV03",
+            "effectivenessResult": "Pendente",
+            "effectivenessNotes": "",
+            "linkedRefIds": [
+              "ref_lab_01"
+            ]
+          },
+          {
+            "id": "act_w2",
+            "causeId": "5pc_p3101b_root",
+            "causaRaizId": "5pc_p3101b_root",
+            "title": "Revisar Plano de Manutenção Preventiva das Válvulas de Retenção de Injeção",
+            "label": "Revisar Plano de Manutenção Preventiva das Válvulas de Retenção de Injeção",
+            "responsible": "Julio Cesar Nogueira",
+            "responsavel": "Julio Cesar Nogueira",
+            "dueDate": "2026-10-15",
+            "prazo": "2026-10-15",
+            "status": "Proposta",
+            "actionType": "Corretiva",
+            "details": "Reduzir a periodicidade de inspeção e limpeza interna das válvulas de dosagem de sequestrante de 6 para 3 meses",
+            "desc": "Reduzir a periodicidade de inspeção e limpeza interna das válvulas de dosagem de sequestrante de 6 para 3 meses",
+            "effectivenessCriterion": "Zero falhas por colmatação de válvulas de retenção nos próximos 12 meses",
+            "verificationResponsible": "Marcelo Farias",
+            "verificationDate": "2026-11-01",
+            "implementationReference": "PM-P50-QUI-044",
+            "effectivenessResult": "Pendente",
+            "effectivenessNotes": "",
+            "linkedRefIds": []
+          }
+        ],
+        "references": [],
+        "identity": {
+          "code": "5P-01",
+          "title": "5 Porquês: Parada Não Planejada da Bomba P-3101B",
+          "owner": "Julio Cesar Nogueira",
+          "participants": [
+            "Aline Vasconcelos",
+            "Marcelo Farias"
+          ],
+          "createdAt": "2026-09-10T14:30:00.000Z",
+          "updatedAt": "2026-09-11T11:00:00.000Z",
+          "status": "completed"
+        },
+        "context": {
+          "problem": "Desarme por Sobrecarga Térmica da Bomba P-3101B",
+          "impact": "Interrupção de 4 horas na dosagem de sequestrante no manifold de produção",
+          "expectedCondition": "Injeção estável a 45 bar com viscosidade de 15 cSt",
+          "observedCondition": "Pico de pressão a 85 bar por polimerização na válvula de retenção",
+          "scope": "Sistema de Injeção de Químicos - Plataforma P-50",
+          "area": "Tratamento de Gás",
+          "location": "Skid de Injeção Química"
+        },
+        "conclusionData": {
+          "summary": "A parada da bomba P-3101B foi provocada pela restrição de fluxo por polimerização do sequestrante de H2S, permitida pela ausência de barreira de controle analítico na recepção de insumos químicos a bordo.",
+          "limitations": "Sem impacto no teor de H2S do gás exportado devido à entrada imediata da bomba reserva P-3101A."
+        },
+        "audit": [],
+        "schemaVersion": "2.0"
+      }
+    ],
+    "audit": [
+      {
+        "id": "log_w_init",
+        "timestamp": "2026-09-10T14:30:00.000Z",
+        "action": "investigation.started",
+        "nodeId": "",
+        "summary": "Investigação 5 Porquês iniciada para CII-2026-MN-019",
+        "fields": []
+      }
+    ],
+    "step": 3,
+    "ria": {
+      "schemaVersion": 2,
+      "template": {
+        "code": "FORM-CORP-SMS-088",
+        "revision": "08"
+      },
+      "control": {
+        "status": "draft",
+        "reportNumber": "RIA-2026-019",
+        "preparedBy": "Julio Cesar Nogueira",
+        "reviewedBy": "Marcelo Farias",
+        "issuedAt": "",
+        "lastValidatedAt": "2026-09-19T18:00:00.000Z",
+        "revision": 0,
+        "dirtyAfterIssue": false
+      },
+      "initialData": {
+        "incidentDate": "2026-09-10",
+        "incidentTime": "14:10",
+        "records": {
+          "siso": "SISO-2026-1009",
+          "siema": "",
+          "idema": "",
+          "inema": "",
+          "semace": ""
+        },
+        "concessionaireName": "Brava Energia S.A.",
+        "concessionaireAddress": "Praia de Botafogo, 300 - Botafogo, Rio de Janeiro / RJ - CEP 22250-040",
+        "issuer": {
+          "name": "Julio Cesar Nogueira",
+          "position": "Coordenador de Manutenção",
+          "company": "Brava Energia",
+          "phone": "+55 21 99123-4567",
+          "email": "julio.nogueira@bravaenergia.com.br"
+        }
+      },
+      "communications": [],
+      "installation": {
+        "name": "Plataforma P-50",
+        "cnpj": "12.345.678/0002-71",
+        "imo": "9212345",
+        "anpCode": "BR-P50-019",
+        "anpAuthorization": "AUT-ANP-2023-14",
+        "explorationProductionContract": "CONTRATO-BC-100",
+        "equipmentTag": "P-3101B",
+        "latitude": "-22.5412",
+        "longitude": "-40.3214",
+        "otherAuthorities": ""
+      },
+      "investigationPeriod": {
+        "start": "2026-09-10",
+        "end": "2026-09-14"
+      },
+      "description": {
+        "technicalDescription": "Durante a operação contínua de injeção química na P-50, a bomba dosadora P-3101B desarmou por sobrecarga elétrica decorrente da retenção travada com produto polimerizado. A bomba reserva P-3101A foi acionada sem impacto na exportação.",
+        "wellInformation": "Sistema de injeção em manifold de produção de poços marítimos.",
+        "mitigatingMeasures": "Partida imediata da bomba reserva P-3101A e isolamento do cabeçote da P-3101B.",
+        "obtainedResults": "Continuidade operacional assegurada em menos de 15 minutos.",
+        "expectedShortTermResults": "Desmontagem, limpeza química e troca da sede da válvula de retenção."
+      },
+      "consequences": {
+        "continuity": "Parada de 4 horas da bomba principal sem interrupção de produção de óleo.",
+        "durationBand": "Inferior a 4 horas",
+        "people": {
+          "ownInjured": "0",
+          "ownFatalities": "0",
+          "contractorInjured": "0",
+          "contractorFatalities": "0",
+          "thirdInjured": "0",
+          "thirdFatalities": "0"
+        },
+        "releases": [],
+        "releaseStatus": "Não aplicável",
+        "releaseInterruptedAt": "",
+        "releaseExpectedAt": "",
+        "plumeBehavior": "Sem liberação ao meio externo.",
+        "affectedEnvironments": "Nenhum.",
+        "solidWaste": "0.5 kg de resíduo sólido de polímero recolhido em oficina.",
+        "otherConsequences": "Sem danos a terceiros ou multas ambientais."
+      },
+      "protectionSystems": [
+        {
+          "name": "Relé de Sobrecarga Térmica do CCM",
+          "assessment": "existed-worked",
+          "reason": "Desarmou o motor antes da queima dos enrolamentos por torque excessivo"
+        },
+        {
+          "name": "Bomba Reserva em Stand-by (P-3101A)",
+          "assessment": "existed-worked",
+          "reason": "Assumiu a dosagem sem perda de continuidade de tratamento do poço"
+        }
+      ],
+      "investigation": {
+        "methodologyDescription": "Metodologia dos 5 Porquês aplicada para análise causal de falha de equipamento de processo de Nível 1.",
+        "potentialConsequences": "Se a bomba reserva também falhasse, o gás exportado ultrapassaria a especificação de H2S exigindo queima em flare.",
+        "humanFactors": "Confiança cega no boletim do fabricante sem conferência de parâmetros físicos no desembarque offshore."
+      },
+      "measuresAdopted": "Substituição da válvula de retenção e dosagem assistida com acompanhamento horo-horário.",
+      "lessonsLearned": "Insumos químicos sujeitos à degradação térmica demandam controle rigoroso de prazo e testes rápidos de recebimento.",
+      "emergencyResponseEvaluation": "Atendimento de rotina executado pela própria equipe de operação e manutenção do ativo.",
+      "riskStudy": {
+        "asset": "Plataforma P-50 - Skid de Injeção Química",
+        "reviewRequired": "Sim",
+        "technicalJustification": "Revisão do procedimento operacional padrão de recepção de químicos e matriz de risco operacional."
+      },
+      "otherRelevantInformation": "Investigação concluída com plano de ação em execução.",
+      "photoRegister": "Registros macroscópicos da goma polimerizada anexados ao laudo laboratorial.",
+      "photos": [],
+      "photoIntro": "",
+      "conclusion": "A comissão técnica concluiu que a falha da bomba P-3101B foi desencadeada pelo travamento da válvula de retenção por polímero viscoso decorrente da falta de barreira de controle analítico na recepção de insumos químicos na unidade marítima.",
+      "referencesText": "Boletim LAB-2026-904, Procedimento PAD-CORP-QUI-002, Manual de Operação P-50.",
+      "attachmentsText": "Anexo 1: Ficha dos 5 Porquês; Anexo 2: Laudo Analítico LAB-2026-904.",
+      "attachments": [],
+      "attachmentsMigrated": true,
+      "fieldReviews": {},
+      "validation": {
+        "issues": [],
+        "lastResult": "compliant"
+      },
+      "emissions": []
+    }
+  }
+}

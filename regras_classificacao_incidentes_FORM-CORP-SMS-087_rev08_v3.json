@@ -1,0 +1,3081 @@
+{
+  "metadados": {
+    "documento": "MATRIZ DE SEVERIDADE DE INCIDENTES",
+    "codigo": "FORM-CORP-SMS-087",
+    "revisao": "08",
+    "classificacao_documento": "GS2 - USO INTERNO",
+    "empresa": "Brava Energia",
+    "arquivo_origem": "FORMCORPSMS087_REV_8.xlsx",
+    "idioma": "pt-BR",
+    "versao_do_json": "3.0",
+    "descricao_da_versao": "Matriz FORM-CORP-SMS-087 Rev.08 + Manual ANP + FACIU v6.35.9 + PG-CORP-SMS-015 Rev.09 + decisões do responsável de 15/10/2026.",
+    "fontes": [
+      {
+        "id": "MATRIZ",
+        "nome": "FORM-CORP-SMS-087 Rev.08 - Matriz de Severidade de Incidentes",
+        "serve_para": "Nível de severidade interno (1 Leve, 2 Moderado, 3 Grave)."
+      },
+      {
+        "id": "MANUAL_ANP",
+        "nome": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023) - base: Resolução ANP nº 882/2022",
+        "serve_para": "Definição dos termos, tipologias, comunicabilidade à ANP e regras de cumulatividade."
+      },
+      {
+        "id": "FACIU",
+        "nome": "FACIU v6.35.9 (motor de classificação, matriz Rev.07 embutida)",
+        "serve_para": "Regra de cálculo do nível final e de registro das consequências."
+      },
+      {
+        "id": "PG-015",
+        "nome": "PG-CORP-SMS-015 Rev.09 - Classificação, Investigação e Tratamento de Incidentes (23/09/2026)",
+        "serve_para": "Regra oficial interna: quase acidente = severidade real 0; níveis 1 a 3 e seus desdobramentos (comissão, método, prazos, alertas, relatórios)."
+      },
+      {
+        "id": "DECISAO_RESPONSAVEL",
+        "nome": "Decisões do responsável pelo JSON (Rafael Rocha), 15/10/2026",
+        "serve_para": "Interpretações adotadas onde matriz e manual divergem ou são omissos. Não são documento oficial."
+      }
+    ],
+    "hierarquia_das_fontes": [
+      "Nível de severidade dos itens SEV: vale somente a MATRIZ.",
+      "Severidade real de quase acidente: vale o PG-015 Rev.09 (sempre 0).",
+      "Significado dos termos e enquadramento da tipologia: vale o MANUAL_ANP.",
+      "Cálculo do nível final do evento: vale o FACIU.",
+      "Onde matriz e manual divergem ou são omissos: vale a DECISAO_RESPONSAVEL registrada em \"pontos_a_decidir\" (campo decisao_adotada). Sem decisão registrada, não escolher sozinho: sinalizar."
+    ],
+    "mudancas_desta_versao": [
+      "Quase acidentes passam a ter severidade real 0 (PG-015 Rev.09, item 6.1) em todos os itens QA.",
+      "Gás inflamável passa a ser enquadrado somente como vazamento de gás, nunca como descarga (PD-01 decidido).",
+      "Definido o que é meio ambiente atingido e área ecologicamente sensível (PD-02 e PD-05 decididos).",
+      "Descarga a partir de tancagem, nível 1 de SEV-06, passa a seguir o manual (PD-10 parcialmente decidido).",
+      "Incluído o bloco \"regras_do_procedimento_PG-CORP-SMS-015_rev09\" (comissão, método, prazos, alertas e relatórios por nível).",
+      "Incluído o alerta de compatibilidade do FACIU v6.35.9 com severidade 0."
+    ],
+    "decisoes_do_responsavel": {
+      "data": "2026-10-15",
+      "responsavel": "Rafael Rocha",
+      "natureza": "interpretação interna, sem respaldo em documento oficial",
+      "itens": [
+        {
+          "ponto": "PD-01",
+          "decisao": "Gás inflamável: seguir o manual (vazamento de gás)."
+        },
+        {
+          "ponto": "PD-02",
+          "decisao": "Área ecologicamente sensível inclui solo natural, rios, mangues e similares."
+        },
+        {
+          "ponto": "PD-05",
+          "decisao": "Meio ambiente atingido inclui vegetação, solo natural, mangues, rios e similares."
+        },
+        {
+          "ponto": "PD-10",
+          "decisao": "Descarga de combustíveis, nível 1: usar a definição do manual."
+        },
+        {
+          "ponto": "PD-12",
+          "decisao": "Quase acidente: nível zero, conforme a nova revisão (PG-015 Rev.09)."
+        }
+      ]
+    }
+  },
+  "instrucoes_para_o_modelo": [
+    "Use somente as regras deste arquivo; não complete lacunas com conhecimento externo.",
+    "NUNCA classifique pela palavra usada no relato (\"vazou\", \"vazamento\", \"derramou\"). Primeiro extraia os fatos (logica_de_decisao.etapa_1_fatos_minimos) e depois aplique a árvore de decisão.",
+    "\"Vazamento\", \"perda de contenção primária\" e \"descarga\" NÃO são sinônimos. Consulte \"glossario_conceitos\" e \"logica_de_decisao.vazamento_x_descarga\" antes de responder.",
+    "GÁS inflamável é sempre \"vazamento de gás\" (quase acidente). Nunca enquadrar gás como descarga, mesmo que a definição de Descarga na matriz cite gás inflamável (decisão PD-01).",
+    "\"Meio ambiente atingido\" = vegetação, solo natural, mangue, rio e demais corpos d'água ou ambientes naturais. Líquido que ficou só em contenção secundária (bacia, dique, canaleta, sistema de tratamento) NÃO atingiu o meio ambiente (decisão PD-05 e manual).",
+    "Área ecologicamente sensível inclui solo natural, rios, mangues e similares: descarga de 8 m3 ou mais nesses ambientes é descarga maior, nível 3 (decisão PD-02).",
+    "Um mesmo evento pode gerar várias tipologias ao mesmo tempo (logica_de_decisao.cumulatividade).",
+    "Severidade: itens SEV recebem nível 1 (Leve), 2 (Moderado) ou 3 (Grave). Itens QA (quase acidentes) recebem SEMPRE severidade real 0 (PG-015 Rev.09). Nunca atribuir 1, 2 ou 3 como severidade real a um quase acidente.",
+    "Em cada item SEV, \"severidades\" traz só os níveis que existem na planilha; nível ausente significa que a matriz não define critério para ele.",
+    "\"enumeracao\" lista condições alternativas; leia \"descricao\" para saber se vale \"qualquer uma\" ou \"ao menos uma\".",
+    "\"parametros_quantitativos\" repete os limiares numéricos; em divergência, vale \"expressao_original\".",
+    "Quando o valor cair exatamente num limite compartilhado entre duas faixas (0,16 m3; 8 m3; 5 min; 24 h; 48 h; 72 h; 49 kg/h), não decida: registre PD-03 e peça confirmação.",
+    "Se faltar dado que decide o enquadramento (volume total, volume que atingiu o meio ambiente, local atingido, estado físico, planejado ou não), liste em \"dados_faltantes\" e NÃO conclua o enquadramento.",
+    "Em \"pontos_a_decidir\", use \"decisao_adotada\" quando houver. Se o status for \"aberto\" ou houver \"pendencia_residual\" que se aplique ao caso, cite o id (PD-xx), apresente as alternativas e não escolha.",
+    "Ao responder, use \"esquema_de_resposta_esperado\" e cite sempre o id do item (SEV-xx ou QA-xx), o nível e a fonte da regra.",
+    "Comunicabilidade à ANP e severidade interna são perguntas separadas.",
+    "Se nenhum item corresponder, informe que não há correspondência clara (existe apenas o item genérico \"Outros\", QA-26) e não invente critérios."
+  ],
+  "niveis_de_severidade": [
+    {
+      "codigo": 0,
+      "rotulo": "Zero",
+      "aplica_se_a": "Quase acidentes (Risco de dano ao Meio Ambiente ou à Saúde Humana), severidade real",
+      "fonte": "PG-CORP-SMS-015 Rev.09 (23/09/2026), item 6.1: \"Todos os Quase Acidentes ... devem ser classificados como Severidade Real 0 (zero), conforme o FORM-CORP-SMS-087\"."
+    },
+    {
+      "codigo": 1,
+      "rotulo": "Leve"
+    },
+    {
+      "codigo": 2,
+      "rotulo": "Moderado"
+    },
+    {
+      "codigo": 3,
+      "rotulo": "Grave"
+    }
+  ],
+  "secoes_matriz_severidade": [
+    {
+      "id": "S01",
+      "nome": "Dano à Saúde Humana"
+    },
+    {
+      "id": "S02",
+      "nome": "Dano potencial ao meio ambiente"
+    },
+    {
+      "id": "S03",
+      "nome": "Interrupção das Operações"
+    },
+    {
+      "id": "S04",
+      "nome": "Prejuízos materiais ao patrimônio próprio, para terceiros ou para as populações"
+    },
+    {
+      "id": "S05",
+      "nome": "Custo do incidente",
+      "orientacao_da_secao": "Custo do Incidente ou % de Perda de Produção. Porcentagem (%) de perda da produção diária com base no total da capacidade do Campo."
+    },
+    {
+      "id": "S06",
+      "nome": "Compliance",
+      "orientacao_da_secao": "Eventos relacionados a questões regulatórias. Entre em contato com os departamentos de Regulatório, Comunicação Social e Sistema de Gestão."
+    }
+  ],
+  "matriz_severidade": [
+    {
+      "id": "SEV-01",
+      "secao_id": "S01",
+      "tipo_ocorrencia": "Lesão/Doença",
+      "definicao_do_tipo": "Acidente com lesão a empregado (Brava Energiaou empresas contratadas)",
+      "severidades": {
+        "1": {
+          "nivel": "Leve",
+          "criterios": [
+            {
+              "titulo": "Caso de Primeiros Socorros; ou"
+            },
+            {
+              "titulo": "Lesão sem afastamento ou com trabalho restrito."
+            }
+          ]
+        },
+        "2": {
+          "nivel": "Moderado",
+          "criterios": [
+            {
+              "titulo": "Lesões não graves com dias afastados do trabalho/função."
+            }
+          ]
+        },
+        "3": {
+          "nivel": "Grave",
+          "criterios": [
+            {
+              "titulo": "Lesões graves com dias afastados do trabalho/função, ou"
+            },
+            {
+              "titulo": "Fatalidade relacionada ao trabalho."
+            }
+          ]
+        }
+      },
+      "linha_na_planilha": 9,
+      "conceitos_relacionados": [
+        "C13",
+        "C14"
+      ],
+      "pontos_a_decidir_relacionados": [
+        "PD-07"
+      ]
+    },
+    {
+      "id": "SEV-02",
+      "secao_id": "S01",
+      "tipo_ocorrencia": "Surto de doença infectocontagiosa ou transmitida por alimentos",
+      "severidades": {
+        "1": {
+          "nivel": "Leve",
+          "criterios": [
+            {
+              "titulo": "Surto de doença infectocontagiosa ou transmitida por alimentos que comprometa a normalidade das operações da instalação ou evento em que ocorra contaminação alimentar que atinja no máximo 10% da força de trabalho presente na instalação - A classificação deve avaliar o efetivo das funções chave para a continuidade operacional, CTS e EOR."
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "forca_trabalho_atingida",
+              "unidade": "%",
+              "min": null,
+              "max": 10,
+              "expressao_original": "no máximo 10%"
+            }
+          ]
+        },
+        "2": {
+          "nivel": "Moderado",
+          "criterios": [
+            {
+              "titulo": "Surto de doença infectocontagiosa ou transmitida por alimentos que comprometa a normalidade das operações da instalação ou evento em que ocorra contaminação alimentar que atinja 11% a 50% da força de trabalho presente na instalação - A classificação deve avaliar o efetivo das funções chave para a continuidade operacional, CTS e EOR."
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "forca_trabalho_atingida",
+              "unidade": "%",
+              "min": 11,
+              "max": 50,
+              "expressao_original": "11% a 50%"
+            }
+          ]
+        },
+        "3": {
+          "nivel": "Grave",
+          "criterios": [
+            {
+              "titulo": "Surto de doença infectocontagiosa ou transmitida por alimentos que comprometa a normalidade das operações da instalação ou evento em que ocorra contaminação alimentar que atinja acima de 50% da força de trabalho presente na instalação - A classificação deve avaliar o efetivo das funções chave para a continuidade operacional, CTS e EOR."
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "forca_trabalho_atingida",
+              "unidade": "%",
+              "min": 50,
+              "max": null,
+              "expressao_original": "acima de 50%"
+            }
+          ]
+        }
+      },
+      "linha_na_planilha": 10,
+      "pontos_a_decidir_relacionados": [
+        "PD-08"
+      ]
+    },
+    {
+      "id": "SEV-03",
+      "secao_id": "S02",
+      "tipo_ocorrencia": "Descarga",
+      "definicao_do_tipo": "Liberação não planejada ou não controlada (qualquer despejo, escape, derrame, vazamento, esvaziamento, lançamento para fora ou bombeamento) de sua contenção primaria: óleo, água oleosa, material com alto potencial de dano, água produzida, água de injeção, gás inflamável, fluido de perfuração ou qualquer substâncias nocivas ou perigosas, a partir de uma instalação, que tenha atingido o meio ambiente",
+      "severidades": {
+        "1": {
+          "nivel": "Leve",
+          "criterios": [
+            {
+              "titulo": "Descarga menor",
+              "descricao": "Descarga de volume inferior a 0,16 m3 cujo fluido tenha atingido o meio ambiente."
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "volume_descarga",
+              "unidade": "m3",
+              "min": null,
+              "max": 0.16,
+              "expressao_original": "inferior a 0,16 m3"
+            }
+          ]
+        },
+        "2": {
+          "nivel": "Moderado",
+          "criterios": [
+            {
+              "titulo": "Descarga significante",
+              "descricao": "Descarga de volume entre 0,16 m3 e 8 m3 cujo fluido tenha atingido o meio ambiente, exceto em região cujo terreno esteja compactado conforme normatização brasileira sobre o tema."
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "volume_descarga",
+              "unidade": "m3",
+              "min": 0.16,
+              "max": 8,
+              "expressao_original": "entre 0,16 m3 e 8 m3"
+            }
+          ]
+        },
+        "3": {
+          "nivel": "Grave",
+          "criterios": [
+            {
+              "titulo": "Descarga maior",
+              "descricao": "evento de perda de contenção de óleo, misturas oleosas, derivados, biocombustíveis ou outras substâncias perigosas, com volume igual ou superior a 8m³ e que tenha atingido o mar, ou que atinja áreas ecologicamente sensíveis, pontos de captação de água, áreas urbanas, unidades de conservação e áreas de importância socioeconômica"
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "volume_descarga",
+              "unidade": "m3",
+              "min": 8,
+              "max": null,
+              "expressao_original": "igual ou superior a 8 m3 (e condições de local atingido)"
+            }
+          ],
+          "nota_de_aplicacao": "Área ecologicamente sensível inclui solo natural, rios, mangues e similares (PD-02). Terreno compactado: PD-04."
+        }
+      },
+      "linha_na_planilha": 12,
+      "conceitos_relacionados": [
+        "C04",
+        "C05",
+        "C03",
+        "C11"
+      ],
+      "pontos_a_decidir_relacionados": [
+        "PD-01",
+        "PD-02",
+        "PD-03",
+        "PD-04",
+        "PD-05"
+      ],
+      "nota_de_aplicacao": "Para este JSON, gás inflamável NÃO é enquadrado como descarga, apesar de constar na definição do tipo (decisão PD-01). \"Meio ambiente atingido\" e \"área ecologicamente sensível\" seguem PD-05 e PD-02."
+    },
+    {
+      "id": "SEV-04",
+      "secao_id": "S02",
+      "tipo_ocorrencia": "Descarte fora de especificação",
+      "severidades": {
+        "1": {
+          "nivel": "Leve",
+          "criterios": [
+            {
+              "titulo": "Descarte fora de especificação (água produzida ou fluido de perfuração, completação, intervenção ou cascalhos, descartados, em desacordo com os limites estabelecidos pela legislação ambiental aplicável)"
+            }
+          ]
+        }
+      },
+      "nota_sobre_fonte": "Na planilha o texto está apenas na coluna Leve (1); Moderado e Grave estão vazios.",
+      "linha_na_planilha": 13,
+      "conceitos_relacionados": [
+        "C08"
+      ]
+    },
+    {
+      "id": "SEV-05",
+      "secao_id": "S02",
+      "tipo_ocorrencia": "Constatação de mancha de origem indeterminada.(Atividades de E&P reguladas pela SSO/ANP)",
+      "aplicabilidade_regulatoria": "Atividades de E&P reguladas pela SSO/ANP",
+      "severidades": {
+        "1": {
+          "nivel": "Leve",
+          "criterios": [
+            {
+              "titulo": "Constatação de mancha de origem indeterminada- Observação de mancha oleosa na superfície de corpos d’água sem que a sua origem tenha sido identificada."
+            }
+          ]
+        }
+      },
+      "nota_sobre_fonte": "Na planilha o texto está apenas na coluna Leve (1); Moderado e Grave estão vazios.",
+      "linha_na_planilha": 14,
+      "conceitos_relacionados": [
+        "C09"
+      ]
+    },
+    {
+      "id": "SEV-06",
+      "secao_id": "S02",
+      "tipo_ocorrencia": "Descargas somente em instalações de produção de combustíveis reguladas pela SPC/ANP.",
+      "aplicabilidade_regulatoria": "Instalações de produção de combustíveis reguladas pela SPC/ANP",
+      "severidades": {
+        "1": {
+          "nivel": "Leve",
+          "criterios": [
+            {
+              "titulo": "Descarga a partir de tancagem",
+              "descricao": "Perda de contenção primária de fluido armazenado em tanque que tenha na bacia de contenção",
+              "vigente": false,
+              "substituido_por_decisao": "PD-10"
+            },
+            {
+              "titulo": "Descarga de líquidos inflamáveis e combustíveis",
+              "descricao": "a qual a taxa de descarga seja maior ou igual a 1 a 49 kg/h."
+            },
+            {
+              "titulo": "Descarga de ácidos e bases na qual a taxa de descarga seja maior ou igual a 1 a 99 kg/h."
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "taxa_liquidos_inflamaveis_combustiveis",
+              "unidade": "kg/h",
+              "min": 1,
+              "max": 49,
+              "expressao_original": "1 a 49 kg/h"
+            },
+            {
+              "variavel": "taxa_acidos_bases",
+              "unidade": "kg/h",
+              "min": 1,
+              "max": 99,
+              "expressao_original": "1 a 99 kg/h"
+            }
+          ],
+          "ajuste_por_decisao": {
+            "ponto": "PD-10",
+            "origem": "Decisão do responsável pelo JSON (Rafael Rocha), 15/10/2026. Não consta em documento oficial; validar com o SMS corporativo. Base: Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), III.3.1.1.1 e III.3.2.1.",
+            "o_que_mudou": "O critério \"descarga a partir de tancagem\" do nível 1 (texto incompleto \"que tenha na bacia de contenção\") deixa de valer como descarga.",
+            "regra_adotada": "Perda de contenção primária de fluido de tanque que ficou contida em bacia de contenção (ou dique, canaleta, sistema de tratamento) é PERDA DE CONTENÇÃO PRIMÁRIA, quase acidente de severidade real 0, e não descarga. Descarga a partir de tancagem só existe com contato direto com o solo e/ou corpo hídrico.",
+            "itens_relacionados": [
+              "QA-02",
+              "QA-03"
+            ],
+            "observacao": "O manual, para Produção de Combustíveis, traz a perda de contenção primária contida em contenção secundária sem gradação por volume (III.3.2.1). Qual QA usar (02 ou 03) fica pelo volume, por analogia: PD-10."
+          }
+        },
+        "2": {
+          "nivel": "Moderado",
+          "criterios": [
+            {
+              "titulo": "Descarga a partir de tancagem",
+              "descricao": "Perda de contenção primária de fluido armazenado em tanque que tenha tido contato direto com o solo e/ou corpo hídrico"
+            },
+            {
+              "titulo": "Descarga de líquidos inflamáveis e combustíveis",
+              "descricao": "a qual a taxa de descarga seja maior ou igual a 49 a 99 kg/h."
+            },
+            {
+              "titulo": "Descarga de ácidos e bases na qual a taxa de descarga seja maior ou igual a 100 a 199 kg/h."
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "taxa_liquidos_inflamaveis_combustiveis",
+              "unidade": "kg/h",
+              "min": 49,
+              "max": 99,
+              "expressao_original": "49 a 99 kg/h"
+            },
+            {
+              "variavel": "taxa_acidos_bases",
+              "unidade": "kg/h",
+              "min": 100,
+              "max": 199,
+              "expressao_original": "100 a 199 kg/h"
+            }
+          ]
+        },
+        "3": {
+          "nivel": "Grave",
+          "criterios": [
+            {
+              "titulo": "Descarga a partir de tancagem",
+              "descricao": "Perda de contenção primária de fluido armazenado em tanque que tenha tido contato direto com o solo e/ou corpo hídrico"
+            },
+            {
+              "titulo": "Descarga de líquidos inflamáveis e combustíveis",
+              "descricao": "a qual a taxa de descarga seja maior ou igual a 100 kg/h."
+            },
+            {
+              "titulo": "Descarga de ácidos e bases na qual a taxa de descarga seja maior ou igual a 200 kg/h."
+            },
+            {
+              "titulo": "Descarga de substância nociva ou perigosa",
+              "descricao": "em qualquer quantidade de substância nociva ou perigosa que tenha atingido o meio ambiente."
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "taxa_liquidos_inflamaveis_combustiveis",
+              "unidade": "kg/h",
+              "min": 100,
+              "max": null,
+              "expressao_original": "maior ou igual a 100 kg/h"
+            },
+            {
+              "variavel": "taxa_acidos_bases",
+              "unidade": "kg/h",
+              "min": 200,
+              "max": null,
+              "expressao_original": "maior ou igual a 200 kg/h"
+            }
+          ]
+        }
+      },
+      "nota_sobre_fonte": "Os limites de faixa coincidem entre níveis (ex.: 49 kg/h) e há trecho incompleto no nível Leve (\"tenha na bacia de contenção\"); texto mantido como na planilha.",
+      "linha_na_planilha": 15,
+      "conceitos_relacionados": [
+        "C04",
+        "C03"
+      ],
+      "pontos_a_decidir_relacionados": [
+        "PD-10"
+      ],
+      "nota_de_aplicacao": "Faixas em kg/h dos níveis 1 e 2 são da matriz e não constam no manual; o manual só traz os limiares de 100 kg/h (líquidos) e 200 kg/h (ácidos e bases). Ver pendência residual em PD-10."
+    },
+    {
+      "id": "SEV-07",
+      "secao_id": "S02",
+      "tipo_ocorrencia": "Eventos Relacionados a Poços",
+      "severidades": {
+        "3": {
+          "nivel": "Grave",
+          "criterios": [
+            {
+              "titulo": "Perda menor de controle de poço",
+              "descricao": "Qualquer incidente de fluxo descontrolado (blowout) que pode ocorrerpor falha de equipamento e/ou procedimentos para controle de kick - com fluxo descontrolado de duração menor 5 minutos"
+            },
+            {
+              "titulo": "Perda significante de controle de poço",
+              "descricao": "Qualquer incidente de fluxo descontrolado (blowout) que pode ocorrerpor falha de equipamento e/ou procedimentos para controle de kick - com fluxo descontrolado de duração entre 5 minutos e 24 horas."
+            },
+            {
+              "titulo": "Perda maior de controle de poço",
+              "descricao": "Qualquer incidente de fluxo descontrolado (blowout) que pode ocorrerpor falha de equipamento e/ou procedimentos para controle de kick - com fluxo descontrolado de duração maior que 24 horas."
+            }
+          ]
+        }
+      },
+      "nota_sobre_fonte": "Na planilha, os três subitens (perda menor, significante e maior) estão todos na coluna Grave (3); Leve e Moderado contêm \"-\". Confirmar com o responsável pelo formulário.",
+      "linha_na_planilha": 16,
+      "pontos_a_decidir_relacionados": [
+        "PD-06"
+      ]
+    },
+    {
+      "id": "SEV-08",
+      "secao_id": "S02",
+      "tipo_ocorrencia": "Outros incidentes com potencial de Danos ao Meio Ambiente",
+      "severidades": {
+        "1": {
+          "nivel": "Leve",
+          "criterios": [
+            {
+              "titulo": "Potencial de impacto ambiental limitado. Sem impacto a comunidades locais."
+            }
+          ]
+        },
+        "2": {
+          "nivel": "Moderado",
+          "criterios": [
+            {
+              "titulo": "Potencial de impacto ambiental moderado. Podem existir indivíduos afetados. O uso de recursos ambientais pode ser impactado, porém por um curto período (<3 meses)"
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "duracao_impacto_recursos_ambientais",
+              "unidade": "meses",
+              "min": null,
+              "max": 3,
+              "expressao_original": "< 3 meses"
+            }
+          ]
+        },
+        "3": {
+          "nivel": "Grave",
+          "criterios": [
+            {
+              "titulo": "Potencial de impacto ambiental maior, de longo prazo (> 3meses) Pode atingir comunidades ou ecossistemas inteiros."
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "duracao_impacto",
+              "unidade": "meses",
+              "min": 3,
+              "max": null,
+              "expressao_original": "> 3 meses"
+            }
+          ]
+        }
+      },
+      "linha_na_planilha": 17
+    },
+    {
+      "id": "SEV-09",
+      "secao_id": "S03",
+      "tipo_ocorrencia": "Parada não Programada",
+      "definicao_do_tipo": "Parada total ou parcial não programada de uma instalação por período superior a 24 (vinte e quatro) horas.",
+      "severidades": {
+        "1": {
+          "nivel": "Leve",
+          "criterios": [
+            {
+              "titulo": "Parada total ou parcial não programada de uma instalação por período de 24 (vinte e quatro) a 48 (quarenta e oito) horas."
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "parada_nao_programada",
+              "unidade": "horas",
+              "min": 24,
+              "max": 48,
+              "expressao_original": "24 a 48 horas"
+            }
+          ]
+        },
+        "2": {
+          "nivel": "Moderado",
+          "criterios": [
+            {
+              "titulo": "Parada total ou parcial não programada de uma instalação por período de 48 (quarenta e oito) a 72 (setenta e duas) horas."
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "parada_nao_programada",
+              "unidade": "horas",
+              "min": 48,
+              "max": 72,
+              "expressao_original": "48 a 72 horas"
+            }
+          ]
+        },
+        "3": {
+          "nivel": "Grave",
+          "criterios": [
+            {
+              "titulo": "Parada total ou parcial não programada de uma instalação por período de superior a 72 (setenta e duas) horas."
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "parada_nao_programada",
+              "unidade": "horas",
+              "min": 72,
+              "max": null,
+              "expressao_original": "superior a 72 horas"
+            }
+          ]
+        }
+      },
+      "linha_na_planilha": 19,
+      "conceitos_relacionados": [
+        "C16"
+      ],
+      "pontos_a_decidir_relacionados": [
+        "PD-03",
+        "PD-11"
+      ]
+    },
+    {
+      "id": "SEV-10",
+      "secao_id": "S04",
+      "tipo_ocorrencia": "Falhas Estruturais",
+      "severidades": {
+        "1": {
+          "nivel": "Leve",
+          "criterios": [
+            {
+              "titulo": "Derivação clandestina"
+            }
+          ]
+        },
+        "3": {
+          "nivel": "Grave",
+          "criterios": [
+            {
+              "titulo": "Falha estrutural em instalação offshore",
+              "descricao": "falha em elemento estrutural que possa comprometer a segurança ou operação da instalação."
+            },
+            {
+              "titulo": "Falha estrutural em sistema de coleta ou escoamento da produção",
+              "descricao": "dano a qualquer elemento de um sistema de coleta ou escoamento da produção que possa comprometer a integridade estrutural ou a operação em condição segura ou que ocasione a perda total do equipamento."
+            },
+            {
+              "titulo": "Falha estrutural em tanque",
+              "descricao": "dano a qualquer elemento de um tanque estrutural que possa gerar perda de contenção."
+            },
+            {
+              "titulo": "Falha nas estruturas das instalações de produção de combustíveis decorrentes de incidente operacional",
+              "descricao": "danos de qualquer natureza e origem, ocorridos devido a incidente operacional, em qualquer estrutura (incluindo estruturas civis – de concreto, de concreto armado ou metálicas, equipamentos – eletrônicos, elétricos, eletromecânicos ou mecânicos –, geradores, caldeiras, vasos de pressão, tubulações, tanques, válvulas, acessórios, instrumentos, painéis e sistemas de controle e automação, entre outros) que esteja contida nas áreas da instalação produtora."
+            }
+          ]
+        }
+      },
+      "nota_sobre_fonte": "Na planilha, Leve contém apenas \"Derivação clandestina\"; Moderado está vazio; Grave contém as falhas estruturais.",
+      "linha_na_planilha": 21
+    },
+    {
+      "id": "SEV-11",
+      "secao_id": "S04",
+      "tipo_ocorrencia": "Eventos Relacionados a Poços",
+      "severidades": {
+        "2": {
+          "nivel": "Moderado",
+          "criterios": [
+            {
+              "titulo": "Falha estrutural em poço",
+              "descricao": "Falha que comprometa a função estrutural de elementos constituintes de poços, incluindo dano em revestimentos, cimentação, colapso de coluna, danos que impeçam o acoplamento do BOP ao poço, dentre outros. Também devem ser considerados como “falha estrutural em poço: (i) o colapso de paredes de poço não consolidadas que comprometa a continuidade de sua perfuração, demandando o seu abandono em fase anterior ao objetivo do projeto de perfuração ou (ii) a colisão de trajetória de poços durante a perfuração."
+            },
+            {
+              "titulo": "Falha no riser de perfuração ou intervenção",
+              "descricao": "Qualquer falha detectada no riser durante as operações de perfuração ou intervenção, incluindo perdas de contenção primárias, falha de conexões e perda de flutuadores"
+            },
+            {
+              "titulo": "Aprisionamento de coluna",
+              "descricao": "Imobilização da coluna de perfuração dentro do poço, não podendo ser movimentada para fora por razões mecânicas indesejadas ou não controláveis, sendo necessário o abandono temporário ou permanente do poço."
+            },
+            {
+              "titulo": "Perda de circulação",
+              "descricao": "Perda total ou parcial de fluidos ou pasta de cimento para a formação, de forma que seja apresentado um potencial de risco de perda de um elemento do CSB ou perda do CSB."
+            },
+            {
+              "titulo": "Falha da barreira primária na perfuração ou intervenção em poços (kick)",
+              "descricao": "Qualquer influxo não intencional para o poço."
+            },
+            {
+              "titulo": "Desconexão de Emergência",
+              "descricao": "Qualquer desconexão do Low Marine Riser Package (LMRP) do conjunto BOP durante atividades relacionadas a poço, exceto quando a desconexão é realizada com objetivo de teste."
+            }
+          ]
+        }
+      },
+      "nota_sobre_fonte": "Na planilha o texto está apenas na coluna Moderado (2).",
+      "linha_na_planilha": 22
+    },
+    {
+      "id": "SEV-12",
+      "secao_id": "S04",
+      "tipo_ocorrencia": "Eventos Navais",
+      "severidades": {
+        "1": {
+          "nivel": "Leve",
+          "criterios": [
+            {
+              "titulo": "Abalroamento menor",
+              "descricao": "Qualquer abalroamento entre instalações ou entre uma instalação e embarcação não enquadrado em abalroamento significante ou maior."
+            }
+          ]
+        },
+        "2": {
+          "nivel": "Moderado",
+          "criterios": [
+            {
+              "titulo": "Abalroamento significante",
+              "descricao": "Qualquer abalroamento entre instalações ou entre uma instalação e embarcação e/ou aeronave que cause:",
+              "enumeracao": [
+                {
+                  "marcador": "a",
+                  "texto": "Ferimento com afastamento que não seja categorizado como ferimento grave;"
+                },
+                {
+                  "marcador": "b",
+                  "texto": "Dano a uma instalação que é julgado com potencial de causar fatalidade(s) ou ferimento(s) grave(s);"
+                },
+                {
+                  "marcador": "c",
+                  "texto": "Dano a uma instalação que tenha ocasionado mobilização da tripulação para ponto de abandono da unidade; ou"
+                },
+                {
+                  "marcador": "d",
+                  "texto": "Dano severo que comprometa, de maneira significante, a integridade estrutural de uma instalação (de uma perspectiva de meio ambiente ou segurança), caso esta continue operando sem reparo imediato."
+                }
+              ]
+            },
+            {
+              "titulo": "Falha do sistema de ancoragem",
+              "descricao": "Falha de um ou mais elementos do sistema de ancoragem da instalação offshore ou embarcação que esteja realizando atividade de apoio após o posicionamento."
+            },
+            {
+              "titulo": "Queda no mar de equipamento ou material",
+              "descricao": "Queda acidental no mar de equipamento ou material proveniente de instalação offshore, que tenha potencial de causar danos ao meio ambiente, saúde e prejuízo ao patrimônio próprio ou de terceiros."
+            }
+          ]
+        },
+        "3": {
+          "nivel": "Grave",
+          "criterios": [
+            {
+              "titulo": "Abalroamento maior",
+              "descricao": "Qualquer abalroamento entre instalações ou entre uma instalação e embarcação e/ou aeronave que cause:",
+              "enumeracao": [
+                {
+                  "marcador": "a",
+                  "texto": "Fatalidade(s) ou ferimento(s) grave(s)"
+                },
+                {
+                  "marcador": "b",
+                  "texto": "Perda da instalação; ou"
+                },
+                {
+                  "marcador": "c",
+                  "texto": "Parada não programada de, no mínimo, 72 (setenta e duas) horas."
+                }
+              ]
+            },
+            {
+              "titulo": "Adernamento",
+              "descricao": "Inclinação acima dos limites de projeto de instalação offshore ou embarcação que esteja realizando atividade de apoio"
+            },
+            {
+              "titulo": "Afundamento ou naufrágio de instalação ou embarcação",
+              "descricao": "Afundamento total de instalação offshore ou embarcação que esteja realizando atividade de apoio."
+            }
+          ]
+        }
+      },
+      "linha_na_planilha": 23
+    },
+    {
+      "id": "SEV-13",
+      "secao_id": "S04",
+      "tipo_ocorrencia": "Transporte aéreo",
+      "severidades": {
+        "3": {
+          "nivel": "Grave",
+          "criterios": [
+            {
+              "titulo": "Queda de helicóptero",
+              "descricao": "Queda ou pouso forçado de helicóptero durante a realização de transporte de/para uma área abrangida por um contrato ou autorização"
+            }
+          ]
+        }
+      },
+      "nota_sobre_fonte": "Na planilha o texto está apenas na coluna Grave (3).",
+      "linha_na_planilha": 24
+    },
+    {
+      "id": "SEV-14",
+      "secao_id": "S04",
+      "tipo_ocorrencia": "Transporte terrestre- Acidente com Veículo ou Equipamentos",
+      "severidades": {
+        "1": {
+          "nivel": "Leve",
+          "criterios": [
+            {
+              "titulo": "Acidente menor de veículo/equipamento",
+              "descricao": "Qualquer acidente com veículo (carro, moto, bicicleta, máquinas, ônibus, carro elétrico ou qualquer meio de locomoção que transporte pessoas) ou equipamento que não cause danos severos ao veículo ou equipamento."
+            }
+          ]
+        },
+        "2": {
+          "nivel": "Moderado",
+          "criterios": [
+            {
+              "titulo": "Acidente significante de veículo/equipamento",
+              "descricao": "Qualquer acidente com veículo (carro, moto, bicicleta, máquina, ônibus, carro elétrico ou qualquer meio de locomoção que transporte pessoas) ou equipamento que cause danos severos ao veículo ou equipamento."
+            }
+          ]
+        },
+        "3": {
+          "nivel": "Grave",
+          "criterios": [
+            {
+              "titulo": "Acidente maior de veículo/equipamento",
+              "descricao": "Qualquer acidente com veículo (carro, moto, bicicleta, máquinas, ônibus, carro elétrico ou qualquer meio de locomoção que transporte pessoas) ou equipamento que cause perda total do veículo ou equipamento"
+            }
+          ]
+        }
+      },
+      "linha_na_planilha": 25
+    },
+    {
+      "id": "SEV-15",
+      "secao_id": "S04",
+      "tipo_ocorrencia": "Incêndios/explosões",
+      "severidades": {
+        "1": {
+          "nivel": "Leve",
+          "criterios": [
+            {
+              "titulo": "Danos ≤ R$ 20.000"
+            },
+            {
+              "titulo": "Incêndio menor",
+              "descricao": "Qualquer incêndio em área de processo não enquadrado em incêndio significante ou maior, que demande atuação da brigada de incêndio para o seu combate."
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "dano_financeiro",
+              "unidade": "BRL",
+              "min": null,
+              "max": 20000,
+              "expressao_original": "≤ R$ 20.000"
+            }
+          ]
+        },
+        "2": {
+          "nivel": "Moderado",
+          "criterios": [
+            {
+              "titulo": "Danos >R$20.000 a R$250.000"
+            },
+            {
+              "titulo": "Incêndio significante",
+              "descricao": "Qualquer incêndio que cause:",
+              "enumeracao": [
+                {
+                  "marcador": "a",
+                  "texto": "Ferimento que acarrete afastamento e que não seja categorizado como ferimento grave;"
+                },
+                {
+                  "marcador": "b",
+                  "texto": "Dano a uma instalação que é julgado com potencial de causar fatalidade(s) ou ferimento(s) grave(s);"
+                },
+                {
+                  "marcador": "c",
+                  "texto": "Dano a uma instalação que tenha ocasionado mobilização da força de trabalho para ponto de abandono da instalação; ou"
+                },
+                {
+                  "marcador": "d",
+                  "texto": "Dano severo que comprometa, de maneira significante, a integridade estrutural de uma instalação (de uma perspectiva de meio ambiente ou segurança), caso esta continue operando sem reparo imediato."
+                }
+              ]
+            },
+            {
+              "titulo": "Detonação acidental de explosivos",
+              "descricao": "Detonação de artefatos explosivos"
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "dano_financeiro",
+              "unidade": "BRL",
+              "min": 20000,
+              "max": 250000,
+              "expressao_original": "> R$ 20.000 a R$ 250.000"
+            }
+          ]
+        },
+        "3": {
+          "nivel": "Grave",
+          "criterios": [
+            {
+              "titulo": "Danos > R$250.000"
+            },
+            {
+              "titulo": "Incêndio maior",
+              "descricao": "Qualquer incêndio que cause:",
+              "enumeracao": [
+                {
+                  "marcador": "a",
+                  "texto": "Fatalidade(s) ou ferimento(s) grave(s);"
+                },
+                {
+                  "marcador": "b",
+                  "texto": "Perda da instalação; ou"
+                },
+                {
+                  "marcador": "c",
+                  "texto": "Parada não-programada de no mínimo 72 (setenta e duas) horas."
+                }
+              ]
+            },
+            {
+              "titulo": "Explosão de atmosfera explosiva",
+              "descricao": "Ignição de atmosfera explosiva com consequente sobrepressão."
+            },
+            {
+              "titulo": "Explosão mecânica",
+              "descricao": "Liberação de energia após ruptura de contenção primária ocasionando sobrepressão"
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "dano_financeiro",
+              "unidade": "BRL",
+              "min": 250000,
+              "max": null,
+              "expressao_original": "> R$ 250.000"
+            }
+          ]
+        }
+      },
+      "linha_na_planilha": 26,
+      "conceitos_relacionados": [
+        "C15"
+      ],
+      "pontos_a_decidir_relacionados": [
+        "PD-13",
+        "PD-11"
+      ]
+    },
+    {
+      "id": "SEV-16",
+      "secao_id": "S04",
+      "tipo_ocorrencia": "Falha de dispositivos de segurança (instalações de produção de combustíveis reguladas pela SPC/ANP)",
+      "aplicabilidade_regulatoria": "Instalações de produção de combustíveis reguladas pela SPC/ANP",
+      "severidades": {
+        "2": {
+          "nivel": "Moderado",
+          "criterios": [
+            {
+              "titulo": "Falhas de dispositivos de segurança (válvula de alívio de pressão e vácuo, corta-chama, disco de ruptura, PSV, entre outros), resultando em avaria de equipamento(s) de processo."
+            }
+          ]
+        }
+      },
+      "nota_sobre_fonte": "Na planilha o texto está apenas na coluna Moderado (2).",
+      "linha_na_planilha": 27
+    },
+    {
+      "id": "SEV-17",
+      "secao_id": "S04",
+      "tipo_ocorrencia": "Eventos de Segurança Cibernética",
+      "severidades": {
+        "2": {
+          "nivel": "Moderado",
+          "criterios": [
+            {
+              "titulo": "Falha devido a ataque cibernético",
+              "descricao": "Falha ou restrição de funcionamento em sistemas de comunicação, de controle ou segurança de processo causada por violação de sistemas de Tecnologia da Informação (TI) ou Tecnologia de Operação (TO), que afete sua integridade."
+            }
+          ]
+        }
+      },
+      "nota_sobre_fonte": "Na planilha o texto está apenas na coluna Moderado (2).",
+      "linha_na_planilha": 28
+    },
+    {
+      "id": "SEV-18",
+      "secao_id": "S05",
+      "tipo_ocorrencia": "Perda econômica (perda de produção/custos de reparação/tempo não produtivo).",
+      "severidades": {
+        "1": {
+          "nivel": "Leve",
+          "criterios": [
+            {
+              "titulo": "≤30mil R$ ou ≤10% da produção diária prevista para o Campo"
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "custo_incidente",
+              "unidade": "BRL",
+              "min": null,
+              "max": 30000,
+              "expressao_original": "≤ 30 mil R$"
+            },
+            {
+              "variavel": "perda_producao_diaria_campo",
+              "unidade": "%",
+              "min": null,
+              "max": 10,
+              "expressao_original": "≤ 10%"
+            }
+          ]
+        },
+        "2": {
+          "nivel": "Moderado",
+          "criterios": [
+            {
+              "titulo": "30mil a 300mil R$ ou >10% a 40% da produção diária prevista para o Campo"
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "custo_incidente",
+              "unidade": "BRL",
+              "min": 30000,
+              "max": 300000,
+              "expressao_original": "30 mil a 300 mil R$"
+            },
+            {
+              "variavel": "perda_producao_diaria_campo",
+              "unidade": "%",
+              "min": 10,
+              "max": 40,
+              "expressao_original": "> 10% a 40%"
+            }
+          ]
+        },
+        "3": {
+          "nivel": "Grave",
+          "criterios": [
+            {
+              "titulo": "> 300mil R$ ou >40% da produção diária prevista para o Campo"
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "custo_incidente",
+              "unidade": "BRL",
+              "min": 300000,
+              "max": null,
+              "expressao_original": "> 300 mil R$"
+            },
+            {
+              "variavel": "perda_producao_diaria_campo",
+              "unidade": "%",
+              "min": 40,
+              "max": null,
+              "expressao_original": "> 40%"
+            }
+          ]
+        }
+      },
+      "linha_na_planilha": 30
+    },
+    {
+      "id": "SEV-19",
+      "secao_id": "S06",
+      "tipo_ocorrencia": "Multas de Agência e Permissão/Autorização para Operaração",
+      "severidades": {
+        "1": {
+          "nivel": "Leve",
+          "criterios": [
+            {
+              "titulo": "Notificações ou avisos incidentais de agência que acarretam uma penalidade financeira ≤ R$ 500.000"
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "penalidade_financeira",
+              "unidade": "BRL",
+              "min": null,
+              "max": 500000,
+              "expressao_original": "≤ R$ 500.000"
+            }
+          ]
+        },
+        "2": {
+          "nivel": "Moderado",
+          "criterios": [
+            {
+              "titulo": "Multas e intervenções da agência que acarretam uma penalidade financeira de >R$ 500.000 a R$ 2000.000"
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "penalidade_financeira",
+              "unidade": "BRL",
+              "min": 500000,
+              "max": 2000000,
+              "expressao_original": "> R$ 500.000 a R$ 2000.000 (grafia original; interpretado como 2.000.000)"
+            }
+          ]
+        },
+        "3": {
+          "nivel": "Grave",
+          "criterios": [
+            {
+              "titulo": "Multas e intervenções da Agência que ameaçam a reputação da empresa e a capacidade de operar ou"
+            },
+            {
+              "titulo": "Penalidade financeira com um custo total > R$ 2000.000"
+            },
+            {
+              "titulo": "Perda do direito de operar"
+            }
+          ],
+          "parametros_quantitativos": [
+            {
+              "variavel": "penalidade_financeira",
+              "unidade": "BRL",
+              "min": 2000000,
+              "max": null,
+              "expressao_original": "> R$ 2000.000 (grafia original; interpretado como 2.000.000)"
+            }
+          ]
+        }
+      },
+      "linha_na_planilha": 32
+    }
+  ],
+  "quase_acidentes": {
+    "nome": "Quase Acidentes - Risco de dano ao Meio Ambiente ou à Saúde Humana",
+    "possui_escala_de_severidade": false,
+    "itens": [
+      {
+        "id": "QA-01",
+        "tipo_ocorrencia": "Parada emergencial de planta de processo (Emergency Shutdown – ESD)",
+        "descricao": "Parada total ou parcial da produção da instalação mediante o acionamento manual ou automático, devido ou indevido, do sistema de parada de emergência. Causas da parada emergencial:",
+        "enumeracao": [
+          {
+            "marcador": "A",
+            "texto": "Acionamento manual de preparação para abandono"
+          },
+          {
+            "marcador": "B",
+            "texto": "Acionamento manual de botão de ESD ocasionando parada da geração principal"
+          },
+          {
+            "marcador": "C",
+            "texto": "Detecção confirmada de gás em entrada do sistema de Aquecimento, Ventilação e Ar Condicionado (HVAC)"
+          },
+          {
+            "marcador": "D",
+            "texto": "Detecção confirmada de gás em área não classificada, excluída a situação prevista no item C)"
+          },
+          {
+            "marcador": "E",
+            "texto": "Atuação de alarme de nível muito alto (LAHH) em vaso de flare"
+          },
+          {
+            "marcador": "F",
+            "texto": "Contaminação cruzada em trocador de calor gás/água"
+          },
+          {
+            "marcador": "G",
+            "texto": "Detecção confirmada de fogo ou gás em área de risers/cabeça de poço"
+          },
+          {
+            "marcador": "H",
+            "texto": "Detecção confirmada de fogo ou gás em área classificada, excluída a situação prevista em G)"
+          },
+          {
+            "marcador": "I",
+            "texto": "Acionamento manual de botão de ESD excluída a situação no item B"
+          },
+          {
+            "marcador": "J",
+            "texto": "Falha do sistema elétrico (geração principal, distribuição, Uninterruptible Power Supply - UPS, ou outro elemento)"
+          },
+          {
+            "marcador": "K",
+            "texto": "Falha do sistema de automação (Controlador Lógico Programável - CLP, CPU, rede de comunicação, ou outro elemento)"
+          },
+          {
+            "marcador": "L",
+            "texto": "Falha do sistema de ar de instrumento ou unidade hidráulica"
+          },
+          {
+            "marcador": "M",
+            "texto": "Falha de outro elemento integrante do sistema de utilidades"
+          },
+          {
+            "marcador": "N",
+            "texto": "Detecção não confirmada/falha espúria de detector (fogo, gás, fumaça...)"
+          },
+          {
+            "marcador": "O",
+            "texto": "OUTROS"
+          }
+        ],
+        "linha_na_planilha": 35,
+        "pontos_a_decidir_relacionados": [
+          "PD-12"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-02",
+        "tipo_ocorrencia": "Perda de contenção primária maior",
+        "descricao": "Perda de contenção primária de volume superior a 8 m³ de fluido, mesmo que não tenha atingido o meio ambiente.",
+        "parametros_quantitativos": [
+          {
+            "variavel": "volume_perda_contencao",
+            "unidade": "m3",
+            "min": 8,
+            "max": null,
+            "expressao_original": "superior a 8 m3"
+          }
+        ],
+        "linha_na_planilha": 36,
+        "conceitos_relacionados": [
+          "C03",
+          "C04"
+        ],
+        "pontos_a_decidir_relacionados": [
+          "PD-03",
+          "PD-05"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-03",
+        "tipo_ocorrencia": "Perda de contenção primária significante",
+        "descricao": "Perda de contenção primária de volume entre 0,16 m³ e 8 m³ de fluido, mesmo que não tenha atingido o meio ambiente.",
+        "parametros_quantitativos": [
+          {
+            "variavel": "volume_perda_contencao",
+            "unidade": "m3",
+            "min": 0.16,
+            "max": 8,
+            "expressao_original": "entre 0,16 m3 e 8 m3"
+          }
+        ],
+        "linha_na_planilha": 37,
+        "conceitos_relacionados": [
+          "C03",
+          "C04"
+        ],
+        "pontos_a_decidir_relacionados": [
+          "PD-03",
+          "PD-05"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-04",
+        "tipo_ocorrencia": "Constatação de mancha de origem indeterminada (atividades reguladas pela SIM/ANP)",
+        "descricao": "Observação de mancha oleosa na superfície de corpos d’água sem que a sua origem tenha sido identificada.",
+        "aplicabilidade_regulatoria": "Atividades reguladas pela SIM/ANP",
+        "linha_na_planilha": 38,
+        "conceitos_relacionados": [
+          "C09"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-05",
+        "tipo_ocorrencia": "Vazamento maior de gás inflamável (atividades de E&P reguladas pelas SSO e SIM/ANP)",
+        "descricao": "Qualquer liberação de gás inflamável que atinja ao menos uma das seguintes condições:",
+        "enumeracao": [
+          {
+            "marcador": "a",
+            "texto": "Taxa de liberação maior que 1 kg.s-1 com duração superior a 5 minutos; e/ou"
+          },
+          {
+            "marcador": "b",
+            "texto": "Taxa de liberação maior ou igual a 0,1 kg.s-1 , com a liberação de uma massa total maior do que 300 kg durante todo o evento."
+          }
+        ],
+        "aplicabilidade_regulatoria": "Atividades de E&P reguladas pelas SSO e SIM/ANP",
+        "linha_na_planilha": 39,
+        "conceitos_relacionados": [
+          "C06"
+        ],
+        "pontos_a_decidir_relacionados": [
+          "PD-01",
+          "PD-03"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-06",
+        "tipo_ocorrencia": "Vazamento significante de gás inflamável (atividades de E&P reguladas pelas SSO e SIM/ANP)",
+        "descricao": "Qualquer liberação de gás inflamável que atenda ao menos uma das seguintes condições: entre 1 e 300 kg durante todo o evento.",
+        "enumeracao": [
+          {
+            "marcador": "a",
+            "texto": "Taxa de liberação entre 0,1 kg.s-1 e 1 kg.s-1 , com duração entre 2 e 5 minutos;"
+          },
+          {
+            "marcador": "b",
+            "texto": "Taxa de liberação maior ou igual a 0,1 kg.s-1, com liberação de uma massa total"
+          }
+        ],
+        "aplicabilidade_regulatoria": "Atividades de E&P reguladas pelas SSO e SIM/ANP",
+        "linha_na_planilha": 40,
+        "conceitos_relacionados": [
+          "C06"
+        ],
+        "pontos_a_decidir_relacionados": [
+          "PD-01",
+          "PD-03"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-07",
+        "tipo_ocorrencia": "Vazamento de H2S (atividades de E&P reguladas pelas SSO e SIM/ANP)",
+        "descricao": "Qualquer liberação confirmada por detecção de H2S em concentração instantânea igual ou superior a 8 ppm, seja através de detectores de gás fixos ou portáteis. Exclui-se deste tipo de evento a detecção de H2S no interior de equipamentos ou tubulações, como por exemplo o trip tank, por não se caracterizar como uma perda de contenção.",
+        "aplicabilidade_regulatoria": "Atividades de E&P reguladas pelas SSO e SIM/ANP",
+        "parametros_quantitativos": [
+          {
+            "variavel": "concentracao_h2s",
+            "unidade": "ppm",
+            "min": 8,
+            "max": null,
+            "expressao_original": "igual ou superior a 8 ppm"
+          }
+        ],
+        "linha_na_planilha": 41,
+        "conceitos_relacionados": [
+          "C07"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-08",
+        "tipo_ocorrencia": "Vazamento de gás inflamável (atividades de produção de combustíveis reguladas pelo SPC/ANP)",
+        "descricao": "Vazamento de gás inflamável em taxa maior ou igual a 50 kg/h.",
+        "aplicabilidade_regulatoria": "Atividades de produção de combustíveis reguladas pelo SPC/ANP",
+        "parametros_quantitativos": [
+          {
+            "variavel": "taxa_vazamento_gas_inflamavel",
+            "unidade": "kg/h",
+            "min": 50,
+            "max": null,
+            "expressao_original": "maior ou igual a 50 kg/h"
+          }
+        ],
+        "linha_na_planilha": 42,
+        "conceitos_relacionados": [
+          "C06"
+        ],
+        "pontos_a_decidir_relacionados": [
+          "PD-01"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-09",
+        "tipo_ocorrencia": "Vazamento de H2S (atividades de produção de combustíveis reguladas pelo SPC/ANP)",
+        "descricao": "Vazamento de H2S em qualquer quantidade ou concentração.",
+        "aplicabilidade_regulatoria": "Atividades de produção de combustíveis reguladas pelo SPC/ANP",
+        "linha_na_planilha": 43,
+        "conceitos_relacionados": [
+          "C07"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-10",
+        "tipo_ocorrencia": "Vazamento de outros gases (atividades de produção de combustíveis reguladas pelo SPC/ANP)",
+        "descricao": "Vazamento de qualquer gás nocivo ou perigoso, incluindo gases inflamáveis.",
+        "aplicabilidade_regulatoria": "Atividades de produção de combustíveis reguladas pelo SPC/ANP",
+        "linha_na_planilha": 44,
+        "conceitos_relacionados": [
+          "C06"
+        ],
+        "pontos_a_decidir_relacionados": [
+          "PD-01"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-11",
+        "tipo_ocorrencia": "Falha no Blowout Preventer (BOP)",
+        "descricao": "Falha no elemento BOP do Conjunto Solidário de Barreira (CSB) do poço, em função e interligado ao poço.",
+        "linha_na_planilha": 45,
+        "pontos_a_decidir_relacionados": [
+          "PD-12"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-12",
+        "tipo_ocorrencia": "Falha de elemento do Conjunto Solidário de Barreira (CSB)",
+        "descricao": "Qualquer falha detectada em elementos integrantes de Conjuntos Solidários de Barreira, exceto falhas em BOP ou na barreira primária na perfuração ou intervenção em poços (kick).",
+        "linha_na_planilha": 46,
+        "pontos_a_decidir_relacionados": [
+          "PD-12"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-13",
+        "tipo_ocorrencia": "Parâmetro de monitoramento de CSB fora do limite de projeto",
+        "descricao": "Qualquer parâmetro utilizado para monitorar Conjunto(s) Solidário(s) de Barreira que esteja fora dos limites estipulados em projeto.",
+        "linha_na_planilha": 47,
+        "pontos_a_decidir_relacionados": [
+          "PD-12"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-14",
+        "tipo_ocorrencia": "Perda de posicionamento",
+        "descricao": "Afastamento de instalação ou atividade de apoio de sua área de passeio crítico mantida com sistema de posicionamento dinâmico, que tenha ocasionado, no mínimo:",
+        "enumeracao": [
+          {
+            "marcador": "i",
+            "texto": "um alerta amarelo;"
+          },
+          {
+            "marcador": "ii",
+            "texto": "a desconexão de mangotes de carga e descarga; ou"
+          },
+          {
+            "marcador": "iii",
+            "texto": "a interrupção das operações da instalação."
+          }
+        ],
+        "linha_na_planilha": 48,
+        "pontos_a_decidir_relacionados": [
+          "PD-12"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-15",
+        "tipo_ocorrencia": "Princípio de incêndio",
+        "descricao": "Período inicial da queima de materiais, compostos químicos ou equipamentos que, por ter sido debelada ou interrompida, não evoluiu para um incêndio menor, significante ou maior",
+        "linha_na_planilha": 49,
+        "conceitos_relacionados": [
+          "C15"
+        ],
+        "pontos_a_decidir_relacionados": [
+          "PD-09",
+          "PD-12"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-16",
+        "tipo_ocorrencia": "Queda de objetos",
+        "descricao": "Qualquer queda de objeto com energia potencial maior ou igual a 40J.",
+        "parametros_quantitativos": [
+          {
+            "variavel": "energia_potencial_objeto",
+            "unidade": "J",
+            "min": 40,
+            "max": null,
+            "expressao_original": "maior ou igual a 40J"
+          }
+        ],
+        "linha_na_planilha": 50,
+        "pontos_a_decidir_relacionados": [
+          "PD-12"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-17",
+        "tipo_ocorrencia": "Perda de fonte radioativa",
+        "descricao": "Qualquer perda de material radioativo durante atividades operacionais ou de apoio.",
+        "linha_na_planilha": 51,
+        "pontos_a_decidir_relacionados": [
+          "PD-12"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-18",
+        "tipo_ocorrencia": "Perda de carga explosiva",
+        "descricao": "Qualquer perda de material explosivo durante atividades operacionais ou de apoio",
+        "linha_na_planilha": 52,
+        "pontos_a_decidir_relacionados": [
+          "PD-12"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-19",
+        "tipo_ocorrencia": "Homem ao mar",
+        "descricao": "Queda em corpo d’agua de pessoa a partir de instalação ou embarcação",
+        "linha_na_planilha": 53,
+        "pontos_a_decidir_relacionados": [
+          "PD-12"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-20",
+        "tipo_ocorrencia": "Falha de sistema crítico de segurança operacional (reguladas pela SSO e SIM/ANP)",
+        "descricao": "Qualquer falha, parcial ou total, no funcionamento projetado para um sistema crítico de segurança operacional (parte ou todo) após demanda, manual ou automática, ocasionada por incidente operacional.",
+        "aplicabilidade_regulatoria": "Reguladas pela SSO e SIM/ANP",
+        "linha_na_planilha": 54,
+        "pontos_a_decidir_relacionados": [
+          "PD-12"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-21",
+        "tipo_ocorrencia": "Queima ou emissão de gás por motivo de emergência",
+        "descricao": "Qualquer queima de gases por sistema de segurança para a despressurização emergencial de sistemas e equipamentos (estando ou não relacionado a ESD), excluindo abertura de PSVs.",
+        "linha_na_planilha": 55,
+        "pontos_a_decidir_relacionados": [
+          "PD-12"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-22",
+        "tipo_ocorrencia": "Parada não programada devido a eventos naturais ou alheios não controlados em instalações de produção de biocombustíveis SPC/ANP)",
+        "descricao": "Parada não programada de uma instalação de produção, unidade auxiliar ou unidade de processo devido a eventos naturais ou alheios não controlados (i) por período superior a 24 (vinte e quatro) horas ou (ii) por qualquer duração, na qual haja risco de desabastecimento de combustíveis.",
+        "aplicabilidade_regulatoria": "Instalações de produção de biocombustíveis SPC/ANP",
+        "parametros_quantitativos": [
+          {
+            "variavel": "duracao_parada",
+            "unidade": "horas",
+            "min": 24,
+            "max": null,
+            "expressao_original": "superior a 24 horas (ou qualquer duração com risco de desabastecimento)"
+          }
+        ],
+        "nota_sobre_fonte": "Duplicidade aparente com o item \"Parada não programada ... biocombustíveis\" (linha 59); mantidos os dois como na planilha.",
+        "linha_na_planilha": 56,
+        "conceitos_relacionados": [
+          "C16"
+        ],
+        "pontos_a_decidir_relacionados": [
+          "PD-14"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-23",
+        "tipo_ocorrencia": "Quase acidente de alto potencial",
+        "descricao": "Quase acidente com potencial de provocar acidente grave (tipo de acidente em que ocorre ferimento grave, fatalidade, descarga maior, incêndio, explosão, falha estrutural, colisão, abalroamento, adernamento, afundamento, naufrágio, queda de helicóptero ou perda de controle de poço.)",
+        "linha_na_planilha": 57,
+        "pontos_a_decidir_relacionados": [
+          "PD-12"
+        ],
+        "nivel_real": 0,
+        "nota_nivel": "Severidade real 0, como todo quase acidente. O alto potencial (acidente grave possível) é avaliado à parte, como severidade potencial (PD-12)."
+      },
+      {
+        "id": "QA-24",
+        "tipo_ocorrencia": "Primeiros Socorros sem Lesão",
+        "descricao": "Caso simples de atendimento restrito a primeiros socorros, onde não é constatada lesão ao colaborador, em que o funcionário deve estar apto para retornar ao posto de trabalho imediatamente após o atendimento.",
+        "linha_na_planilha": 58,
+        "pontos_a_decidir_relacionados": [
+          "PD-12"
+        ],
+        "nivel_real": 0,
+        "nota_nivel": "Primeiros socorros SEM lesão = quase acidente (nível 0). Com lesão: SEV-01 nível 1."
+      },
+      {
+        "id": "QA-25",
+        "tipo_ocorrencia": "Parada não programada devido a eventos naturais ou alheios não controlados em instalações de produção de biocombustíveis",
+        "descricao": "Parada não programada de uma instalação de produção, unidade auxiliar ou unidade de processo devido a eventos naturais ou alheios não controlados (i) por período superior a 24 (vinte e quatro) horas ou (ii) por qualquer duração, na qual haja risco de desabastecimento de combustíveis.",
+        "aplicabilidade_regulatoria": "Instalações de produção de biocombustíveis",
+        "parametros_quantitativos": [
+          {
+            "variavel": "duracao_parada",
+            "unidade": "horas",
+            "min": 24,
+            "max": null,
+            "expressao_original": "superior a 24 horas (ou qualquer duração com risco de desabastecimento)"
+          }
+        ],
+        "nota_sobre_fonte": "Duplicidade aparente com o item \"Parada não programada ... biocombustíveis SPC/ANP\" (linha 56); mantidos os dois como na planilha.",
+        "linha_na_planilha": 59,
+        "conceitos_relacionados": [
+          "C16"
+        ],
+        "pontos_a_decidir_relacionados": [
+          "PD-14"
+        ],
+        "nivel_real": 0
+      },
+      {
+        "id": "QA-26",
+        "tipo_ocorrencia": "Outros",
+        "descricao": "Outros",
+        "linha_na_planilha": 60,
+        "pontos_a_decidir_relacionados": [
+          "PD-12"
+        ],
+        "nivel_real": 0
+      }
+    ],
+    "severidade_real_fixa": 0,
+    "fonte_da_regra": "PG-CORP-SMS-015 Rev.09 (23/09/2026), item 6.1",
+    "observacao": "Severidade REAL é sempre 0. O PG-015 usa \"nível potencial/real\" nas tabelas 1 e 2 e define incidente leve e moderado também por quase acidentes de baixo/médio e de elevado potencial, mas não diz como atribuir o número do nível potencial (ver PD-12)."
+  },
+  "glossario_conceitos": [
+    {
+      "id": "C01",
+      "termo": "Contenção primária",
+      "definicao": "Tanque, vaso, tubulação, duto ou qualquer equipamento projetado para servir como meio de armazenamento ou usado para o processamento ou movimentação de materiais.",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), cap. 2 (referência API 754)"
+    },
+    {
+      "id": "C02",
+      "termo": "Contenção secundária",
+      "definicao": "O manual não traz definição formal. Cita como exemplos: bacia ou dique de contenção (E&P e Movimentação) e diques, canaletas e sistemas de tratamento específicos (Produção de Combustíveis).",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), I.3.2.2 e III.3.2.1",
+      "definicao_formal": "nao_consta"
+    },
+    {
+      "id": "C03",
+      "termo": "Perda de contenção primária (PCP)",
+      "definicao": "Liberação não planejada ou não controlada de qualquer LÍQUIDO a partir da sua contenção primária.",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), cap. 4 e PG-CORP-SMS-015 Rev.09 (23/09/2026), item 4 (mesma definição)",
+      "condicoes_para_existir": [
+        "O material liberado é líquido.",
+        "A liberação é não planejada ou não controlada.",
+        "A origem é a contenção primária."
+      ],
+      "nao_depende_de": "Atingir o meio ambiente.",
+      "como_classificar": "Pelo VOLUME TOTAL que saiu da contenção primária (inclusive o que ficou retido em contenção secundária).",
+      "natureza": "quase_acidente; severidade real 0 (PG-015 Rev.09, item 6.1).",
+      "itens_da_matriz": [
+        "QA-02",
+        "QA-03"
+      ],
+      "nota": "O texto do cap. 3.2 cita a gradação \"menor\", mas a Tabela I.2 (E&P) lista apenas \"maior\" e \"significante\". Abaixo de 0,16 m3 sem atingir o meio ambiente não há tipologia listada."
+    },
+    {
+      "id": "C04",
+      "termo": "Descarga",
+      "definicao": "Qualquer despejo, escape, derrame, vazamento, esvaziamento, lançamento para fora ou bombeamento de substâncias nocivas ou perigosas, em qualquer quantidade, a partir de uma instalação, que tenha ATINGIDO O MEIO AMBIENTE.",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), cap. 4 (Lei nº 9.966/2000)",
+      "condicoes_para_existir": [
+        "Houve liberação a partir de uma instalação.",
+        "A substância é nociva ou perigosa.",
+        "A substância ATINGIU o meio ambiente."
+      ],
+      "como_classificar": "Pelo VOLUME QUE ATINGIU O MEIO AMBIENTE (não pelo volume total perdido).",
+      "regra_do_manual": "Toda descarga ocorre após uma perda de contenção primária; por isso a descarga deve ser registrada JUNTO com a PCP que a originou, esta classificada pelo volume total (cap. 3.3).",
+      "natureza": "acidente (exige relatório de investigação).",
+      "itens_da_matriz": [
+        "SEV-03",
+        "SEV-06"
+      ],
+      "excecao_por_decisao": {
+        "regra": "Gás inflamável NÃO é descarga, mesmo que a definição de Descarga na matriz (SEV-03) cite gás inflamável. Gás é sempre vazamento de gás.",
+        "origem": "Decisão do responsável pelo JSON (Rafael Rocha), 15/10/2026. Não consta em documento oficial; validar com o SMS corporativo.",
+        "ponto": "PD-01"
+      }
+    },
+    {
+      "id": "C05",
+      "termo": "Vazamento (palavra isolada)",
+      "definicao": "O manual NÃO define \"vazamento\" de forma isolada. A palavra aparece com três usos: (1) verbo dentro da definição de descarga; (2) na tipologia formal \"Vazamento de gás\"; (3) nos anexos de Produção de Combustíveis e Distribuição, como sinônimo de perda de contenção primária (\"vazamentos (perdas de contenção primária)\").",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), cap. 4, III.2.3.1 (Campo V) e IV.2.3.1; PG-CORP-SMS-015 Rev.09 (23/09/2026), item 4",
+      "regra_de_uso": "Em relato de campo, \"vazamento\" é apenas ponto de partida. O enquadramento depende do estado físico (líquido ou gás), da origem (contenção primária) e do destino (ficou contido ou atingiu o meio ambiente).",
+      "nao_confundir_com": [
+        "Descarga",
+        "Perda de contenção primária"
+      ],
+      "uso_adicional": "Quarto uso: na definição de \"Acidente ambiental\" do PG-015 Rev.09 (para comunicação ao IBAMA, IN 15/2014): \"todo evento não planejado e indesejado, incluídos os vazamentos de produto perigoso\". É conceito de comunicação ao IBAMA e não classifica severidade."
+    },
+    {
+      "id": "C06",
+      "termo": "Vazamento de gás",
+      "definicao": "Liberação não planejada ou não controlada de GÁS oriundo da contenção primária, exceto liberações que resultem de sistemas de produção ou processamento projetados para responder a desvios de processo.",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), cap. 4 (IRF/API 754)",
+      "como_classificar": "Pela taxa de liberação (kg/s), duração e massa total liberada (E&P e Movimentação); por taxa em kg/h (Produção de Combustíveis).",
+      "natureza": "quase_acidente; severidade real 0 (PG-015 Rev.09).",
+      "itens_da_matriz": [
+        "QA-05",
+        "QA-06",
+        "QA-08",
+        "QA-10"
+      ],
+      "nao_confundir_com": [
+        "Descarga",
+        "Perda de contenção primária (que é só de líquido)"
+      ],
+      "regra_decidida": {
+        "regra": "Todo gás liberado (inflamável, H2S ou outro) é vazamento de gás e nunca descarga.",
+        "origem": "Decisão do responsável pelo JSON (Rafael Rocha), 15/10/2026. Não consta em documento oficial; validar com o SMS corporativo.",
+        "ponto": "PD-01"
+      }
+    },
+    {
+      "id": "C07",
+      "termo": "Vazamento de H2S",
+      "definicao": "Liberação confirmada por detecção de H2S em concentração instantânea igual ou superior a 8 ppm, por detector fixo ou portátil. Exclui detecção no interior de equipamentos ou tubulações (por exemplo trip tank), por não ser perda de contenção. Na Produção de Combustíveis vale qualquer quantidade ou concentração.",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), I.3.2.3.3 e III.3.2.3",
+      "itens_da_matriz": [
+        "QA-07",
+        "QA-09"
+      ]
+    },
+    {
+      "id": "C08",
+      "termo": "Descarte fora de especificação",
+      "definicao": "Lançamento de água produzida ou fluido de perfuração, completação, intervenção ou cascalhos feito como parte de um processo ou atividade (permanente ou intermitente) em desacordo com os limites da legislação ambiental ou do órgão ambiental competente. Comunicável em qualquer volume.",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), I.1 e I.3.1.1.1",
+      "diferenca_para_descarga": "No descarte, o lançamento é PREVISTO (faz parte do processo) e o problema é o limite excedido. Na descarga, a liberação é NÃO PREVISTA (perda de contenção).",
+      "parametros_de_especificacao_agua_produzida": {
+        "plataformas_maritimas": "TOG acima de 42 mg/L (máximo diário) ou acima de 29 mg/L (média aritmética simples mensal)",
+        "instalacoes_terrestres": "TOG acima de 20 mg/L"
+      },
+      "itens_da_matriz": [
+        "SEV-04"
+      ]
+    },
+    {
+      "id": "C09",
+      "termo": "Constatação de mancha de origem indeterminada",
+      "definicao": "Observação de mancha oleosa na superfície de corpos d'água sem que a origem tenha sido identificada.",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), cap. 4 e I.3.1.1.2.4",
+      "regra_do_manual": "Mancha de óleo no entorno de uma instalação NÃO é \"origem indeterminada\": deve ser comunicada como descarga de óleo, pelo volume constatado, e a investigação define a origem.",
+      "itens_da_matriz": [
+        "SEV-05",
+        "QA-04"
+      ]
+    },
+    {
+      "id": "C10",
+      "termo": "Substância nociva ou perigosa",
+      "definicao": "Qualquer substância que, se descarregada, é capaz de gerar riscos ou causar danos à saúde humana ou ao meio ambiente. Fluidos inflamáveis que não sejam óleo (por exemplo glicol de tratamento ou injeção de gás) entram nesta categoria.",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), cap. 2 e I.2.5 (Lei nº 9.966/2000)"
+    },
+    {
+      "id": "C11",
+      "termo": "Meio ambiente atingido",
+      "definicao": "O manual não define \"meio ambiente\" de forma isolada. Pede informar a \"área atingida\" (corpo hídrico, aquífero, solo, mar territorial etc.) e, separadamente, o \"tipo de contenção secundária atingida\" (bacia ou dique de contenção). Líquido que ficou apenas na contenção secundária é tratado como perda de contenção primária, não como descarga.",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), I.3.1.1.2 e I.3.2.2; III.3.2.1",
+      "definicao_formal": "nao_consta",
+      "ponto_a_decidir": "PD-05 (parcialmente decidido)",
+      "definicao_adotada": {
+        "meio_ambiente_atingido": [
+          "vegetação",
+          "solo natural",
+          "mangue",
+          "rio e demais corpos d'água (o item 3.4 do RIA no PG-015 cita córrego, rio, aguada, lagoa, salina, mar aberto e mar próximo à costa)"
+        ],
+        "nao_e_meio_ambiente_atingido": [
+          "líquido que ficou somente em contenção secundária (bacia, dique, canaleta, sistema de tratamento), conforme o manual"
+        ],
+        "origem": "Decisão do responsável pelo JSON (Rafael Rocha), 15/10/2026. Não consta em documento oficial; validar com o SMS corporativo.",
+        "ponto": "PD-05",
+        "pendencia_residual": "Superfície impermeabilizada (piso concretado, asfalto) sem contenção secundária e \"área de cultivo\" (que o PG-015 manda informar no RIA) não foram decididas."
+      }
+    },
+    {
+      "id": "C12",
+      "termo": "Incidente, acidente e quase acidente",
+      "definicao": "Incidente = acidente ou quase acidente. Acidente = ocorrência que resulte em poluição ou danos ao meio ambiente ou à saúde humana, prejuízos materiais ao patrimônio próprio ou de terceiros ou interrupção das operações. Quase acidente = ocorrência com POTENCIAL de causar esses efeitos. Acidente exige relatório de investigação.",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), cap. 1 e I.3.1"
+    },
+    {
+      "id": "C13",
+      "termo": "Ferimento grave",
+      "definicao": "Ocorrência (acidental ou intencional) que envolva: a) fratura de ossos que não seja de dedos; b) amputação; c) perda de consciência por asfixia ou exposição a substâncias nocivas ou perigosas; d) doença aguda que exija tratamento médico por exposição a substâncias nocivas ou perigosas; e) lesão de órgãos internos; f) deslocamento de articulações; g) perda de visão; h) hipotermia ou outras doenças por temperaturas extremas; i) internação por mais de 24 horas; j) queimadura química ou por metal quente no olho, ou qualquer lesão penetrante no olho; k) qualquer outra lesão que exija ressuscitação.",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), I.3.1.2.1.1 (Res. ANP 882/2022, art. 2º, VII)",
+      "notas": [
+        "O manual define ferimento grave pela LISTA acima; não exige dias de afastamento.",
+        "Há pequenas variações de redação entre capítulos (cap. 4 usa \"sintoma agudo\" no item d; Anexo II acrescenta \"ou de dentes\" no item a e condiciona o deslocamento de articulações à internação superior a 24 horas)."
+      ],
+      "itens_da_matriz": [
+        "SEV-01"
+      ]
+    },
+    {
+      "id": "C14",
+      "termo": "Ferimento com afastamento e fatalidade",
+      "definicao": "Ferimento com afastamento de 1 a 3 dias e por mais de 3 dias são tipologias da ANP para lesão que não seja ferimento grave. Fatalidade inclui óbito na instalação ou decorrente de incidente operacional, moléstia ou doença contraída na atividade, em até um ano da data do incidente, com nexo causal. Fatalidade por causa natural, suicídio ou doença profissional é sempre comunicada até haver laudo. Fatalidade por acidente de trânsito terrestre não é comunicável à ANP.",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), I.3.1.2.1.2 a I.3.1.2.1.4",
+      "itens_da_matriz": [
+        "SEV-01"
+      ]
+    },
+    {
+      "id": "C15",
+      "termo": "Incêndio menor, significante e maior; princípio de incêndio",
+      "definicao": "Incêndio menor: em área de processo, não enquadrado em significante ou maior, que exige atuação da brigada. Incêndio significante: causa ferimento com afastamento não grave, ou dano com potencial de fatalidade/ferimento grave, ou mobilização para ponto de abandono, ou dano estrutural severo. Incêndio maior: causa fatalidade ou ferimento grave, ou perda da instalação, ou parada não programada de no mínimo 72 horas. Princípio de incêndio: período inicial da queima que foi debelado ou interrompido e não evoluiu para incêndio.",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), cap. 4 e I.3.1.3.5 / I.3.2.5.1",
+      "itens_da_matriz": [
+        "SEV-15",
+        "QA-15"
+      ],
+      "nota": "No cap. 4, o princípio de incêndio \"não evoluiu para incêndio significante ou maior\"; no Anexo I e na matriz, \"não evoluiu para incêndio menor, significante ou maior\". Vale o texto do Anexo I (igual ao da matriz). Ver PD-09."
+    },
+    {
+      "id": "C16",
+      "termo": "Interrupção das operações (parada não programada)",
+      "definicao": "Parada total ou parcial não programada de uma instalação por período superior a 24 horas. Na Produção de Combustíveis e na Distribuição, também qualquer parada com risco de desabastecimento, mesmo abaixo de 24 horas.",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), I.3.1.4.1.1; III.3.1.4.1; IV.3.1.4.1",
+      "itens_da_matriz": [
+        "SEV-09",
+        "QA-22",
+        "QA-25"
+      ]
+    },
+    {
+      "id": "C17",
+      "termo": "Área ecologicamente sensível",
+      "definicao": "O manual usa o termo na definição de descarga maior (\"áreas ecologicamente sensíveis, pontos de captação de água, áreas urbanas, unidades de conservação e áreas de importância socioeconômica\") sem defini-lo.",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), cap. 4 e I.3.1.1.2.1",
+      "definicao_adotada": {
+        "inclui": [
+          "solo natural",
+          "rios",
+          "mangues",
+          "e ambientes naturais similares"
+        ],
+        "origem": "Decisão do responsável pelo JSON (Rafael Rocha), 15/10/2026. Não consta em documento oficial; validar com o SMS corporativo.",
+        "ponto": "PD-02"
+      },
+      "consequencia": "Descarga de 8 m3 ou mais nesses ambientes = descarga maior (SEV-03, nível 3).",
+      "itens_da_matriz": [
+        "SEV-03"
+      ]
+    },
+    {
+      "id": "C18",
+      "termo": "Incidente leve, moderado e grave",
+      "definicao": {
+        "leve": "Acidentes de menores consequências à vida humana, ao meio ambiente ou ao patrimônio; ou quase acidentes de baixo/médio potencial de causar consequências maiores.",
+        "moderado": "Acidentes com consequências significantes; ou quase acidentes com elevado potencial de causar consequências maiores.",
+        "grave": "Acidentes com consequências maiores à vida humana, ao meio ambiente ou ao patrimônio. Tipicamente fatalidade e danos severos à instalação (abalroamento maior, afundamento, incêndio maior, explosão). Normalmente eventos apontados como Major Accident Hazards nos estudos de risco."
+      },
+      "fonte": "PG-CORP-SMS-015 Rev.09 (23/09/2026), item 4",
+      "nota": "Não define limites numéricos para \"baixo/médio\" e \"elevado\" potencial (ver PD-12)."
+    },
+    {
+      "id": "C19",
+      "termo": "Acidente grave",
+      "definicao": "Tipo de acidente em que ocorre ferimento grave, fatalidade, descarga maior, incêndio, explosão, falha estrutural, colisão, abalroamento, adernamento, afundamento, naufrágio, queda de helicóptero ou perda de controle de poço.",
+      "fonte": "PG-CORP-SMS-015 Rev.09 (23/09/2026), item 4 (igual ao manual)"
+    }
+  ],
+  "classificacao_de_fluidos": {
+    "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), I.2.5 e Figura I.2",
+    "categorias": [
+      "óleo",
+      "água oleosa",
+      "água de injeção",
+      "água produzida",
+      "fluido de perfuração, completação ou intervenção (e cascalhos)",
+      "substância nociva ou perigosa"
+    ],
+    "regras": [
+      "Fluidos de drenagem ABERTA são classificados como \"água oleosa\".",
+      "Fluidos de drenagem FECHADA são classificados conforme a natureza do que o sistema recebeu (água oleosa, óleo etc.).",
+      "Mistura de água com condensado de gás natural em drenagem fechada é sempre \"óleo\".",
+      "Óleos e derivados recebidos e armazenados na instalação (lubrificante, diesel de geração etc.) são \"óleo\".",
+      "Demais inflamáveis que não sejam óleo (por exemplo glicol) são \"substância nociva ou perigosa\".",
+      "Para água produzida e fluido de perfuração, completação, intervenção ou cascalhos que atingiram o meio ambiente: lançamento previsto fora dos limites = DESCARTE fora de especificação; perda de contenção não prevista com lançamento = DESCARGA.",
+      "Ao informar volume, separar cada componente da mistura. Exemplo do manual: 0,1 m3 de água oleosa 50% água / 50% óleo descarregados = 0,05 m3 de água + 0,05 m3 de óleo."
+    ],
+    "descargas_comunicaveis_E&P": "óleo, água oleosa, água de injeção (somente ambiente terrestre), água produzida (somente ambiente terrestre), fluido de perfuração/completação/intervenção e substância nociva ou perigosa. O manual NÃO lista gás entre os fluidos de descarga de E&P (ver PD-01)."
+  },
+  "logica_de_decisao": {
+    "principios": [
+      "Cada consequência do evento é avaliada separadamente e vira um enquadramento (item + nível).",
+      "O nível final do evento é o MAIOR nível entre os enquadramentos (regra do FACIU).",
+      "Só entra na conta o que a matriz ou o manual definem; o resto vira dado faltante ou ponto a decidir."
+    ],
+    "etapa_1_fatos_minimos": {
+      "objetivo": "Extrair do relato os fatos que decidem o enquadramento. Se algum faltar, listar em \"dados_faltantes\".",
+      "campos": [
+        {
+          "campo": "estado_fisico",
+          "valores": [
+            "liquido",
+            "gas_inflamavel",
+            "h2s",
+            "outro_gas",
+            "solido_ou_cascalho",
+            "material_radioativo",
+            "material_explosivo"
+          ]
+        },
+        {
+          "campo": "liberacao_planejada",
+          "descricao": "A liberação fazia parte do processo (descarte) ou foi não planejada/não controlada?"
+        },
+        {
+          "campo": "origem_contencao_primaria",
+          "descricao": "Saiu de tanque, vaso, tubulação, duto ou equipamento de processo/movimentação?"
+        },
+        {
+          "campo": "volume_total_m3",
+          "descricao": "Todo o volume que saiu da contenção primária."
+        },
+        {
+          "campo": "volume_atingiu_meio_ambiente_m3",
+          "descricao": "Somente o volume que chegou ao solo, corpo hídrico, mar ou aquífero."
+        },
+        {
+          "campo": "local_atingido",
+          "valores": [
+            "ficou_em_contencao_secundaria",
+            "solo",
+            "solo_compactado",
+            "corpo_hidrico",
+            "mar",
+            "area_sensivel",
+            "ponto_de_captacao_de_agua",
+            "area_urbana",
+            "unidade_de_conservacao",
+            "nao_informado"
+          ]
+        },
+        {
+          "campo": "fluido",
+          "descricao": "Segundo \"classificacao_de_fluidos\"."
+        },
+        {
+          "campo": "taxa_ou_massa_gas",
+          "descricao": "Taxa (kg/s ou kg/h), duração e massa total, quando for gás."
+        },
+        {
+          "campo": "lesao_e_dias_afastados",
+          "descricao": "Tipo de lesão, internação, dias afastados e se houve óbito."
+        },
+        {
+          "campo": "duracao_parada_horas",
+          "descricao": "Duração da parada total ou parcial não programada."
+        },
+        {
+          "campo": "segmento_regulatorio",
+          "valores": [
+            "E&P (SSO)",
+            "Movimentacao (SIM)",
+            "Producao_de_combustiveis_e_biocombustiveis (SPC)",
+            "Distribuicao (SDL)"
+          ],
+          "descricao": "Define quais regras do manual e quais itens da matriz se aplicam."
+        }
+      ]
+    },
+    "vazamento_x_descarga": {
+      "objetivo": "Separar perda de contenção primária, descarga, vazamento de gás e descarte fora de especificação.",
+      "quadro_comparativo": [
+        {
+          "conceito": "Perda de contenção primária",
+          "material": "Líquido",
+          "precisa_atingir_meio_ambiente": false,
+          "volume_que_classifica": "Volume total liberado",
+          "faixas_m3": "maior: acima de 8; significante: 0,16 a 8",
+          "natureza": "Quase acidente",
+          "itens": [
+            "QA-02",
+            "QA-03"
+          ],
+          "severidade_real": 0
+        },
+        {
+          "conceito": "Descarga",
+          "material": "Substância nociva ou perigosa (óleo, água oleosa, produzida, injeção, fluido de perfuração etc.)",
+          "precisa_atingir_meio_ambiente": true,
+          "volume_que_classifica": "Volume que atingiu o meio ambiente",
+          "faixas_m3": "menor: abaixo de 0,16; significante: 0,16 a 8; maior: 8 ou mais E mar, ou ambiente natural/área sensível (solo natural, vegetação, rio, mangue, corpo d'água), captação de água, área urbana, unidade de conservação ou área socioeconômica",
+          "natureza": "Acidente",
+          "itens": [
+            "SEV-03 níveis 1, 2 e 3"
+          ],
+          "gas": "Gás não entra (PD-01)."
+        },
+        {
+          "conceito": "Vazamento de gás",
+          "material": "Gás (inflamável ou H2S)",
+          "precisa_atingir_meio_ambiente": false,
+          "volume_que_classifica": "Taxa de liberação, duração e massa (não usa volume líquido)",
+          "natureza": "Quase acidente",
+          "itens": [
+            "QA-05",
+            "QA-06",
+            "QA-07",
+            "QA-08",
+            "QA-09",
+            "QA-10"
+          ],
+          "regra_decidida": "Todo gás é vazamento de gás, nunca descarga (PD-01).",
+          "severidade_real": 0
+        },
+        {
+          "conceito": "Descarte fora de especificação",
+          "material": "Água produzida; fluido de perfuração, completação, intervenção ou cascalhos",
+          "precisa_atingir_meio_ambiente": true,
+          "liberacao": "Prevista, como parte do processo, acima dos limites",
+          "volume_que_classifica": "Qualquer volume",
+          "natureza": "Acidente",
+          "itens": [
+            "SEV-04 nível 1"
+          ]
+        }
+      ],
+      "arvore_de_decisao": [
+        {
+          "passo": "P1",
+          "pergunta": "Qual é o estado físico do que foi liberado?",
+          "se": {
+            "liquido": "ir para P2",
+            "gas_inflamavel": "ir para TRILHA_GAS. É sempre vazamento de gás; nunca descarga (PD-01).",
+            "h2s": "ir para TRILHA_GAS (H2S)",
+            "outro_gas": "ir para TRILHA_GAS (apenas SPC: vazamento de outros gases, QA-10)",
+            "material_radioativo_ou_explosivo": "QA-17 ou QA-18"
+          }
+        },
+        {
+          "passo": "P2",
+          "pergunta": "A liberação era prevista, como parte de um processo, e envolve água produzida ou fluido de perfuração/completação/intervenção/cascalhos?",
+          "se": {
+            "sim_e_fora_dos_limites": "DESCARTE fora de especificação (SEV-04, nível 1), qualquer volume. Parar aqui para este fluido.",
+            "sim_e_dentro_dos_limites": "Não é incidente.",
+            "nao_ou_nao_se_aplica": "ir para P3"
+          }
+        },
+        {
+          "passo": "P3",
+          "pergunta": "A liberação foi não planejada ou não controlada e saiu de uma contenção primária?",
+          "se": {
+            "sim": "Existe PERDA DE CONTENÇÃO PRIMÁRIA. Ir para P4.",
+            "nao_e_mancha_sem_origem": "ir para P6"
+          }
+        },
+        {
+          "passo": "P4",
+          "pergunta": "Qual foi o VOLUME TOTAL que saiu da contenção primária?",
+          "classifica_PCP": {
+            "acima_de_8_m3": "QA-02 (maior)",
+            "de_0.16_a_8_m3": "QA-03 (significante)",
+            "abaixo_de_0.16_m3": "sem tipologia de PCP listada no E&P; seguir para P5",
+            "exatamente_0.16_ou_8": "PD-03",
+            "nota": "PCP é quase acidente: severidade real 0 (PG-015 Rev.09)."
+          }
+        },
+        {
+          "passo": "P5",
+          "pergunta": "O líquido atingiu o meio ambiente (vegetação, solo natural, mangue, rio ou outro corpo d'água, mar)?",
+          "se": {
+            "nao_ficou_em_contencao_secundaria": "Só PCP (quase acidente, severidade 0). Não há descarga.",
+            "sim": "Registrar TAMBÉM a DESCARGA, classificada pelo volume que atingiu o meio ambiente (ver P5a).",
+            "superficie_impermeabilizada_sem_contencao_secundaria": "PD-05 (pendência residual)"
+          },
+          "P5a_classificar_descarga_pelo_volume_que_atingiu": {
+            "abaixo_de_0.16_m3": "SEV-03 nível 1 (descarga menor)",
+            "de_0.16_a_8_m3": "SEV-03 nível 2 (descarga significante), exceto em região de terreno compactado conforme normatização brasileira (PD-04)",
+            "8_m3_ou_mais_E_mar_ou_ambiente_natural_ou_area_sensivel_ou_captacao_ou_area_urbana_ou_unidade_de_conservacao_ou_area_socioeconomica": "SEV-03 nível 3 (descarga maior). Ambiente natural inclui solo natural, vegetação, rio, mangue (PD-02).",
+            "8_m3_ou_mais_em_terreno_compactado": "PD-04 (pendência residual: a exceção de terreno compactado não diz em que nível o evento se enquadra)"
+          },
+          "regra_do_manual": "Registrar PCP (volume total) e Descarga (volume que atingiu o meio ambiente) no mesmo evento. As duas podem ter graus diferentes.",
+          "exemplo": "Perda de 1 m3 de água oleosa, dos quais 0,1 m3 atingiram o meio ambiente = PCP significante + Descarga menor."
+        },
+        {
+          "passo": "P6",
+          "pergunta": "Há mancha oleosa em corpo d'água?",
+          "se": {
+            "no_entorno_da_instalacao": "Classificar como DESCARGA de óleo pelo volume constatado (P5a) e investigar a origem. Não usar \"origem indeterminada\".",
+            "origem_nao_identificada": "SEV-05 / QA-04 (constatação de mancha de origem indeterminada). A instalação informada é a que constatou a mancha."
+          }
+        }
+      ],
+      "trilha_gas": {
+        "regra_geral": "Gás NÃO é perda de contenção primária (que é só de líquido) e NÃO é descarga (decisão PD-01). Classificar como VAZAMENTO DE GÁS (quase acidente, severidade real 0).",
+        "excecao_de_origem": "Não é vazamento de gás a liberação que resulta de sistemas de produção ou processamento projetados para responder a desvios de processo.",
+        "E&P_e_Movimentacao": {
+          "nao_comunicar_se": "taxa de liberação abaixo de 0,1 kg/s OU massa total liberada abaixo de 1 kg",
+          "vazamento_maior_QA-05": "ao menos uma: (a) taxa maior que 1 kg/s com duração superior a 5 min; e/ou (b) taxa igual ou superior a 0,1 kg/s com massa total maior que 300 kg no evento",
+          "vazamento_significante_QA-06": "ao menos uma: (a) taxa entre 0,1 e 1 kg/s com duração entre 2 e 5 min; (b) taxa igual ou superior a 0,1 kg/s com massa total entre 1 e 300 kg no evento",
+          "h2s_QA-07": "concentração instantânea igual ou superior a 8 ppm, confirmada por detector (exclui interior de equipamentos/tubulações)"
+        },
+        "Producao_de_combustiveis_SPC": {
+          "gas_inflamavel_QA-08": "taxa igual ou superior a 50 kg/h",
+          "h2s_QA-09": "qualquer quantidade ou concentração",
+          "outros_gases_QA-10": "qualquer gás nocivo ou perigoso, incluindo inflamáveis",
+          "classificacao_de_gases_inflamaveis": "conforme NR-20 (líquidos inflamáveis e combustíveis: ABNT NBR 17505)"
+        },
+        "calculo_da_taxa_de_liberacao": {
+          "usar_quando": "A taxa não é conhecida e não há método mais preciso.",
+          "formula": "taxa_kg_s = 132.52 * (d/1000)**2 * sqrt(rho * Po)",
+          "variaveis": {
+            "d": "diâmetro equivalente do furo, em mm (disco de área idêntica à do furo transversal ao fluxo)",
+            "rho": "densidade do gás, em kg/m3, na pressão de operação",
+            "Po": "pressão de operação, em bar absoluto"
+          },
+          "unidade_do_resultado": "kg/s"
+        },
+        "decisao": {
+          "ponto": "PD-01",
+          "decisao": "Seguir o manual: gás é vazamento de gás, nunca descarga.",
+          "origem": "Decisão do responsável pelo JSON (Rafael Rocha), 15/10/2026. Não consta em documento oficial; validar com o SMS corporativo."
+        }
+      }
+    },
+    "cumulatividade": {
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), cap. 3.2 e 3.3",
+      "regras": [
+        "As tipologias de um mesmo evento são incluídas de forma CUMULATIVA; um evento pode se enquadrar em várias.",
+        "Dentro da mesma família com gradação (perda de contenção primária, descarga, abalroamento, incêndio) o mais grave ABSORVE o menos grave: registrar só o mais grave da família.",
+        "Fatalidade absorve ferimento grave para a MESMA vítima.",
+        "PCP e descarga são famílias diferentes: ambas devem ser registradas quando o líquido atingir o meio ambiente.",
+        "Se o evento escalar para outra tipologia (por exemplo incêndio significante para maior), a classificação deve ser retificada o mais rápido possível.",
+        "Se uma vítima de ferimento grave falecer em até um ano por consequência do acidente, retificar para fatalidade assim que houver ciência do óbito.",
+        "Incidentes recorrentes são registrados individualmente; se depois se confirmar que são manifestações do mesmo evento, os posteriores podem ser cancelados e o primeiro atualizado."
+      ]
+    },
+    "nivel_final_do_evento": {
+      "fonte": "FACIU v6.35.9 (funções addClassificationAssessment, recalcClassification e applyClassificationOverride)",
+      "regras": [
+        "Cada consequência registrada guarda: natureza (real ou potencial), área afetada, tipo de ocorrência, critério e nível.",
+        "Não se registra a mesma consequência (mesmo critério) duas vezes.",
+        "nivel_calculado = maior nível entre todas as consequências registradas; sem consequências, não há nível.",
+        "Revisão manual: o nível pode ser alterado por quem conduz a investigação, mas a justificativa é OBRIGATÓRIA; sem justificativa, vale o nível calculado.",
+        "nivel_final = nivel_revisado (se houver justificativa) senão nivel_calculado.",
+        "O nível final define os métodos de investigação sugeridos e a exigência de composição da comissão no FACIU.",
+        "Quase acidentes têm severidade real 0 (PG-015 Rev.09, item 6.1). Se o evento tiver só quase acidentes, nivel_final = 0.",
+        "Se houver acidente (SEV) e quase acidente (QA) no mesmo evento, vale o maior nível; o 0 do quase acidente nunca puxa o resultado para baixo."
+      ],
+      "formula": "nivel_final = (nivel_revisado se justificativa preenchida) senão max(niveis das consequencias), com quase acidente = 0",
+      "identificadores_no_FACIU": "Os critérios do FACIU usam o padrão m{revisão}-r{linha_na_planilha}-s{nível} (por exemplo m07-r12-s3 = Descarga maior). Como \"linha_na_planilha\" está em cada item deste arquivo, o id correspondente na Rev.08 pode ser formado como m08-r{linha}-s{nível}.",
+      "quase_acidentes_no_FACIU": "O FACIU Rev.07 grava nível 1 nos quase acidentes verificados (linhas 36 a 54). A regra vigente (PG-015 Rev.09) é nível 0: ajustar o FACIU (ver compatibilidade_FACIU).",
+      "compatibilidade_FACIU_v6_35_9": {
+        "tipo": "alerta, identificado pela leitura do código; não foi executado",
+        "itens": [
+          "recalcClassification() e renderClassificationAssessments() descartam consequências com \"x.severity\" falso: severidade 0 seria apagada da lista.",
+          "recalcClassification() usa \"if(cs.finalSeverity)\": nível final 0 é tratado como vazio e limpa sev, nivel e metodos.",
+          "classifyEngine() faz METHODS_BY_LEVEL[c.severity].rot: não existe entrada para 0, o que gera erro ao selecionar um critério de quase acidente com severidade 0.",
+          "Os critérios de quase acidente da Rev.07 embutida no FACIU estão com severity 1 e precisam ir para 0.",
+          "O motor de métodos e de comissão por nível (METHODS_BY_LEVEL) não tem regra para nível 0: o PG-015 também não define (ver regras_do_procedimento_PG-CORP-SMS-015_rev09)."
+        ],
+        "sugestao": "Tratar 0 como valor válido (comparar com null/undefined, não com falso), incluir a entrada 0 em METHODS_BY_LEVEL e migrar os critérios de quase acidente para severity 0."
+      }
+    },
+    "comunicabilidade_ANP": {
+      "observacao": "Pergunta diferente da severidade. Os prazos de comunicação estão na Resolução ANP nº 882/2022 (art. 3º) e NÃO constam no manual; por isso não foram incluídos.",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), Anexo I (E&P) e Figura I.1",
+      "perguntas_em_ordem_E&P": [
+        "O evento se enquadra na definição de incidente (causou ou tem potencial de causar poluição, dano ao meio ambiente ou à saúde, prejuízo material ou interrupção)? Se não, não é comunicável.",
+        "Está associado a instalação de exploração e produção? Se não, ver regras de atividade de apoio.",
+        "Ocorreu dentro dos limites do contrato ou autorização? Fora deles, só é comunicável a DESCARGA em águas jurisdicionais brasileiras.",
+        "Corresponde a alguma tipologia listada nas Tabelas I.1 ou I.2? Se não, não é comunicável."
+      ],
+      "nao_comunicaveis_por_local": [
+        "escritórios",
+        "bases de apoio operacional",
+        "aeroportos",
+        "portos",
+        "área de fundeio",
+        "estaleiros",
+        "transporte terrestre",
+        "sedes administrativas"
+      ],
+      "excecao_por_local": "Descarga em águas jurisdicionais brasileiras é sempre comunicável, qualquer que seja o local ou a atividade.",
+      "atividade_de_apoio_somente_estas_tipologias": [
+        "Descarga de qualquer natureza",
+        "Constatação de mancha de origem indeterminada",
+        "Ferimento grave",
+        "Fatalidade",
+        "Detonação de explosivos",
+        "Incêndio maior, significante ou menor",
+        "Explosão",
+        "Perda de carga explosiva",
+        "Perda de carga radioativa",
+        "Queda de helicóptero",
+        "Adernamento",
+        "Abalroamento",
+        "Afundamento de equipamento ou material",
+        "Afundamento ou naufrágio de instalação ou embarcação",
+        "Desconexão de emergência",
+        "Perda de posicionamento",
+        "Perda de ancoragem",
+        "Homem ao mar"
+      ],
+      "casario_offshore_somente": [
+        "Ferimento grave",
+        "Fatalidade",
+        "Incêndio maior",
+        "Incêndio significante",
+        "Explosão"
+      ],
+      "regras_especificas": [
+        "Descarga em instalação TERRESTRE: só é comunicável com volume igual ou superior a 0,16 m3 (descarga menor não é comunicável).",
+        "Descarga de água de injeção no mar não é comunicável, salvo fora de especificação.",
+        "Descarte fora de especificação: comunicável em qualquer volume.",
+        "Fatalidade por acidente de trânsito terrestre: não comunicável.",
+        "Surto de doença infectocontagiosa ou transmitida por alimentos: comunicável quando comprometer a normalidade das operações ou atingir 10% ou mais da força de trabalho presente.",
+        "Ferimento com afastamento: comunicável quando de 1 a 3 dias e quando por mais de 3 dias (E&P). Em Produção de Combustíveis e Movimentação: por mais de 3 dias.",
+        "Cada abalroamento é comunicado uma única vez.",
+        "Falha do sistema de ancoragem: só se houver rompimento da amarra; amarra tensionada acima do limite não é comunicável."
+      ],
+      "relatorio_de_investigacao": {
+        "regra": "Obrigatório para todo evento que se enquadre em pelo menos uma tipologia de ACIDENTE. Para quase acidente, a ANP pode determinar a investigação (anexos de Produção de Combustíveis e Distribuição).",
+        "prazo": "90 dias para o RIA à ANP, contados da constatação do evento, independentemente da comunicação inicial; a ANP pode antecipar ou prorrogar (PG-CORP-SMS-015 Rev.09 (23/09/2026), item 6.10 e Tabela 3).",
+        "quase_acidente": "Não é necessário enviar RIA de quase acidente à ANP, mas a ANP pode determinar o envio. A investigação interna deve ser feita sempre, conforme o PG-015 (item 6.10).",
+        "dados_do_evento_na_CI": "Para cada tipologia, o manual define dados da comunicação inicial (quadros vermelhos) e dados complementares em até 48 horas (quadros laranja)."
+      }
+    },
+    "quando_o_relato_diz": [
+      {
+        "relato": "Vazou óleo/fluido e ficou na bacia de contenção, dique ou canaleta",
+        "enquadramento": "Perda de contenção primária (pelo volume total). Não é descarga.",
+        "itens": [
+          "QA-02",
+          "QA-03"
+        ]
+      },
+      {
+        "relato": "Vazou e escorreu para o solo, canal, rio ou mar",
+        "enquadramento": "Perda de contenção primária (volume total) + Descarga (volume que atingiu o meio ambiente).",
+        "itens": [
+          "QA-02",
+          "QA-03",
+          "SEV-03"
+        ]
+      },
+      {
+        "relato": "Cheiro ou detecção de gás / vazamento de gás",
+        "enquadramento": "Vazamento de gás (taxa, duração e massa). Não é perda de contenção primária nem descarga pelo manual (ver PD-01).",
+        "itens": [
+          "QA-05",
+          "QA-06",
+          "QA-08",
+          "QA-10"
+        ]
+      },
+      {
+        "relato": "Detecção de H2S",
+        "enquadramento": "Vazamento de H2S (8 ppm ou mais no E&P).",
+        "itens": [
+          "QA-07",
+          "QA-09"
+        ]
+      },
+      {
+        "relato": "Água produzida ou fluido de perfuração lançado acima dos limites durante a operação",
+        "enquadramento": "Descarte fora de especificação.",
+        "itens": [
+          "SEV-04"
+        ]
+      },
+      {
+        "relato": "Perda não prevista de água produzida ou fluido de perfuração que chegou ao meio ambiente",
+        "enquadramento": "Descarga (e perda de contenção primária).",
+        "itens": [
+          "SEV-03",
+          "QA-02",
+          "QA-03"
+        ]
+      },
+      {
+        "relato": "Mancha de óleo na água perto da instalação",
+        "enquadramento": "Descarga de óleo pelo volume constatado; investigar a origem.",
+        "itens": [
+          "SEV-03"
+        ]
+      },
+      {
+        "relato": "Mancha de óleo na água sem origem identificada",
+        "enquadramento": "Constatação de mancha de origem indeterminada.",
+        "itens": [
+          "SEV-05",
+          "QA-04"
+        ]
+      },
+      {
+        "relato": "Pequeno foco de fogo apagado logo no início, sem brigada",
+        "enquadramento": "Princípio de incêndio (quase acidente). Se a brigada precisou atuar: incêndio menor.",
+        "itens": [
+          "QA-15",
+          "SEV-15"
+        ]
+      }
+    ]
+  },
+  "mapa_tipologias_anp_para_matriz": {
+    "objetivo": "Traduzir o nome da tipologia da ANP (por exemplo o campo \"classificação\" do CII) para o item e o nível da matriz, sem depender de busca por trecho de texto.",
+    "itens": [
+      {
+        "tipologia_anp": "Descarga maior",
+        "item_matriz": "SEV-03",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 3
+      },
+      {
+        "tipologia_anp": "Descarga significante",
+        "item_matriz": "SEV-03",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 2
+      },
+      {
+        "tipologia_anp": "Descarga menor",
+        "item_matriz": "SEV-03",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 1
+      },
+      {
+        "tipologia_anp": "Descarte fora de especificação (água produzida; fluidos de perfuração, completação, intervenção ou cascalhos)",
+        "item_matriz": "SEV-04",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 1
+      },
+      {
+        "tipologia_anp": "Constatação de mancha de origem indeterminada",
+        "item_matriz": "SEV-05",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 1,
+        "observacao": "Também aparece como quase acidente em QA-04 (atividades reguladas pela SIM/ANP)."
+      },
+      {
+        "tipologia_anp": "Perda maior / significante / menor de controle de poço",
+        "item_matriz": "SEV-07",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 3,
+        "observacao": "Na matriz as três gradações estão na coluna Grave (PD-06)."
+      },
+      {
+        "tipologia_anp": "Ferimento grave",
+        "item_matriz": "SEV-01",
+        "tipo_equivalencia": "inferida",
+        "nivel": 3,
+        "observacao": "Matriz: \"lesões graves com dias afastados\" (PD-07)."
+      },
+      {
+        "tipologia_anp": "Fatalidade",
+        "item_matriz": "SEV-01",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 3
+      },
+      {
+        "tipologia_anp": "Ferimento com afastamento de 1 a 3 dias / por mais de 3 dias",
+        "item_matriz": "SEV-01",
+        "tipo_equivalencia": "inferida",
+        "nivel": 2,
+        "observacao": "Matriz: \"lesões não graves com dias afastados\". Os cortes de 1-3 e mais de 3 dias são da ANP, não da matriz."
+      },
+      {
+        "tipologia_anp": "Surto de doença infectocontagiosa ou transmitida por alimentos",
+        "item_matriz": "SEV-02",
+        "tipo_equivalencia": "nome_identico",
+        "observacao": "Nível pela faixa da força de trabalho atingida: até 10% = 1; 11% a 50% = 2; acima de 50% = 3 (PD-08)."
+      },
+      {
+        "tipologia_anp": "Falha estrutural em instalação offshore / em sistema de coleta ou escoamento / em tanque",
+        "item_matriz": "SEV-10",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 3
+      },
+      {
+        "tipologia_anp": "Derivação clandestina",
+        "item_matriz": "SEV-10",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 1
+      },
+      {
+        "tipologia_anp": "Falha estrutural em poço; falha no riser; aprisionamento de coluna; perda de circulação; falha da barreira primária (kick); desconexão de emergência",
+        "item_matriz": "SEV-11",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 2
+      },
+      {
+        "tipologia_anp": "Abalroamento menor",
+        "item_matriz": "SEV-12",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 1
+      },
+      {
+        "tipologia_anp": "Abalroamento significante; falha do sistema de ancoragem; queda no mar de equipamento ou material",
+        "item_matriz": "SEV-12",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 2
+      },
+      {
+        "tipologia_anp": "Abalroamento maior; adernamento; afundamento ou naufrágio",
+        "item_matriz": "SEV-12",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 3
+      },
+      {
+        "tipologia_anp": "Queda de helicóptero",
+        "item_matriz": "SEV-13",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 3
+      },
+      {
+        "tipologia_anp": "Incêndio menor",
+        "item_matriz": "SEV-15",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 1
+      },
+      {
+        "tipologia_anp": "Incêndio significante; detonação acidental de explosivos",
+        "item_matriz": "SEV-15",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 2
+      },
+      {
+        "tipologia_anp": "Incêndio maior; explosão de atmosfera explosiva; explosão mecânica",
+        "item_matriz": "SEV-15",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 3
+      },
+      {
+        "tipologia_anp": "Falha de dispositivos de segurança (Produção de Combustíveis)",
+        "item_matriz": "SEV-16",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 2
+      },
+      {
+        "tipologia_anp": "Falha devido a ataque cibernético",
+        "item_matriz": "SEV-17",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 2
+      },
+      {
+        "tipologia_anp": "Interrupção não programada superior a 24 horas",
+        "item_matriz": "SEV-09",
+        "tipo_equivalencia": "nome_identico",
+        "observacao": "Nível pela duração: 24 a 48 h = 1; 48 a 72 h = 2; acima de 72 h = 3 (PD-03, PD-11)."
+      },
+      {
+        "tipologia_anp": "Descarga a partir de tancagem; de líquidos inflamáveis e combustíveis; de ácidos e bases; de substância nociva ou perigosa (Produção de Combustíveis)",
+        "item_matriz": "SEV-06",
+        "tipo_equivalencia": "nome_identico",
+        "observacao": "Pelo manual (SPC), descarga a partir de tancagem exige contato direto com solo e/ou corpo hídrico; líquidos inflamáveis e combustíveis a partir de 100 kg/h; ácidos e bases a partir de 200 kg/h; qualquer quantidade de substância nociva ou perigosa que atinja o meio ambiente. Perda contida em contenção secundária é perda de contenção primária (quase acidente). Níveis 1 e 2 em kg/h são da matriz (PD-10)."
+      },
+      {
+        "tipologia_anp": "Parada emergencial de planta de processo (ESD)",
+        "item_matriz": "QA-01",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Perda de contenção primária maior",
+        "item_matriz": "QA-02",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Perda de contenção primária significante",
+        "item_matriz": "QA-03",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Vazamento maior de gás inflamável",
+        "item_matriz": "QA-05",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Vazamento significante de gás inflamável",
+        "item_matriz": "QA-06",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Vazamento de H2S (E&P)",
+        "item_matriz": "QA-07",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Vazamento de gás inflamável (Produção de Combustíveis)",
+        "item_matriz": "QA-08",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Vazamento de H2S (Produção de Combustíveis)",
+        "item_matriz": "QA-09",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Vazamento de outros gases (Produção de Combustíveis)",
+        "item_matriz": "QA-10",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Falha no Blowout Preventer (BOP)",
+        "item_matriz": "QA-11",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Falha de elemento do Conjunto Solidário de Barreira (CSB)",
+        "item_matriz": "QA-12",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Parâmetro de monitoramento de CSB fora do limite de projeto",
+        "item_matriz": "QA-13",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Perda de posicionamento",
+        "item_matriz": "QA-14",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Princípio de incêndio",
+        "item_matriz": "QA-15",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Queda de objetos",
+        "item_matriz": "QA-16",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Perda de fonte radioativa",
+        "item_matriz": "QA-17",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Perda de carga explosiva",
+        "item_matriz": "QA-18",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Homem ao mar",
+        "item_matriz": "QA-19",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Falha de sistema crítico de segurança operacional",
+        "item_matriz": "QA-20",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Queima ou emissão de gás por motivo de emergência",
+        "item_matriz": "QA-21",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Parada não programada devido a eventos naturais ou alheios não controlados (biocombustíveis)",
+        "item_matriz": "QA-22 / QA-25",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Quase acidente de alto potencial",
+        "item_matriz": "QA-23",
+        "tipo_equivalencia": "nome_identico",
+        "nivel": 0,
+        "observacao": "Severidade real 0 (PG-015 Rev.09)."
+      },
+      {
+        "tipologia_anp": "Perda de contenção primária contida em contenção secundária (Produção de Combustíveis, SPC)",
+        "item_matriz": "QA-02 / QA-03",
+        "nivel": 0,
+        "tipo_equivalencia": "inferida",
+        "observacao": "Manual III.3.2.1: única tipologia, sem gradação por volume. A matriz só tem as linhas \"maior\" e \"significante\"; usar por analogia (PD-10)."
+      }
+    ]
+  },
+  "pontos_a_decidir": [
+    {
+      "id": "PD-01",
+      "titulo": "Gás inflamável: descarga ou vazamento de gás?",
+      "situacao": "divergencia",
+      "o_que_diz_a_matriz": "A definição de Descarga (SEV-03) lista \"gás inflamável\" entre os fluidos.",
+      "o_que_diz_o_manual": "Gás é tratado como \"Vazamento de gás\" (quase acidente). A lista de fluidos de descarga do E&P não inclui gás; PCP é só de líquido.",
+      "alternativas": [
+        "A: gás = vazamento de gás (QA-05, QA-06, QA-08, QA-10), nunca descarga.",
+        "B: gás que atinge o meio ambiente também gera descarga (SEV-03), seguindo o texto da matriz.",
+        "C: seguir o manual para comunicação à ANP e a matriz para severidade interna."
+      ],
+      "acionar_quando": "Relato de liberação de gás inflamável.",
+      "decisao_adotada": {
+        "decisao": "Seguir o manual: gás inflamável é vazamento de gás (QA), nunca descarga (SEV-03).",
+        "origem": "Decisão do responsável pelo JSON (Rafael Rocha), 15/10/2026. Não consta em documento oficial; validar com o SMS corporativo.",
+        "data": "2026-10-15"
+      },
+      "status": "decidido"
+    },
+    {
+      "id": "PD-02",
+      "titulo": "Volume de 8 m3 ou mais sem atingir mar ou área sensível",
+      "situacao": "lacuna",
+      "o_que_diz_a_matriz": "Descarga significante vai \"entre 0,16 m3 e 8 m3\"; descarga maior exige 8 m3 ou mais E mar/área sensível/captação/área urbana/unidade de conservação/área socioeconômica.",
+      "o_que_diz_o_manual": "Mesma redação; não diz como classificar 8 m3 ou mais em local comum.",
+      "alternativas": [
+        "A: tratar como descarga significante com revisão manual justificada.",
+        "B: tratar como descarga maior.",
+        "C: aguardar posição do SMS corporativo."
+      ],
+      "acionar_quando": "Descarga de 8 m3 ou mais em solo comum, fora das áreas listadas.",
+      "decisao_adotada": {
+        "decisao": "Área ecologicamente sensível inclui solo natural, rios, mangues e ambientes naturais similares; descarga de 8 m3 ou mais neles é descarga maior (nível 3).",
+        "origem": "Decisão do responsável pelo JSON (Rafael Rocha), 15/10/2026. Não consta em documento oficial; validar com o SMS corporativo.",
+        "data": "2026-10-15"
+      },
+      "status": "decidido",
+      "pendencia_residual": "Descarga de 8 m3 ou mais em terreno compactado (ver PD-04)."
+    },
+    {
+      "id": "PD-03",
+      "titulo": "Valor exatamente no limite entre faixas",
+      "situacao": "lacuna",
+      "o_que_diz_a_matriz": "Faixas compartilham limites: 0,16 m3; 8 m3; 5 min; 24 h; 48 h; 72 h; 49 kg/h.",
+      "o_que_diz_o_manual": "Perda de contenção maior é \"superior a 8 m3\" e significante \"entre 0,16 e 8\"; descarga maior é \"igual ou superior a 8 m3\"; incêndio maior usa \"no mínimo 72 horas\".",
+      "alternativas": [
+        "A: sempre o nível mais alto no limite (conservador).",
+        "B: sempre o nível mais baixo.",
+        "C: perguntar ao usuário a cada caso."
+      ],
+      "acionar_quando": "Qualquer valor igual a um limite.",
+      "decisao_adotada": null,
+      "status": "aberto"
+    },
+    {
+      "id": "PD-04",
+      "titulo": "Terreno compactado",
+      "situacao": "lacuna",
+      "o_que_diz_a_matriz": "Descarga significante vale \"exceto em região cujo terreno esteja compactado conforme normatização brasileira sobre o tema\".",
+      "o_que_diz_o_manual": "Mesma redação (no Anexo II a exceção também aparece na descarga menor). Não diz em que nível o evento se enquadra nessa exceção.",
+      "alternativas": [
+        "A: descarga menor (nível 1).",
+        "B: não classificar como descarga e tratar só como PCP.",
+        "C: aguardar posição do SMS corporativo."
+      ],
+      "acionar_quando": "Descarga entre 0,16 e 8 m3 em terreno compactado/impermeabilizado.",
+      "decisao_adotada": null,
+      "status": "aberto",
+      "contexto_adicional": "Com a decisão de PD-05, terreno natural atingido conta como meio ambiente; falta decidir se \"terreno compactado\" é solo natural e em que nível entra a descarga nele."
+    },
+    {
+      "id": "PD-05",
+      "titulo": "O que conta como \"meio ambiente atingido\"",
+      "situacao": "lacuna",
+      "o_que_diz_a_matriz": "Usa \"tenha atingido o meio ambiente\" sem definir.",
+      "o_que_diz_o_manual": "Não define; só diferencia \"área atingida\" (solo, corpo hídrico etc.) de \"contenção secundária atingida\" (bacia, dique).",
+      "alternativas": [
+        "A: piso concretado ou área de processo sem contato com solo = não atingiu o meio ambiente.",
+        "B: qualquer saída da contenção primária para fora da contenção secundária = atingiu.",
+        "C: perguntar ao usuário."
+      ],
+      "acionar_quando": "Líquido sobre piso, canaleta, área cimentada ou sistema de drenagem.",
+      "decisao_adotada": {
+        "decisao": "Meio ambiente atingido inclui vegetação, solo natural, mangues, rios e similares. Líquido contido apenas em contenção secundária não é meio ambiente atingido.",
+        "origem": "Decisão do responsável pelo JSON (Rafael Rocha), 15/10/2026. Não consta em documento oficial; validar com o SMS corporativo.",
+        "data": "2026-10-15"
+      },
+      "status": "parcialmente_decidido",
+      "pendencia_residual": "Não decidido: superfície impermeabilizada (piso concretado, asfalto) sem contenção secundária; área de cultivo (o PG-015 manda informar no RIA, item 3.4)."
+    },
+    {
+      "id": "PD-06",
+      "titulo": "Perda de controle de poço: gradações todas no nível Grave",
+      "situacao": "divergencia",
+      "o_que_diz_a_matriz": "Perda menor, significante e maior de controle de poço estão todas na coluna Grave; Leve e Moderado têm \"-\".",
+      "o_que_diz_o_manual": "Define as três gradações pela duração (abaixo de 5 min; 5 min a 24 h; acima de 24 h), sem níveis.",
+      "alternativas": [
+        "A: manter tudo em nível 3.",
+        "B: criar níveis próprios por gradação (decisão de SMS corporativo)."
+      ],
+      "acionar_quando": "Evento de perda de controle de poço.",
+      "decisao_adotada": null,
+      "status": "aberto"
+    },
+    {
+      "id": "PD-07",
+      "titulo": "Lesão: \"grave\" e dias afastados",
+      "situacao": "divergencia",
+      "o_que_diz_a_matriz": "Grave = \"lesões graves com dias afastados\" ou fatalidade; Moderado = \"lesões não graves com dias afastados\".",
+      "o_que_diz_o_manual": "Ferimento grave é definido por lista (fratura, amputação, internação acima de 24 h etc.), sem exigir dias afastados. Os cortes 1-3 dias e mais de 3 dias são da ANP.",
+      "alternativas": [
+        "A: usar a lista do manual para decidir se é grave, independentemente dos dias.",
+        "B: exigir lesão da lista E afastamento."
+      ],
+      "acionar_quando": "Lesão com internação, fratura ou outro item da lista, sem afastamento registrado.",
+      "decisao_adotada": null,
+      "status": "aberto",
+      "contexto_adicional": "O PG-015 Rev.09 repete a lista de ferimento grave do manual (sem exigir dias de afastamento). A matriz continua exigindo \"dias afastados\" no nível 3."
+    },
+    {
+      "id": "PD-08",
+      "titulo": "Surto de doença: faixas e siglas",
+      "situacao": "divergencia",
+      "o_que_diz_a_matriz": "Faixas de até 10%, 11% a 50% e acima de 50%; manda avaliar o efetivo das funções-chave para continuidade operacional, \"CTS e EOR\" (siglas não definidas).",
+      "o_que_diz_o_manual": "Comunicável quando atingir 10% ou mais da força de trabalho presente ou comprometer a normalidade das operações.",
+      "alternativas": [
+        "A: usar as faixas da matriz para o nível.",
+        "B: pedir ao SMS a definição de CTS e EOR antes de automatizar a regra das funções-chave."
+      ],
+      "acionar_quando": "Surto de doença ou contaminação alimentar.",
+      "decisao_adotada": null,
+      "status": "aberto"
+    },
+    {
+      "id": "PD-09",
+      "titulo": "Princípio de incêndio e incêndio menor",
+      "situacao": "divergencia_interna_do_manual",
+      "o_que_diz_a_matriz": "Princípio de incêndio não evoluiu para incêndio \"menor, significante ou maior\".",
+      "o_que_diz_o_manual": "Cap. 4: \"significante ou maior\". Anexo I e matriz: \"menor, significante ou maior\".",
+      "alternativas": [
+        "A: adotar o texto do Anexo I (igual ao da matriz): se a brigada precisou atuar, é incêndio menor."
+      ],
+      "acionar_quando": "Foco de fogo debelado.",
+      "decisao_adotada": null,
+      "status": "aberto"
+    },
+    {
+      "id": "PD-10",
+      "titulo": "Descarga em Produção de Combustíveis: faixas e bacia de contenção",
+      "situacao": "divergencia",
+      "o_que_diz_a_matriz": "Nível 1 traz \"tancagem ... que tenha na bacia de contenção\" (frase incompleta) e faixas de 1 a 49 e 1 a 99 kg/h; nível 2 traz 49 a 99 e 100 a 199 kg/h.",
+      "o_que_diz_o_manual": "Só traz os limites superiores (líquidos inflamáveis 100 kg/h; ácidos e bases 200 kg/h; tanque em contato direto com solo ou corpo hídrico; qualquer quantidade de substância nociva). Perda contida em contenção secundária é quase acidente (PCP), não descarga.",
+      "alternativas": [
+        "A: usar as faixas da matriz como regra interna e destacar que os níveis 1 e 2 não vêm do manual.",
+        "B: pedir correção do texto do nível 1 da matriz."
+      ],
+      "acionar_quando": "Descarga em instalação de produção de combustíveis (SPC).",
+      "decisao_adotada": {
+        "decisao": "Nível 1 de SEV-06: usar a definição do manual. Tancagem contida em bacia = perda de contenção primária (quase acidente, severidade 0); descarga a partir de tancagem só com contato direto com solo e/ou corpo hídrico.",
+        "origem": "Decisão do responsável pelo JSON (Rafael Rocha), 15/10/2026. Não consta em documento oficial; validar com o SMS corporativo.",
+        "data": "2026-10-15"
+      },
+      "status": "parcialmente_decidido",
+      "pendencia_residual": "Faixas em kg/h dos níveis 1 e 2 (1 a 49 e 49 a 99 kg/h em líquidos; 1 a 99 e 100 a 199 kg/h em ácidos e bases) não constam no manual e seguem como regra interna da matriz. O texto de tancagem é igual nos níveis 2 e 3 da matriz. Qualquer quantidade de substância nociva é nível 3 e pode se sobrepor às faixas de kg/h. Confirmar com o SMS."
+    },
+    {
+      "id": "PD-11",
+      "titulo": "Parada não programada e incêndio maior",
+      "situacao": "divergencia",
+      "o_que_diz_a_matriz": "Parada: 24 a 48 h = nível 1; 48 a 72 h = nível 2; acima de 72 h = nível 3.",
+      "o_que_diz_o_manual": "Incêndio maior e abalroamento maior consideram parada de \"no mínimo 72 horas\" (inclui 72 h).",
+      "alternativas": [
+        "A: para incêndio e abalroamento valer o manual (72 h já é \"maior\"); para parada isolada valer a matriz."
+      ],
+      "acionar_quando": "Parada de exatamente 72 h.",
+      "decisao_adotada": null,
+      "status": "aberto"
+    },
+    {
+      "id": "PD-12",
+      "titulo": "Nível de quase acidente",
+      "situacao": "lacuna",
+      "o_que_diz_a_matriz": "Quase acidentes não têm escala Leve/Moderado/Grave.",
+      "o_que_diz_o_manual": "Não define nível. O FACIU Rev.07 grava nível 1 nos itens verificados e o CII traz \"severidade potencial\" separada.",
+      "alternativas": [
+        "A: severidade real 0 para todo quase acidente (decidido).",
+        "B: para a severidade potencial, usar o campo \"severidade potencial\" do CII.",
+        "C: pedir ao SMS a regra numérica de potencial para quase acidentes."
+      ],
+      "acionar_quando": "Qualquer quase acidente.",
+      "decisao_adotada": {
+        "decisao": "Severidade real de quase acidente é 0 (PG-015 Rev.09, item 6.1).",
+        "origem": "PG-CORP-SMS-015 Rev.09 (23/09/2026), item 6.1",
+        "data": "2026-10-15"
+      },
+      "status": "parcialmente_decidido",
+      "pendencia_residual": "Severidade POTENCIAL: o PG-015 usa \"nível potencial/real\" e fala em quase acidentes de baixo/médio e de elevado potencial, mas não diz como atribuir o número 1 a 3. O FACIU Rev.07 gravava 1 e o CII traz \"severidade potencial\" à parte."
+    },
+    {
+      "id": "PD-13",
+      "titulo": "Critérios em reais combinados com critérios descritivos",
+      "situacao": "lacuna",
+      "o_que_diz_a_matriz": "Incêndios/explosões traz faixas de dano (≤ R$ 20.000; R$ 20.000 a 250.000; acima de R$ 250.000) junto das definições descritivas; Custo e Compliance também usam valores.",
+      "o_que_diz_o_manual": "O manual não traz valores monetários nem diz se os critérios se somam ou se vale o mais grave.",
+      "alternativas": [
+        "A: registrar cada critério como consequência separada e usar o maior nível (regra do FACIU).",
+        "B: pedir ao SMS a regra de combinação."
+      ],
+      "acionar_quando": "Incêndio ou explosão com dano financeiro estimado.",
+      "decisao_adotada": null,
+      "status": "aberto"
+    },
+    {
+      "id": "PD-14",
+      "titulo": "Itens duplicados de parada em biocombustíveis",
+      "situacao": "duplicidade",
+      "o_que_diz_a_matriz": "QA-22 e QA-25 têm o mesmo texto (um com \")\" sobrando no título).",
+      "o_que_diz_o_manual": "Tipologia única: \"Parada não programada devido a eventos naturais ou alheios não controlados\".",
+      "alternativas": [
+        "A: tratar QA-22 e QA-25 como o mesmo item.",
+        "B: pedir limpeza da matriz."
+      ],
+      "acionar_quando": "Parada em instalação de biocombustíveis.",
+      "decisao_adotada": null,
+      "status": "aberto"
+    }
+  ],
+  "exemplos_resolvidos": [
+    {
+      "id": "EX-01",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), cap. 3.2",
+      "relato": "Perda de contenção de 10 m3 de fluido inflamável, dos quais 1 m3 atingiu o meio ambiente. Incêndio de grandes proporções com uma fatalidade. Unidade parada por mais de 24 horas devido aos danos.",
+      "tipologias_segundo_o_manual": [
+        "Perda de contenção primária",
+        "Descarga",
+        "Incêndio maior",
+        "Fatalidade",
+        "Interrupção não programada superior a 24 horas"
+      ],
+      "aplicando_as_regras_deste_arquivo": {
+        "PCP": "volume total 10 m3, acima de 8 = QA-02 (maior); severidade real 0 (quase acidente)",
+        "Descarga": "volume que atingiu o meio ambiente 1 m3, entre 0,16 e 8 = SEV-03 nível 2 (significante), sujeito a PD-04 e ao local atingido",
+        "Incêndio maior": "SEV-15 nível 3",
+        "Fatalidade": "SEV-01 nível 3",
+        "Parada": "SEV-09, nível depende da duração real (PD-03, PD-11)",
+        "nivel_final": 3,
+        "regra": "máximo dos níveis (FACIU)"
+      }
+    },
+    {
+      "id": "EX-02",
+      "fonte": "Manual ANP de Comunicação de Incidentes (versão 1, 02/06/2023), I.2.6",
+      "relato": "Perda de contenção de 1 m3 de água oleosa (50% água, 50% óleo), dos quais 0,1 m3 atingiram o meio ambiente.",
+      "tipologias_segundo_o_manual": [
+        "Perda de contenção primária significante de água oleosa (volume total 1 m3)",
+        "Descarga menor de água oleosa (volume descarregado 0,1 m3)"
+      ],
+      "aplicando_as_regras_deste_arquivo": {
+        "PCP": "QA-03 (significante), severidade real 0",
+        "Descarga": "SEV-03 nível 1 (menor)",
+        "nivel_final": 1,
+        "volume_descarregado_por_componente": "0,05 m3 de água + 0,05 m3 de óleo",
+        "descricao_da_PCP": "0,5 m3 de óleo + 0,5 m3 de água"
+      }
+    },
+    {
+      "id": "EX-03",
+      "fonte": "Construído para ilustrar as decisões do responsável (PD-01 e PG-015 Rev.09); não é do manual.",
+      "relato": "Vazamento de gás inflamável de 2 kg/s durante 6 minutos em área aberta, sem fogo e sem feridos.",
+      "aplicando_as_regras_deste_arquivo": {
+        "tipologia": "Vazamento maior de gás inflamável (QA-05): taxa maior que 1 kg/s com duração superior a 5 minutos",
+        "descarga": "Não há descarga: gás é sempre vazamento de gás (PD-01).",
+        "nivel_final": 0,
+        "regra": "quase acidente tem severidade real 0 (PG-015 Rev.09)"
+      }
+    },
+    {
+      "id": "EX-04",
+      "fonte": "Construído para ilustrar as decisões do responsável (PD-02 e PD-05); não é do manual.",
+      "relato": "Perda de 10 m3 de óleo de um tanque; todo o volume chegou ao solo natural com vegetação ao redor.",
+      "aplicando_as_regras_deste_arquivo": {
+        "PCP": "volume total 10 m3, acima de 8 = QA-02 (maior), severidade real 0",
+        "Descarga": "volume que atingiu o meio ambiente 10 m3 (8 m3 ou mais) em solo natural = área ecologicamente sensível (PD-02) = SEV-03 nível 3 (descarga maior)",
+        "nivel_final": 3,
+        "regra": "máximo dos níveis (FACIU); o 0 do quase acidente não reduz o resultado"
+      }
+    }
+  ],
+  "esquema_de_resposta_esperado": {
+    "descricao": "Estrutura que o modelo deve devolver ao classificar uma ocorrência.",
+    "campos": {
+      "resumo_dos_fatos": "string curta, sem interpretação",
+      "dados_extraidos": "objeto com os campos de \"logica_de_decisao.etapa_1_fatos_minimos\"",
+      "dados_faltantes": [
+        {
+          "campo": "string",
+          "por_que_importa": "string"
+        }
+      ],
+      "enquadramentos": [
+        {
+          "item_id": "SEV-xx ou QA-xx",
+          "tipologia": "nome da tipologia",
+          "natureza": "acidente | quase_acidente",
+          "nivel": "0 (quase acidente) | 1 | 2 | 3 | null (somente se faltar dado)",
+          "criterio_atendido": "texto do critério da matriz ou do manual",
+          "caminho_na_arvore": "passos percorridos (por exemplo P1, P3, P4, P5, P5a)",
+          "fonte_da_regra": "MATRIZ | MANUAL_ANP | FACIU, com a seção",
+          "confianca": "alta | media | baixa"
+        }
+      ],
+      "nivel_final_calculado": "0 | 1 | 2 | 3 | null (somente se faltar dado)",
+      "regra_do_nivel_final": "máximo dos níveis dos enquadramentos; quase acidente vale 0",
+      "pontos_a_decidir_acionados": [
+        "PD-xx"
+      ],
+      "comunicabilidade_ANP": {
+        "avaliada": "true | false",
+        "resultado": "comunicavel | nao_comunicavel | indefinido",
+        "motivo": "string"
+      },
+      "alertas": [
+        "string"
+      ],
+      "decisoes_aplicadas": [
+        "PD-xx com decisao_adotada que foram usadas"
+      ],
+      "pendencias_residuais": [
+        "PD-xx com pendencia_residual que se aplica ao caso"
+      ]
+    }
+  },
+  "regras_do_procedimento_PG-CORP-SMS-015_rev09": {
+    "fonte": "PG-CORP-SMS-015 Rev.09 (23/09/2026)",
+    "observacao": "Resumo das regras do PG-015 que dependem do nível. Dados lidos do texto extraído do PDF; as tabelas 1 e 2 vieram com a formatação embaralhada e os campos marcados \"nao_extraido\" precisam ser conferidos no PDF.",
+    "classificacao": {
+      "base": "Classificar conforme FORM-CORP-SMS-087, com base na NBR ISO 14280:2001 (texto do item 6.1) e no Manual ANP, conforme aplicável.",
+      "quase_acidente": "Todos os quase acidentes (Risco de dano ao Meio Ambiente ou à Saúde Humana) = Severidade Real 0.",
+      "todos_os_incidentes": "Independentemente de lesão, dano ou obrigação de comunicar, todo incidente é registrado (PG-CORP-SMS-014) e investigado conforme a severidade.",
+      "saude": "O médico do trabalho auxilia na classificação de incidente com dano à saúde humana. Fatalidade por doença profissional, suicídio ou causa natural é sempre comunicada à ANP até haver laudo. Fatalidade por acidente de trânsito terrestre não é comunicável à ANP.",
+      "pocos": "Falha de qualquer elemento do CSB e operação fora dos limites operacionais são incidentes e devem ser registrados.",
+      "severidade_no_RIA": "Item 2.1 do RIA: definir a severidade conforme o FORM-CORP-SMS-087."
+    },
+    "tabela_1_comissao_minima": {
+      "1": {
+        "nivel": "Leve",
+        "gestor": "Supervisor/coordenador da área, ou da coordenação responsável pela atividade",
+        "coordenador": "Profissional com conhecimento da atividade, do processo ou da instalação",
+        "membros": "No mínimo dois; se possível incluir pessoas da equipe onde ocorreu",
+        "qualificacao": "Ao menos um membro com qualificação em técnica de análise de incidentes e identificação de causa-raiz e experiência em investigação"
+      },
+      "2": {
+        "nivel": "Moderado",
+        "gestor": "Gerente de Operações",
+        "coordenador": "nao_extraido",
+        "membros": "No mínimo três, incluindo pessoas da equipe com conhecimento técnico da atividade, do processo ou da instalação e do SMS; um membro da CIPA/CIPLAT; representante da contratada e especialistas se o gestor julgar pertinente",
+        "qualificacao": "Membros familiarizados com metodologias de investigação e com o processo ou a atividade"
+      },
+      "3": {
+        "nivel": "Grave",
+        "gestor": "Gerente Executivo",
+        "coordenador": "Gerente de QSSO, Coordenador Sr. do onshore/offshore ou gerente indicado pelo Gerente Executivo",
+        "membros": "Um membro da CIPA/CIPLAT (moderado ou grave); o mais alto nível hierárquico da instalação participa e valida o resultado",
+        "qualificacao": "nao_extraido"
+      },
+      "nivel_0": "O PG-015 não define comissão para nível 0.",
+      "prazos": "Comissão mobilizada em até 48 horas da ocorrência; início da investigação em até 24 horas após a instalação da comissão (salvo força maior justificada e documentada)."
+    },
+    "tabela_2_metodologia": {
+      "1": {
+        "metodo": "5 porquês, Árvore de Causa ou Árvore de Falha",
+        "ferramenta": "Emissão da RTA; incidente comunicável a órgão regulador segue Gestão de Incidentes (CII e RIA)"
+      },
+      "2": {
+        "metodo": "Árvore de Causa ou Árvore de Falha",
+        "ferramenta": "Gestão de Incidentes (CII e RIA)"
+      },
+      "3": {
+        "metodo": "Árvore de Causa ou Árvore de Falha; metodologias adicionais quando necessário",
+        "ferramenta": "Gestão de Incidentes (CII e RIA)"
+      },
+      "nivel_0": "O PG-015 não define método para nível 0; diz apenas que a investigação de quase acidente deve seguir as diretrizes do procedimento.",
+      "acidente_de_trajeto": "Investigado por RTA.",
+      "analise_de_causa": "Análise de causas com método da Tabela 2 para incidentes de moderado a grave (item 6.7, alínea d)."
+    },
+    "prazos_das_acoes_corretivas": {
+      "leve_dias": 180,
+      "moderado_dias": 90,
+      "grave_dias": 30,
+      "critico_grave_e_iminente": "imediato",
+      "pocos_CSB": "Prazo definido conforme procedimentos internos (modelo de falha, avaliação de risco, criticidade do poço).",
+      "fonte": "Item 6.7, alínea d, nº 5 e 6. O texto fala em \"condições\" classificadas como grave, moderada ou leve."
+    },
+    "alertas": {
+      "alerta_preliminar_SMS": "Em até 72 horas da ocorrência, para incidentes com nível potencial ou real grave, quando julgado adequado (FORM-CORP-SMS-089).",
+      "alerta_SMS": "Em até 72 horas após a conclusão e aprovação da investigação, para nível potencial ou real grave (FORM-CORP-SMS-090). Obrigatório para TODO acidente com dano à saúde humana ligado ao descumprimento de Regra que Salva Vidas.",
+      "divulgacao_grave_contratada": "Em incidente de nível potencial ou real grave com empresa contratada, a alta liderança da contratada apresenta o relatório nas análises críticas da instalação."
+    },
+    "relatorios_externos_tabela_3": [
+      {
+        "orgao": "ANP",
+        "relatorio": "RIA",
+        "prazo_dias": 90,
+        "formulario": "FORM-CORP-SMS-088"
+      },
+      {
+        "orgao": "IBAMA",
+        "relatorio": "RADO",
+        "prazo_dias": 30,
+        "formulario": "FORM-CORP-SMS-091"
+      },
+      {
+        "orgao": "IBAMA",
+        "relatorio": "RNC-TOGm",
+        "prazo_dias": 30,
+        "formulario": "FORM-CORP-SMS-093"
+      },
+      {
+        "orgao": "IDEMA",
+        "relatorio": "RIA",
+        "prazo_dias": 30,
+        "formulario": "FORM-CORP-SMS-088"
+      },
+      {
+        "orgao": "INEMA",
+        "relatorio": "RIA (Relatório Emergencial)",
+        "prazo_dias": 15,
+        "formulario": "FORM-CORP-SMS-088"
+      },
+      {
+        "orgao": "SRT (acidente em plataforma)",
+        "relatorio": "R-CIP",
+        "prazo_dias": 60,
+        "formulario": "FORM-CORP-SMS-092"
+      }
+    ],
+    "regra_de_prazos": "Com prazos diferentes entre órgãos, vale o mais restritivo.",
+    "inconsistencias_do_documento": [
+      "O item 6.1 cita \"NBR ISO 14280:2001\" e a lista de referências cita \"ABNT NBR 14280:2001\".",
+      "O item 7 diz 5 anos de arquivo no primeiro parágrafo e 10 anos no período mínimo de arquivamento; o item 6.8 também fala em 10 anos para relatórios."
+    ]
+  }
+}

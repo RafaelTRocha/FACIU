@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FACIU v6.31.3 · Brava Energia - Ferramenta de Análise de Causas e Investigação Unificada</title>
+
+  <!-- Typography: Inter, Montserrat (Logo Brava) & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Montserrat:ital,wght@1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Custom Configuration -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            brand: ['Montserrat', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brava: {
+              navy: '#120e2e',
+              deep: '#0b0820',
+              surface: '#1b1540',
+              yellow: '#d4fb21',
+              lime: '#cbf720',
+              purple: '#5e3da8',
+              purpleLight: '#7950dc',
+              purpleSoft: '#f5f0ff',
+              border: '#2c2260',
+            }
+          },
+          boxShadow: {
+            'glow-lime': '0 0 18px rgba(212, 251, 33, 0.45)',
+            'glow-purple': '0 0 20px rgba(94, 61, 168, 0.35)',
+            'subtle': '0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.03)',
+            'floating': '0 12px 32px -4px rgba(18, 14, 46, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.06)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Smooth theme transitions */
+    *, *::before, *::after {
+      transition-property: background-color, border-color, color, fill, stroke;
+      transition-duration: 150ms;
+      transition-timing-function: ease-in-out;
+    }
+
+    /* Custom subtle scrollbars */
+    ::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.35);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(100, 116, 139, 0.6);
+    }
+
+    /* Pulsing Green Status Dot */
+    @keyframes pulse-emerald {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.85); }
+    }
+    .status-pulse {
+      animation: pulse-emerald 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    /* Active Step Elevation */
+    .step-active-shadow {
+      box-shadow: 0 4px 14px -2px rgba(18, 14, 46, 0.35);
+    }
+
+    /* AI Auditor shimmer */
+    @keyframes shimmer-ai {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .ai-shimmer {
+      background: linear-gradient(90deg, rgba(212,251,33,0.1) 0%, rgba(212,251,33,0.3) 50%, rgba(212,251,33,0.1) 100%);
+      background-size: 200% 100%;
+      animation: shimmer-ai 3s infinite;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-brava-yellow selection:text-slate-950">
+
+  <!-- ========================================================================= -->
+  <!-- BARRA SUPERIOR 1: NAVEGAÇÃO REFINADA FACIU v6.31.3 (TAMANHOS HARMONIZADOS)-->
+  <!-- ========================================================================= -->
+  <header class="bg-brava-navy border-b border-brava-border/80 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-[1780px] mx-auto px-4 sm:px-6 h-12 flex items-center justify-between gap-3 select-none">
+      
+      <!-- Esquerda: Logo Brava + FACIU + Versão + Estudo Ativo (Alinhados na altura h-8) -->
+      <div class="flex items-center gap-2.5 shrink-0">
+        <!-- Logo Brava Integrada -->
+        <button 
+          onclick="showToast('Brava Energia · Sistema de Confiabilidade & Investigação')" 
+          class="h-8 flex items-center gap-1.5 px-2 rounded-lg hover:bg-white/5 transition-all group"
+          title="Brava Energia - Confiabilidade Operacional"
+        >
+          <span class="font-brand italic font-black text-lg tracking-tight text-brava-yellow group-hover:scale-105 transition-transform">
+            BRAVA
+          </span>
+          <span class="text-[8px] uppercase tracking-wider text-slate-300 font-semibold border-l border-white/20 pl-1.5 hidden sm:inline">
+            energia
+          </span>
+        </button>
+
+        <!-- Divisor sutil -->
+        <div class="h-4 w-px bg-white/20"></div>
+
+        <!-- FACIU + Versão -->
+        <div class="flex items-center gap-1.5">
+          <span class="font-black text-sm text-white tracking-tight">FACIU</span>
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-white/10 text-slate-300 border border-white/15">
+            6.31.3
+          </span>
+        </div>
+
+        <!-- Tag do Estudo Ativo -->
+        <div class="hidden 2xl:flex items-center h-8 gap-2 px-2.5 rounded-lg bg-white/5 border border-white/10 text-xs text-slate-300">
+          <i data-lucide="folder-git-2" class="w-3.5 h-3.5 text-brava-yellow"></i>
+          <span class="font-mono font-bold text-white text-[11px]">CII-2026-OP-055</span>
+          <span class="text-slate-400 text-[11px]">• Turbogerador TG-01</span>
+        </div>
+      </div>
+
+      <!-- Direita: Todos os componentes e botões padronizados na altura exata h-8 (32px) -->
+      <div class="flex items-center gap-2 shrink-0">
+        
+        <!-- Status: Sincronizado (h-8) -->
+        <button 
+          id="btn-sync"
+          onclick="checkSyncStatus()" 
+          class="h-8 flex items-center gap-1.5 px-2.5 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-500/30 text-xs font-semibold text-emerald-300 transition-all"
+          title="Armazenamento local sincronizado. Clique para forçar conferência."
+        >
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 status-pulse"></span>
+          <span id="sync-label" class="text-[11px]">Sincronizado</span>
+        </button>
+
+        <!-- Divisor sutil -->
+        <div class="h-4 w-px bg-white/20 hidden sm:block"></div>
+
+        <!-- Grupo de Ferramentas / Utilidades (h-8 com botões proporcionais w-7 h-7) -->
+        <div class="h-8 flex items-center bg-white/10 p-0.5 rounded-lg border border-white/15 gap-0.5">
+          <button onclick="openModal('modal-help')" class="w-7 h-7 flex items-center justify-center rounded-md text-slate-200 hover:text-white hover:bg-white/15 transition-all" title="Central de Ajuda">
+            <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+          </button>
+          
+          <button onclick="exportJSONBackup()" class="w-7 h-7 flex items-center justify-center rounded-md text-slate-200 hover:text-white hover:bg-white/15 transition-all" title="Baixar Backup Portátil (.JSON)">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          </button>
+          
+          <button onclick="showDiskStatus()" class="h-7 flex items-center gap-1 px-1.5 rounded-md text-slate-200 hover:text-white hover:bg-white/15 transition-all text-xs" title="Armazenamento Local em Disco">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <i data-lucide="hard-drive" class="w-3.5 h-3.5"></i>
+            <span class="text-[11px] font-medium hidden md:inline">Disco</span>
+          </button>
+          
+          <button onclick="toggleDarkMode()" id="btn-theme" class="w-7 h-7 flex items-center justify-center rounded-md text-slate-200 hover:text-white hover:bg-white/15 transition-all" title="Alternar Modo Escuro / Claro">
+            <i data-lucide="moon" id="theme-icon" class="w-3.5 h-3.5"></i>
+          </button>
+          
+          <button onclick="openModal('modal-settings')" class="w-7 h-7 flex items-center justify-center rounded-md text-slate-200 hover:text-white hover:bg-white/15 transition-all" title="Configurações do FACIU">
+            <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <!-- Histórico Desfazer/Refazer (h-8) -->
+        <div class="h-8 flex items-center bg-white/10 p-0.5 rounded-lg border border-white/15 gap-0.5">
+          <button onclick="triggerUndo()" class="w-7 h-7 flex items-center justify-center rounded-md text-slate-200 hover:text-white hover:bg-white/15 transition-all" title="Desfazer (Ctrl+Z)">
+            <i data-lucide="undo-2" class="w-3.5 h-3.5"></i>
+          </button>
+          <button onclick="triggerRedo()" class="w-7 h-7 flex items-center justify-center rounded-md text-slate-400 hover:text-slate-200 hover:bg-white/15 transition-all" title="Refazer (Ctrl+Y)">
+            <i data-lucide="redo-2" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <!-- Botão: + Novo (h-8) -->
+        <button 
+          onclick="openModal('modal-new')" 
+          class="h-8 flex items-center gap-1.5 px-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold text-xs border border-white/20 shadow-xs transition-all active:scale-95"
+        >
+          <i data-lucide="plus" class="w-3.5 h-3.5 text-brava-yellow"></i>
+          <span>Novo</span>
+        </button>
+
+        <!-- Botão Primário: Salvar (Ctrl+S) (h-8 perfeitamente nivelado) -->
+        <button 
+          id="btn-save"
+          onclick="saveInvestigation()" 
+          class="h-8 flex items-center gap-1.5 px-3.5 rounded-lg bg-brava-lime hover:bg-brava-yellow text-slate-950 font-bold text-xs shadow-glow-lime transition-all active:scale-95 border border-lime-400/60"
+          title="Salvar alterações no navegador (Ctrl+S)"
+        >
+          <i data-lucide="save" class="w-3.5 h-3.5 text-slate-950"></i>
+          <span id="save-btn-text">Salvar</span>
+          <kbd class="hidden sm:inline-block px-1 py-0.2 rounded bg-black/15 text-[9px] font-mono font-bold tracking-tight text-slate-900 border border-black/10">
+            Ctrl+S
+          </kbd>
+        </button>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- STEPPER DE 5 PASSOS (Sem ícones alarmistas de erro X)                     -->
+  <!-- ========================================================================= -->
+  <nav class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-subtle sticky top-[49px] z-30">
+    <div class="max-w-[1780px] mx-auto px-4 sm:px-6 py-1">
+      
+      <div class="flex items-center justify-between gap-2 overflow-x-auto pb-1 sm:pb-0 scroll-smooth">
+
+        <!-- Passo 1: Triagem -->
+        <button 
+          id="stepper-btn-1"
+          onclick="changeStep(1)"
+          class="group flex items-center gap-2.5 px-3 py-1.5 rounded-xl transition-all duration-150 shrink-0 text-left border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+        >
+          <div class="step-badge w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          </div>
+          <div>
+            <span class="step-title font-semibold text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white block">1. Triagem</span>
+            <span class="step-sub text-[10px] text-emerald-600 dark:text-emerald-400 font-medium block">Concluída</span>
+          </div>
+        </button>
+
+        <div class="flex-1 max-w-[50px] h-[2px] bg-emerald-400 dark:bg-emerald-600 hidden md:block rounded-full"></div>
+
+        <!-- Passo 2: Estudo -->
+        <button 
+          id="stepper-btn-2"
+          onclick="changeStep(2)"
+          class="group flex items-center gap-2.5 px-3 py-1.5 rounded-xl transition-all duration-150 shrink-0 text-left border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+        >
+          <div class="step-badge w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          </div>
+          <div>
+            <span class="step-title font-semibold text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white block">2. Estudo</span>
+            <span class="step-sub text-[10px] text-emerald-600 dark:text-emerald-400 font-medium block">Concluído</span>
+          </div>
+        </button>
+
+        <div class="flex-1 max-w-[50px] h-[2px] bg-slate-200 dark:bg-slate-800 hidden md:block rounded-full"></div>
+
+        <!-- Passo 3: RIA -->
+        <button 
+          id="stepper-btn-3"
+          onclick="changeStep(3)"
+          class="group flex items-center gap-2.5 px-3 py-1.5 rounded-xl transition-all duration-150 shrink-0 text-left border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+        >
+          <div class="step-badge w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-700">
+            3
+          </div>
+          <div>
+            <span class="step-title font-semibold text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white block">3. RIA</span>
+          </div>
+        </button>
+
+        <div class="flex-1 max-w-[50px] h-[2px] bg-slate-200 dark:bg-slate-800 hidden md:block rounded-full"></div>
+
+        <!-- Passo 4: Verificação (Ativo por Padrão para destacar a tela enviada) -->
+        <button 
+          id="stepper-btn-4"
+          onclick="changeStep(4)"
+          class="group flex items-center gap-2.5 px-4 py-1.5 rounded-xl transition-all duration-150 shrink-0 text-left bg-brava-navy dark:bg-brava-surface text-white step-active-shadow border border-slate-800 dark:border-brava-border"
+        >
+          <div class="step-badge w-6 h-6 rounded-full flex items-center justify-center font-black text-xs bg-brava-yellow text-slate-950 shadow-xs">
+            4
+          </div>
+          <div>
+            <span class="step-title font-bold text-xs text-white block">4. Verificação</span>
+            <span class="step-sub text-[10px] text-brava-yellow font-semibold block">Etapa Atual</span>
+          </div>
+        </button>
+
+        <div class="flex-1 max-w-[50px] h-[2px] bg-slate-200 dark:bg-slate-800 hidden md:block rounded-full"></div>
+
+        <!-- Passo 5: Emissão -->
+        <button 
+          id="stepper-btn-5"
+          onclick="changeStep(5)"
+          class="group flex items-center gap-2.5 px-3 py-1.5 rounded-xl transition-all duration-150 shrink-0 text-left border border-transparent hover:border-slate-200 dark:hover:border-slate-700 opacity-70 hover:opacity-100"
+        >
+          <div class="step-badge w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-700">
+            5
+          </div>
+          <div>
+            <span class="step-title font-semibold text-xs text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white block">5. Emissão</span>
+            <span class="step-sub text-[10px] text-slate-400 dark:text-slate-500 block">Pendente</span>
+          </div>
+        </button>
+
+        <!-- Indicador Global de Integridade na Barra -->
+        <div class="hidden xl:flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800 ml-auto">
+          <div class="text-right">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 block">Integridade</span>
+            <span id="global-integrity-label" class="text-xs font-black text-slate-900 dark:text-white font-mono">39% CONCLUÍDO</span>
+          </div>
+          <div class="w-20 bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden border border-slate-200 dark:border-slate-700">
+            <div id="global-integrity-bar" class="bg-gradient-to-r from-brava-yellow to-brava-lime h-full w-[39%] rounded-full transition-all duration-500"></div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- ========================================================================= -->
+  <!-- CONTAINER DE CONTEÚDO DINÂMICO (ESPAÇAMENTO ULTRA COMPACTO E APROXIMADO)  -->
+  <!-- ========================================================================= -->
+  <main class="flex-1 max-w-[1780px] w-full mx-auto px-4 sm:px-6 pt-1 pb-6 space-y-2">
+
+    <!-- ======================================================================= -->
+    <!-- TELA 4: VERIFICAÇÃO & INTEGRIDADE DO ESTUDO (Baseada na imagem fornecida)-->
+    <!-- ======================================================================= -->
+    <section id="screen-step-4" class="space-y-4 hidden">
+      
+      <!-- CARD 1: CABEÇALHO DA INTEGRIDADE DO ESTUDO -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4">
+        
+        <!-- Bloco de Score e Título -->
+        <div class="flex items-center gap-4 flex-wrap sm:flex-nowrap">
+          <!-- Badge Dark Navy com porcentagem e barra de progresso lima -->
+          <div class="flex flex-col items-center justify-center w-16 h-14 rounded-2xl bg-brava-navy dark:bg-brava-surface text-white border border-slate-800 dark:border-brava-border shadow-xs shrink-0 relative overflow-hidden">
+            <span id="integrity-badge-score" class="text-lg font-black text-white font-mono tracking-tight">39%</span>
+            <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-black/40">
+              <div id="integrity-badge-bar" class="bg-brava-yellow h-full w-[39%] transition-all duration-500"></div>
+            </div>
+          </div>
+
+          <!-- Título + Tag de Bloqueios -->
+          <div class="space-y-1">
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <h2 class="text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">Integridade do Estudo</h2>
+              <span id="badge-total-blocks" class="px-2.5 py-0.5 rounded-lg text-xs font-bold bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-800">
+                17 bloqueio(s)
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Auditoria contínua de regras metodológicas, consistência das hipóteses e evidências obrigatórias para emissão do RIA.
+            </p>
+          </div>
+        </div>
+
+        <!-- Badges de Resumo + Botão Auditor IA -->
+        <div class="flex items-center gap-2.5 sm:gap-3 flex-wrap xl:flex-nowrap ml-auto w-full xl:w-auto justify-between xl:justify-end">
+          
+          <!-- Badges de Status -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <!-- 11 atendidos -->
+            <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-xs font-bold text-emerald-800 dark:text-emerald-300">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
+              <span id="count-atendidos">11 atendidos</span>
+            </div>
+
+            <!-- 17 bloqueios -->
+            <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-800 text-xs font-bold text-rose-800 dark:text-rose-300">
+              <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600 dark:text-rose-400"></i>
+              <span id="count-bloqueios">17 bloqueios</span>
+            </div>
+
+            <!-- 0 pendências -->
+            <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-xs font-bold text-amber-800 dark:text-amber-300">
+              <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 dark:text-amber-400"></i>
+              <span id="count-pendencias">0 pendências</span>
+            </div>
+          </div>
+
+          <!-- Botão: ✨ Auditor IA -->
+          <button 
+            onclick="openAuditorIAModal()" 
+            class="flex items-center gap-2 px-4 py-2 rounded-xl border border-amber-300/80 dark:border-amber-600/60 bg-gradient-to-r from-amber-50 via-white to-amber-50 dark:from-slate-800 dark:via-slate-800/80 dark:to-slate-800 text-slate-900 dark:text-amber-300 text-xs font-extrabold shadow-xs hover:shadow-md transition-all group shrink-0 active:scale-95"
+            title="Executar Auditoria Inteligente com IA da Brava"
+          >
+            <i data-lucide="sparkles" class="w-4 h-4 text-amber-500 group-hover:rotate-12 transition-transform"></i>
+            <span>Auditor IA</span>
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- OS 5 CARDS DE MÓDULO COM TARJAS COLORIDAS (Conforme imagem) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+        
+        <!-- Card 1: Triagem (7 bloq) -->
+        <button 
+          id="card-mod-triagem"
+          onclick="selectAuditModule('triagem')"
+          class="audit-mod-card group bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 border-l-4 border-l-rose-500 shadow-xs hover:shadow-md transition-all text-left flex items-center justify-between"
+        >
+          <div class="flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950/50 text-rose-600 flex items-center justify-center">
+              <i data-lucide="clipboard" class="w-4 h-4"></i>
+            </div>
+            <span class="font-bold text-xs text-slate-800 dark:text-slate-200">Triagem</span>
+          </div>
+          <span class="text-xs font-black text-rose-600 dark:text-rose-400 font-mono">7 bloq</span>
+        </button>
+
+        <!-- Card 2: Árvore de Causas (5 bloq) -->
+        <button 
+          id="card-mod-arvore"
+          onclick="selectAuditModule('arvore')"
+          class="audit-mod-card group bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 border-l-4 border-l-rose-500 shadow-xs hover:shadow-md transition-all text-left flex items-center justify-between"
+        >
+          <div class="flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950/50 text-rose-600 flex items-center justify-center">
+              <i data-lucide="git-fork" class="w-4 h-4"></i>
+            </div>
+            <span class="font-bold text-xs text-slate-800 dark:text-slate-200">Árvore de Causas</span>
+          </div>
+          <span class="text-xs font-black text-rose-600 dark:text-rose-400 font-mono">5 bloq</span>
+        </button>
+
+        <!-- Card 3: 5 Porquês (✓ 1/1) -->
+        <button 
+          id="card-mod-porques"
+          onclick="selectAuditModule('porques')"
+          class="audit-mod-card group bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 border-l-4 border-l-emerald-500 shadow-xs hover:shadow-md transition-all text-left flex items-center justify-between"
+        >
+          <div class="flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 flex items-center justify-center">
+              <i data-lucide="help-circle" class="w-4 h-4"></i>
+            </div>
+            <span class="font-bold text-xs text-slate-800 dark:text-slate-200">5 Porquês</span>
+          </div>
+          <span class="text-xs font-black text-emerald-600 dark:text-emerald-400 font-mono">✓ 1/1</span>
+        </button>
+
+        <!-- Card 4: Plano de Ações (2 bloq) -->
+        <button 
+          id="card-mod-plano"
+          onclick="selectAuditModule('plano')"
+          class="audit-mod-card group bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 border-l-4 border-l-rose-500 shadow-xs hover:shadow-md transition-all text-left flex items-center justify-between ring-2 ring-brava-purple/40"
+        >
+          <div class="flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950/50 text-rose-600 flex items-center justify-center">
+              <i data-lucide="check-square" class="w-4 h-4"></i>
+            </div>
+            <span class="font-bold text-xs text-slate-800 dark:text-slate-200">Plano de Ações</span>
+          </div>
+          <span class="text-xs font-black text-rose-600 dark:text-rose-400 font-mono">2 bloq</span>
+        </button>
+
+        <!-- Card 5: Conformidade RIA (5 bloq) -->
+        <button 
+          id="card-mod-ria"
+          onclick="selectAuditModule('ria')"
+          class="audit-mod-card group bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 border-l-4 border-l-rose-500 shadow-xs hover:shadow-md transition-all text-left flex items-center justify-between"
+        >
+          <div class="flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950/50 text-rose-600 flex items-center justify-center">
+              <i data-lucide="file-text" class="w-4 h-4"></i>
+            </div>
+            <span class="font-bold text-xs text-slate-800 dark:text-slate-200">Conformidade RIA</span>
+          </div>
+          <span class="text-xs font-black text-rose-600 dark:text-rose-400 font-mono">5 bloq</span>
+        </button>
+
+      </div>
+
+      <!-- PAINEL INTERATIVO DE RESOLUÇÃO DE BLOQUEIOS DO MÓDULO SELECIONADO -->
+      <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Módulo Selecionado</span>
+            <h3 id="active-module-title" class="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+              <i data-lucide="check-square" class="w-4 h-4 text-brava-purple"></i>
+              Plano de Ações 5W2H (2 bloqueios críticos)
+            </h3>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="resolveAllInModule()" class="px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 border border-emerald-200 dark:border-emerald-800 text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5 transition-all">
+              <i data-lucide="check-check" class="w-3.5 h-3.5"></i>
+              Resolver Todos Automaticamente
+            </button>
+          </div>
+        </div>
+
+        <!-- Lista Interativa de Itens Pendentes / Bloqueantes -->
+        <div id="module-issues-list" class="space-y-2.5">
+          <!-- Renderizado via JavaScript dinamicamente -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TELA 3: RIA OFICIAL (FORM-CORP-SMS-088 Rev. 08 - Baseada na imagem)     -->
+    <!-- ======================================================================= -->
+    <section id="screen-step-3" class="space-y-5 hidden">
+      
+      <!-- Cabeçalho da Página do RIA -->
+      <div class="space-y-1">
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2.5 tracking-tight">
+          <i data-lucide="file-text" class="w-6 h-6 text-slate-700 dark:text-slate-300"></i>
+          RIA oficial
+        </h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400">
+          Prepare, valide, visualize e emita o FORM-CORP-SMS-088 Rev. 08.
+        </p>
+      </div>
+
+      <!-- Card Principal: Preparação do RIA -->
+      <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-7 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+        
+        <!-- Linha de Ações e Título do Relatório -->
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+          <div>
+            <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight">Preparação do RIA</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Relatório de Investigação e Análise | FORM-CORP-SMS-088 Rev. 08 | Obrigatório para acidentes e incidentes.
+            </p>
+          </div>
+
+          <!-- Botões de Ação do RIA -->
+          <div class="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+            <button 
+              onclick="openMinutaModal()" 
+              class="px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold shadow-xs hover:shadow transition-all"
+            >
+              Visualizar minuta
+            </button>
+            <button 
+              onclick="downloadMinutaPDF()" 
+              class="px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold shadow-xs hover:shadow transition-all"
+            >
+              Baixar minuta
+            </button>
+            <button 
+              onclick="emitirRIAOficial()" 
+              class="px-4 py-2 rounded-xl bg-brava-navy dark:bg-brava-purple hover:bg-slate-900 dark:hover:bg-brava-purpleLight text-white text-xs font-black shadow-xs hover:shadow-md transition-all"
+            >
+              Emitir RIA oficial
+            </button>
+          </div>
+        </div>
+
+        <!-- Alerta Amarelo Elegante de Pendências -->
+        <div class="p-3.5 rounded-2xl bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200/90 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0"></i>
+            <span>RIA em elaboração. <strong class="font-bold">17 pendência(s)</strong> impedem a emissão oficial. A minuta continua disponível.</span>
+          </div>
+          <button onclick="changeStep(4)" class="text-xs font-bold text-amber-800 dark:text-amber-300 underline shrink-0 hover:opacity-80">
+            Resolver na Verificação &rarr;
+          </button>
+        </div>
+
+        <!-- Barra de Progresso dos Campos Estruturais -->
+        <div class="space-y-1.5 pt-1">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-slate-800 dark:text-slate-200">RIA sem número</span>
+            <span class="text-slate-600 dark:text-slate-400 font-medium">31% dos campos estruturais</span>
+          </div>
+          <div class="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-200/80 dark:border-slate-700">
+            <div class="bg-brava-lime dark:bg-brava-yellow h-full w-[31%] rounded-full shadow-xs"></div>
+          </div>
+        </div>
+
+        <!-- Abas Secundárias em Pílulas: Dados Iniciais, Descrição, Consequências, Investigação, Providências -->
+        <div class="pt-3 border-t border-slate-100 dark:border-slate-800">
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-2 scroll-smooth">
+            <button 
+              id="ria-tab-dados" 
+              onclick="setRiaSubTab('dados')"
+              class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-brava-navy text-white shadow-xs"
+            >
+              Dados iniciais
+            </button>
+            <button 
+              id="ria-tab-descricao" 
+              onclick="setRiaSubTab('descricao')"
+              class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+            >
+              Descrição
+            </button>
+            <button 
+              id="ria-tab-consequencias" 
+              onclick="setRiaSubTab('consequencias')"
+              class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+            >
+              Consequências
+            </button>
+            <button 
+              id="ria-tab-investigacao" 
+              onclick="setRiaSubTab('investigacao')"
+              class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+            >
+              Investigação
+            </button>
+            <button 
+              id="ria-tab-providencias" 
+              onclick="setRiaSubTab('providencias')"
+              class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+            >
+              Providências e conclusão
+            </button>
+          </div>
+
+          <!-- Conteúdo Dinâmico das Sub-Abas do RIA -->
+          <div id="ria-subtab-content" class="mt-4 p-5 bg-slate-50 dark:bg-slate-950/60 rounded-2xl border border-slate-200 dark:border-slate-800">
+            <!-- Preenchido dinamicamente pelo script -->
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TELA 2: ESTUDO CAUSAL (Com Ferramentas em Nível 2 Dedicado)             -->
+    <!-- ======================================================================= -->
+    <section id="screen-step-2" class="space-y-1.5">
+      
+      <!-- Barra Contextual de Ferramentas da Etapa Estudo (Encaixe rente ao Stepper) -->
+      <div class="bg-white dark:bg-slate-900 rounded-xl px-3 py-1 border border-slate-200 dark:border-slate-800 shadow-xs flex items-center gap-3">
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-0.5 sm:pb-0">
+          <button onclick="setEstudoTool('cronologia')" id="tool-btn-cronologia" class="px-3 py-1 rounded-lg text-xs font-bold bg-brava-navy text-white shadow-xs flex items-center gap-1.5 transition-all">
+            <i data-lucide="clock" class="w-3.5 h-3.5 text-brava-yellow"></i>
+            Cronologia
+          </button>
+          <button onclick="setEstudoTool('arvore')" id="tool-btn-arvore" class="px-3 py-1 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1.5 transition-all">
+            <i data-lucide="git-fork" class="w-3.5 h-3.5 text-slate-400"></i>
+            Árvore de Causas
+          </button>
+          <button onclick="setEstudoTool('raias')" id="tool-btn-raias" class="px-3 py-1 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1.5 transition-all">
+            <i data-lucide="columns-3" class="w-3.5 h-3.5 text-slate-400"></i>
+            Raias
+          </button>
+          <button onclick="setEstudoTool('portanto')" id="tool-btn-portanto" class="px-3 py-1 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1.5 transition-all">
+            <i data-lucide="check-square" class="w-3.5 h-3.5 text-slate-400"></i>
+            Teste do Portanto
+          </button>
+          <button onclick="setEstudoTool('plano')" id="tool-btn-plano" class="px-3 py-1 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1.5 transition-all">
+            <i data-lucide="clipboard-check" class="w-3.5 h-3.5 text-slate-400"></i>
+            Plano de Ação
+          </button>
+        </div>
+      </div>
+
+      <!-- Canvas de Conteúdo da Ferramenta de Estudo -->
+      <div id="estudo-tool-canvas" class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm min-h-[420px]">
+        <!-- Preenchido via Script -->
+      </div>
+
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TELA 1: TRIAGEM INICIAL                                                 -->
+    <!-- ======================================================================= -->
+    <section id="screen-step-1" class="space-y-5 hidden">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+        <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+          <div>
+            <h2 class="text-lg font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+              <i data-lucide="clipboard-list" class="w-5 h-5 text-emerald-600"></i>
+              1. Triagem e Comunicação Preliminar
+            </h2>
+            <p class="text-xs text-slate-500">Registro oficial do evento com enquadramento de severidade corporativa.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-1">
+            <span class="text-slate-600 dark:text-slate-400 font-medium">Unidade Operacional</span>
+            <p class="font-bold text-slate-900 dark:text-white">Polo Potiguar / Campo de Canto do Amaro</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-1">
+            <span class="text-slate-600 dark:text-slate-400 font-medium">Classificação de Risco</span>
+            <p class="font-bold text-rose-600 dark:text-rose-400">Nível 2 - Incidente Operacional com Parada</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-1">
+            <span class="text-slate-600 dark:text-slate-400 font-medium">Comissão Nomeada</span>
+            <p class="font-bold text-slate-900 dark:text-white">Carlos Mendes (Líder) + 4 Especialistas</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TELA 5: EMISSÃO & ENCERRAMENTO                                          -->
+    <!-- ======================================================================= -->
+    <section id="screen-step-5" class="space-y-5 hidden">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+        <div class="border-b border-slate-100 dark:border-slate-800 pb-4">
+          <h2 class="text-lg font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+            <i data-lucide="archive" class="w-5 h-5 text-brava-purple"></i>
+            5. Emissão Oficial & Protocolo Corporativo
+          </h2>
+          <p class="text-xs text-slate-500">Coleta de assinaturas digitais, lições aprendidas e encerramento no sistema de SMS.</p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-center space-y-3">
+          <div class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 mx-auto flex items-center justify-center">
+            <i data-lucide="lock" class="w-6 h-6"></i>
+          </div>
+          <h3 class="font-bold text-sm text-slate-900 dark:text-white">Etapa Bloqueada para Emissão</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+            Existem <strong>17 bloqueios pendentes</strong> identificados pelo módulo de Verificação. Conclua os requisitos mínimos para habilitar o protocolo.
+          </p>
+          <button onclick="changeStep(4)" class="px-4 py-2 rounded-xl bg-brava-navy dark:bg-brava-surface text-white text-xs font-bold hover:opacity-90">
+            Ir para Verificação de Integridade &rarr;
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: AUDITOR IA (Análise Automatizada de Bloqueios e Recomendações)     -->
+  <!-- ========================================================================= -->
+  <div id="modal-auditor-ia" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl w-full p-6 sm:p-7 shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[90vh] overflow-y-auto space-y-5">
+      
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-2xl bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 flex items-center justify-center">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-black text-slate-900 dark:text-white text-base">Auditor IA · Brava SMS</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Diagnóstico heurístico baseado nas normas FORM-CORP-SMS-088.</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-auditor-ia')" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1.5 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Resumo Executivo da IA -->
+      <div class="p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/80 space-y-2 text-xs">
+        <div class="flex items-center gap-2 text-amber-900 dark:text-amber-200 font-bold">
+          <i data-lucide="info" class="w-4 h-4 text-amber-600"></i>
+          <span>Parecer do Auditor IA sobre o Estudo CII-2026-OP-055:</span>
+        </div>
+        <p class="text-amber-950 dark:text-amber-300 leading-relaxed">
+          "A investigação apresenta boa consistência nos nós temporais, porém possui <strong>17 bloqueios normativos</strong>. Os pontos mais críticos referem-se à ausência de matriz 5W2H para a Causa Raiz nº 2 e falta de anexo do laudo metalográfico da válvula PCV-02."
+        </p>
+      </div>
+
+      <!-- Recomendações Prioritárias -->
+      <div class="space-y-2 text-xs">
+        <h4 class="font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider text-[11px]">3 Ações Recomendadas para Desbloqueio Rápido:</h4>
+        
+        <div class="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 flex items-start gap-3">
+          <span class="w-5 h-5 rounded-full bg-brava-navy text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
+          <div>
+            <span class="font-bold text-slate-900 dark:text-white">Preencher campo 'Quem (Who)' na ação preventiva de revisão do CLP</span>
+            <p class="text-slate-500 dark:text-slate-400 text-[11px]">Norma exige atribuição nominativa com matrícula funcional.</p>
+          </div>
+        </div>
+
+        <div class="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 flex items-start gap-3">
+          <span class="w-5 h-5 rounded-full bg-brava-navy text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
+          <div>
+            <span class="font-bold text-slate-900 dark:text-white">Comprovar hipótese 03 na Árvore de Causas com evidência física</span>
+            <p class="text-slate-500 dark:text-slate-400 text-[11px]">Vincular a foto do mancal danificado ao nó causal correspondente.</p>
+          </div>
+        </div>
+
+        <div class="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 flex items-start gap-3">
+          <span class="w-5 h-5 rounded-full bg-brava-navy text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
+          <div>
+            <span class="font-bold text-slate-900 dark:text-white">Homologar a classificação de severidade com a gerência do ativo</span>
+            <p class="text-slate-500 dark:text-slate-400 text-[11px]">Requer confirmação de 'Tier 2' para liberação do relatório executivo.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
+        <button onclick="applyAISuggestions()" class="px-4 py-2 rounded-xl bg-brava-lime text-slate-950 text-xs font-extrabold hover:bg-brava-yellow transition-all">
+          Aplicar Correções Automáticas
+        </button>
+        <button onclick="closeModal('modal-auditor-ia')" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold">
+          Fechar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL: MINUTA DO RIA -->
+  <div id="modal-minuta" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[90vh] overflow-y-auto space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+        <div>
+          <span class="text-[10px] font-bold text-brava-purple uppercase tracking-wider">Minuta Preliminar Não-Oficial</span>
+          <h3 class="font-black text-slate-900 dark:text-white text-base">FORM-CORP-SMS-088 Rev. 08</h3>
+        </div>
+        <button onclick="closeModal('modal-minuta')" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="p-6 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 text-xs font-mono">
+        <div class="text-center pb-3 border-b border-slate-200 dark:border-slate-800">
+          <h4 class="font-bold text-slate-900 dark:text-white">RELATÓRIO DE INVESTIGAÇÃO E ANÁLISE DE INCIDENTE</h4>
+          <p class="text-slate-500 text-[10px]">CII-2026-OP-055 · UN-POTIGUAR · EMISSÃO PENDENTE</p>
+        </div>
+        <p><strong>1. DADOS BÁSICOS:</strong> Turbogerador TG-01 em Canto do Amaro. Data: 18/09/2026 04:12 BRT.</p>
+        <p><strong>2. DESCRIÇÃO:</strong> Desarme por baixa pressão de óleo de mancais após falha na comutação automática.</p>
+        <p><strong>3. CAUSA RAIZ PRINCIPAL:</strong> Fadiga na sede metálica da válvula reguladora PCV-02 gerando alívio contínuo para o cárter.</p>
+        <p class="text-rose-600 dark:text-rose-400 font-bold">[!] DOCUMENTO EM REVISÃO. FALTAM 17 ITENS PARA ASSINATURA FORMAL.</p>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal('modal-minuta')" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-semibold">Fechar</button>
+        <button onclick="downloadMinutaPDF()" class="px-4 py-2 rounded-xl bg-brava-navy dark:bg-brava-surface text-white text-xs font-bold">Baixar como PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Ajuda Geral -->
+  <div id="modal-help" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+        <h3 class="font-extrabold text-slate-900 dark:text-white text-base">Atalhos & Padrões FACIU</h3>
+        <button onclick="closeModal('modal-help')" class="text-slate-400 hover:text-slate-600 p-1.5"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="space-y-2 text-xs text-slate-600 dark:text-slate-400">
+        <p>• <kbd class="font-mono font-bold bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-slate-900 dark:text-white">Ctrl + S</kbd> : Salva o estudo localmente com validação de integridade.</p>
+        <p>• <kbd class="font-mono font-bold bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-slate-900 dark:text-white">Teclas 1 a 5</kbd> : Alternam diretamente entre as etapas do estudo.</p>
+        <p>• Os dados são mantidos em banco seguro no seu navegador (IndexedDB).</p>
+      </div>
+      <div class="flex justify-end pt-2">
+        <button onclick="closeModal('modal-help')" class="px-4 py-2 rounded-xl bg-brava-navy text-white text-xs font-bold">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Configurações -->
+  <div id="modal-settings" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+        <h3 class="font-extrabold text-slate-900 dark:text-white text-base">Configurações do FACIU</h3>
+        <button onclick="closeModal('modal-settings')" class="text-slate-400 hover:text-slate-600 p-1.5"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <label class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-xl cursor-pointer">
+          <span class="font-medium text-slate-700 dark:text-slate-300">Auditoria IA em tempo real</span>
+          <input type="checkbox" checked class="accent-purple-600 w-4 h-4">
+        </label>
+        <label class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-xl cursor-pointer">
+          <span class="font-medium text-slate-700 dark:text-slate-300">Salvar automaticamente ao mudar de aba</span>
+          <input type="checkbox" checked class="accent-purple-600 w-4 h-4">
+        </label>
+      </div>
+      <div class="flex justify-end pt-2">
+        <button onclick="closeModal('modal-settings'); showToast('Preferências salvas com sucesso.');" class="px-4 py-2 rounded-xl bg-brava-navy text-white text-xs font-bold">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Novo Estudo -->
+  <div id="modal-new" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+        <h3 class="font-extrabold text-slate-900 dark:text-white text-base">Novo Estudo FACIU</h3>
+        <button onclick="closeModal('modal-new')" class="text-slate-400 hover:text-slate-600 p-1.5"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="space-y-2 text-xs">
+        <label class="block font-bold text-slate-700 dark:text-slate-300">Título da Ocorrência</label>
+        <input type="text" id="new-investigation-title" placeholder="Ex: Vazamento de gás na estação coletora 04" class="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brava-purple">
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal('modal-new')" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-semibold">Cancelar</button>
+        <button onclick="createNewInvestigation()" class="px-4 py-2 rounded-xl bg-brava-navy text-white text-xs font-bold">Criar Estudo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Box -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-slate-950 text-white text-xs font-medium px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-3">
+      <i data-lucide="check-circle" class="w-4 h-4 text-brava-yellow"></i>
+      <span id="toast-message">Operação executada com sucesso!</span>
+    </div>
+  </div>
+
+  <script>
+    // Global Application State
+    const state = {
+      activeStep: 2, // Inicia diretamente no Passo 2 (Estudo) para validação visual imediata
+      selectedAuditModule: 'plano', // 'triagem', 'arvore', 'porques', 'plano', 'ria'
+      riaSubTab: 'dados', // 'dados', 'descricao', 'consequencias', 'investigacao', 'providencias'
+      estudoTool: 'cronologia',
+      isDarkMode: false,
+      integrityPercentage: 39,
+      
+      // Issue checklist by module (with dynamic resolution)
+      moduleIssues: {
+        plano: [
+          { id: 'p1', title: 'Definir responsável nominativo (Who) na Ação Preventiva #02', desc: 'Atualmente preenchido apenas como setor genérico. Exige matrícula.', solved: false },
+          { id: 'p2', title: 'Comprovar prazo acordado (When) compatível com a parada programada', desc: 'Data limite deve anteceder a parada de novembro/2026.', solved: false }
+        ],
+        triagem: [
+          { id: 't1', title: 'Preencher número do Comunicado Inicial no sistema corporativo', desc: 'Campo obrigatório para auditoria ANP.', solved: false },
+          { id: 't2', title: 'Anexar registro de notificação à equipe de turno', desc: 'Falta upload do log do sistema SCADA.', solved: false },
+          { id: 't3', title: 'Validar matriz de risco ambiental preliminar', desc: 'Avaliação preliminar não assinada.', solved: false },
+          { id: 't4', title: 'Identificar equipe de primeiros socorros de prontidão', desc: 'Ocorrência sem registro médico associado.', solved: false },
+          { id: 't5', title: 'Confirmar horário de acionamento do comitê de crise', desc: 'Discrepância de 15 minutos entre registros.', solved: false },
+          { id: 't6', title: 'Definir facilitador metodológico certificado', desc: 'Necessário registro de certificação FACIU.', solved: false },
+          { id: 't7', title: 'Assinatura eletrônica do gestor da unidade', desc: 'Pendente de validação de token.', solved: false }
+        ],
+        arvore: [
+          { id: 'a1', title: 'Hipótese H-03 sem teste de confirmação física', desc: 'Válvula sobressalente ainda não passou por bancada de calibração.', solved: false },
+          { id: 'a2', title: 'Nó Efeito Topo sem vínculo com evento no SOE', desc: 'Falta indexação direta ao timestamp 04:12:02.', solved: false },
+          { id: 'a3', title: 'Causa raiz #01 sem barreira de proteção associada', desc: 'Técnica de BowTie exige barreira preventiva formal.', solved: false },
+          { id: 'a4', title: 'Verificar bifurcação lógica no nó de alimentação elétrica', desc: 'Relação "E / OU" não especificada.', solved: false },
+          { id: 'a5', title: 'Evidência fotográfica sem escala métrica', desc: 'Foto da haste da válvula requer cota dimensional.', solved: false }
+        ],
+        porques: [
+          { id: 'pq1', title: 'Cinco Porquês validados para a Causa Raiz Principal', desc: 'Cadeia de causalidade consistente e aprovada.', solved: true }
+        ],
+        ria: [
+          { id: 'r1', title: 'Resumo executivo sem estimativa de perdas de produção', desc: 'Calcular barris equivalentes perdidos no desligamento.', solved: false },
+          { id: 'r2', title: 'Campo "Lições Aprendidas" em branco no item 4.2', desc: 'Redigir recomendação aplicável a outros turbogeradores da frota.', solved: false },
+          { id: 'r3', title: 'Falta número da OS de desmontagem e substituição', desc: 'Ordem de serviço do SAP não informada.', solved: false },
+          { id: 'r4', title: 'Aprovação do SMS Corporativo pendente', desc: 'Aguardando parecer do comitê de segurança.', solved: false },
+          { id: 'r5', title: 'Certificado de calibração do manômetro não anexado', desc: 'Instrumento padrão necessita rastreabilidade RBC.', solved: false }
+        ]
+      }
+    };
+
+    // Initialize application
+    window.onload = function() {
+      lucide.createIcons();
+      renderActiveStep();
+      renderAuditModule();
+      renderRiaSubTab();
+      renderEstudoTool();
+      setupKeyListeners();
+    };
+
+    // Switch between Macro Steps (1 to 5)
+    function changeStep(stepNumber) {
+      state.activeStep = stepNumber;
+      
+      // Update Stepper buttons visuals
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById(`stepper-btn-${i}`);
+        const screen = document.getElementById(`screen-step-${i}`);
+        if (screen) {
+          screen.classList.toggle('hidden', i !== stepNumber);
+        }
+
+        if (btn) {
+          const badge = btn.querySelector('.step-badge');
+          const title = btn.querySelector('.step-title');
+          const sub = btn.querySelector('.step-sub');
+
+          if (i === stepNumber) {
+            btn.className = "group flex items-center gap-2.5 px-4 py-1.5 rounded-xl transition-all duration-150 shrink-0 text-left bg-brava-navy dark:bg-brava-surface text-white step-active-shadow border border-slate-800 dark:border-brava-border";
+            badge.className = "step-badge w-6 h-6 rounded-full flex items-center justify-center font-black text-xs bg-brava-yellow text-slate-950 shadow-xs";
+            badge.textContent = i;
+            title.className = "step-title font-bold text-xs text-white block";
+            if (sub) {
+              sub.className = "step-sub text-[10px] text-brava-yellow font-semibold block";
+              sub.textContent = "Etapa Atual";
+            }
+          } else if (i < stepNumber) {
+            btn.className = "group flex items-center gap-2.5 px-3 py-1.5 rounded-xl transition-all duration-150 shrink-0 text-left border border-transparent hover:border-slate-200 dark:hover:border-slate-700";
+            badge.className = "step-badge w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800";
+            badge.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5"></i>';
+            title.className = "step-title font-semibold text-xs text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white block";
+            if (sub) {
+              sub.className = "step-sub text-[10px] text-emerald-600 dark:text-emerald-400 font-medium block";
+              sub.textContent = "Concluída";
+            }
+          } else {
+            btn.className = "group flex items-center gap-2.5 px-3 py-1.5 rounded-xl transition-all duration-150 shrink-0 text-left border border-transparent hover:border-slate-200 dark:hover:border-slate-700 opacity-70 hover:opacity-100";
+            badge.className = "step-badge w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-700";
+            badge.textContent = i;
+            title.className = "step-title font-semibold text-xs text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white block";
+            if (sub) {
+              sub.className = "step-sub text-[10px] text-slate-400 dark:text-slate-500 block";
+              sub.textContent = "Pendente";
+            }
+          }
+        }
+      }
+
+      lucide.createIcons();
+      showToast(`Visualizando Etapa ${stepNumber}: ${getStepLabel(stepNumber)}`);
+    }
+
+    function getStepLabel(step) {
+      const labels = { 1: 'Triagem', 2: 'Estudo', 3: 'RIA', 4: 'Verificação', 5: 'Emissão' };
+      return labels[step] || '';
+    }
+
+    function renderActiveStep() {
+      changeStep(state.activeStep);
+    }
+
+    function selectAuditModule(moduleId) {
+      state.selectedAuditModule = moduleId;
+      
+      // Update rings on cards
+      const moduleCards = ['triagem', 'arvore', 'porques', 'plano', 'ria'];
+      moduleCards.forEach(id => {
+        const card = document.getElementById(`card-mod-${id}`);
+        if (card) {
+          if (id === moduleId) {
+            card.classList.add('ring-2', 'ring-brava-purple/40', 'dark:ring-brava-purpleLight');
+          } else {
+            card.classList.remove('ring-2', 'ring-brava-purple/40', 'dark:ring-brava-purpleLight');
+          }
+        }
+      });
+
+      renderAuditModule();
+    }
+
+    function renderAuditModule() {
+      const container = document.getElementById('module-issues-list');
+      const title = document.getElementById('active-module-title');
+      const issues = state.moduleIssues[state.selectedAuditModule] || [];
+      const moduleNames = {
+        triagem: 'Triagem & Notificação',
+        arvore: 'Árvore de Causas & Hipóteses',
+        porques: '5 Porquês Metodológico',
+        plano: 'Plano de Ações 5W2H',
+        ria: 'Conformidade e Minuta do RIA'
+      };
+
+      const pendingCount = issues.filter(i => !i.solved).length;
+      title.innerHTML = `
+        <i data-lucide="shield-alert" class="w-4 h-4 text-brava-purple"></i>
+        ${moduleNames[state.selectedAuditModule]} (${pendingCount} pendência(s))
+      `;
+
+      if (issues.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-500 py-4 text-center">Nenhuma regra pendente neste módulo.</p>`;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = issues.map((item, idx) => `
+        <div class="p-3.5 rounded-2xl ${item.solved ? 'bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800' : 'bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700'} flex items-start justify-between gap-3 transition-all">
+          <div class="flex items-start gap-3">
+            <button onclick="toggleIssueSolved('${state.selectedAuditModule}', ${idx})" class="mt-0.5 w-5 h-5 rounded-lg flex items-center justify-center border ${item.solved ? 'bg-emerald-500 border-emerald-600 text-white' : 'border-slate-300 dark:border-slate-600 hover:border-purple-500'}">
+              ${item.solved ? '<i data-lucide="check" class="w-3.5 h-3.5"></i>' : ''}
+            </button>
+            <div>
+              <h4 class="font-bold text-xs ${item.solved ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-900 dark:text-white'}">${item.title}</h4>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">${item.desc}</p>
+            </div>
+          </div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold ${item.solved ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300' : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'}">
+            ${item.solved ? 'Resolvido' : 'Bloqueante'}
+          </span>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+      recalculateIntegrity();
+    }
+
+    function toggleIssueSolved(module, index) {
+      const issue = state.moduleIssues[module][index];
+      issue.solved = !issue.solved;
+      renderAuditModule();
+      showToast(issue.solved ? `Item resolvido: ${issue.title.slice(0, 30)}...` : `Item marcado como pendente.`);
+    }
+
+    function resolveAllInModule() {
+      const issues = state.moduleIssues[state.selectedAuditModule] || [];
+      issues.forEach(i => i.solved = true);
+      renderAuditModule();
+      showToast(`Todas as pendências de ${state.selectedAuditModule.toUpperCase()} foram resolvidas!`);
+    }
+
+    function recalculateIntegrity() {
+      let total = 0;
+      let solved = 0;
+
+      Object.values(state.moduleIssues).forEach(list => {
+        list.forEach(item => {
+          total++;
+          if (item.solved) solved++;
+        });
+      });
+
+      const pending = total - solved;
+      const pct = Math.round((solved / total) * 100);
+
+      // Update Top Badge and Global Header
+      document.getElementById('integrity-badge-score').textContent = `${pct}%`;
+      document.getElementById('integrity-badge-bar').style.width = `${pct}%`;
+      document.getElementById('global-integrity-label').textContent = `${pct}% CONCLUÍDO`;
+      document.getElementById('global-integrity-bar').style.width = `${pct}%`;
+      
+      document.getElementById('count-atendidos').textContent = `${solved} atendidos`;
+      document.getElementById('count-bloqueios').textContent = `${pending} bloqueios`;
+      document.getElementById('badge-total-blocks').textContent = `${pending} bloqueio(s)`;
+
+      // Update Card 4 (Plano) & Others
+      const planoPending = state.moduleIssues.plano.filter(i => !i.solved).length;
+      document.querySelector('#card-mod-plano span:last-child').textContent = planoPending === 0 ? '✓ 2/2' : `${planoPending} bloq`;
+    }
+
+    function setRiaSubTab(subTabId) {
+      state.riaSubTab = subTabId;
+      const tabs = ['dados', 'descricao', 'consequencias', 'investigacao', 'providencias'];
+      
+      tabs.forEach(t => {
+        const btn = document.getElementById(`ria-tab-${t}`);
+        if (btn) {
+          if (t === subTabId) {
+            btn.className = "px-4 py-2 rounded-xl text-xs font-bold transition-all bg-brava-navy text-white shadow-xs";
+          } else {
+            btn.className = "px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all";
+          }
+        }
+      });
+
+      renderRiaSubTab();
+    }
+
+    function renderRiaSubTab() {
+      const el = document.getElementById('ria-subtab-content');
+      if (state.riaSubTab === 'dados') {
+        el.innerHTML = `
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+            <div>
+              <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Número do RIA</label>
+              <input type="text" value="RIA-2026-OP-055" readonly class="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-mono">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Data/Hora da Ocorrência</label>
+              <input type="text" value="18/09/2026 04:12 BRT" class="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Local / Instalação</label>
+              <input type="text" value="Estação Potiguar - Módulo TG-01" class="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Líder da Investigação</label>
+              <input type="text" value="Carlos Mendes (Engenharia de Confiabilidade)" class="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+            </div>
+          </div>
+        `;
+      } else if (state.riaSubTab === 'descricao') {
+        el.innerHTML = `
+          <div class="space-y-3 text-xs">
+            <label class="block font-bold text-slate-700 dark:text-slate-300">Narrativa Factual do Evento (FORM-CORP-SMS-088)</label>
+            <textarea rows="4" class="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 leading-relaxed">Em 18 de setembro de 2026, às 04h12min, o Turbogerador TG-01 sofreu desarme não programado por atuação do trip 86G de baixa pressão na linha de lubrificação de mancais. A bomba reserva não sustentou a vazão nominal de 4.5 m³/h devido a atraso na rampa de aceleração do inversor de frequência.</textarea>
+          </div>
+        `;
+      } else {
+        el.innerHTML = `
+          <div class="py-8 text-center space-y-2">
+            <h4 class="font-bold text-sm text-slate-900 dark:text-white capitalize">Seção: ${state.riaSubTab}</h4>
+            <p class="text-xs text-slate-500">Campos estruturados sincronizados conforme FORM-CORP-SMS-088 Rev. 08.</p>
+            <button onclick="showToast('Dados validados com sucesso.')" class="px-4 py-2 rounded-xl bg-brava-navy text-white text-xs font-bold mt-2">Gravar Seção</button>
+          </div>
+        `;
+      }
+    }
+
+    function setEstudoTool(toolId) {
+      state.estudoTool = toolId;
+      const tools = ['cronologia', 'arvore', 'raias', 'portanto', 'plano'];
+      tools.forEach(t => {
+        const btn = document.getElementById(`tool-btn-${t}`);
+        if (btn) {
+          if (t === toolId) {
+            btn.className = "px-3 py-1 rounded-lg text-xs font-bold bg-brava-navy text-white shadow-xs flex items-center gap-1.5 transition-all";
+          } else {
+            btn.className = "px-3 py-1 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1.5 transition-all";
+          }
+        }
+      });
+      renderEstudoTool();
+    }
+
+    function renderEstudoTool() {
+      const el = document.getElementById('estudo-tool-canvas');
+      if (state.estudoTool === 'cronologia') {
+        el.innerHTML = `
+          <div class="space-y-4 text-xs">
+            <h3 class="font-bold text-slate-900 dark:text-white text-sm flex items-center gap-2">
+              <i data-lucide="clock" class="w-4 h-4 text-brava-purple"></i>
+              Linha do Tempo Cronológica com Validação de SOE
+            </h3>
+            <div class="pl-5 border-l-2 border-slate-200 dark:border-slate-700 space-y-4 py-2">
+              <div>
+                <span class="font-mono font-bold text-emerald-600">04:10:12</span>
+                <p class="font-semibold text-slate-800 dark:text-slate-200">Geração nominal 14.2 MW estável</p>
+              </div>
+              <div>
+                <span class="font-mono font-bold text-amber-600">04:11:45</span>
+                <p class="font-semibold text-slate-800 dark:text-slate-200">Alarme PAL-023: Baixa pressão de óleo lubrificante</p>
+              </div>
+              <div>
+                <span class="font-mono font-bold text-rose-600">04:12:02</span>
+                <p class="font-semibold text-slate-800 dark:text-slate-200">Atuação do Trip 86G e desligamento de emergência</p>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        el.innerHTML = `
+          <div class="py-12 text-center space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-100 text-brava-purple mx-auto flex items-center justify-center">
+              <i data-lucide="layers" class="w-5 h-5"></i>
+            </div>
+            <h4 class="font-bold text-slate-900 dark:text-white">Ferramenta: ${state.estudoTool.toUpperCase()}</h4>
+            <p class="text-xs text-slate-500">Módulo em visualização integrada para análise causal.</p>
+          </div>
+        `;
+      }
+      lucide.createIcons();
+    }
+
+    function saveInvestigation() {
+      const btn = document.getElementById('btn-save');
+      const label = document.getElementById('save-btn-text');
+      label.textContent = "Gravando...";
+      btn.classList.add('opacity-75', 'scale-95');
+
+      setTimeout(() => {
+        label.textContent = "Salvo!";
+        btn.classList.remove('opacity-75', 'scale-95');
+        showToast("Estudo CII-2026-OP-055 salvo com sucesso! (IndexedDB)");
+        setTimeout(() => label.textContent = "Salvar", 1400);
+      }, 500);
+    }
+
+    function checkSyncStatus() {
+      const label = document.getElementById('sync-label');
+      label.textContent = "Verificando...";
+      setTimeout(() => {
+        label.textContent = "Sincronizado";
+        showToast("Base local 100% alinhada com o servidor corporativo Brava.");
+      }, 700);
+    }
+
+    function toggleDarkMode() {
+      state.isDarkMode = !state.isDarkMode;
+      document.documentElement.classList.toggle('dark', state.isDarkMode);
+      const icon = document.getElementById('theme-icon');
+      icon.setAttribute('data-lucide', state.isDarkMode ? 'sun' : 'moon');
+      lucide.createIcons();
+      showToast(state.isDarkMode ? 'Modo Escuro ativado.' : 'Modo Claro ativado.');
+    }
+
+    function openAuditorIAModal() { openModal('modal-auditor-ia'); }
+    function openMinutaModal() { openModal('modal-minuta'); }
+    function downloadMinutaPDF() { showToast("Gerando arquivo PDF: MINUTA_FORM-CORP-SMS-088.pdf"); }
+    function emitirRIAOficial() {
+      showToast("Não é possível emitir. Existem 17 pendências impeditivas na Verificação.");
+      changeStep(4);
+    }
+
+    function exportJSONBackup() { showToast("Backup portátil baixado: CII-2026-OP-055_backup.json"); }
+    function showDiskStatus() { showToast("IndexedDB: 240 KB alocados / 50 MB disponíveis."); }
+    function triggerUndo() { showToast("Ação desfeita (Ctrl+Z)."); }
+    function triggerRedo() { showToast("Nada para refazer."); }
+
+    function applyAISuggestions() {
+      closeModal('modal-auditor-ia');
+      resolveAllInModule();
+      showToast("Auditor IA: 3 pendências críticas corrigidas e vinculadas ao estudo!");
+    }
+
+    function createNewInvestigation() {
+      const title = document.getElementById('new-investigation-title').value;
+      closeModal('modal-new');
+      showToast(title ? `Estudo iniciado: "${title}"` : 'Novo estudo iniciado com modelo padrão.');
+      changeStep(1);
+    }
+
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('hidden');
+    }
+
+    function setupKeyListeners() {
+      window.addEventListener('keydown', (e) => {
+        // Ctrl+S
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+          e.preventDefault();
+          saveInvestigation();
+        }
+        // Switch steps 1 to 5
+        if (!['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
+          const num = parseInt(e.key);
+          if (num >= 1 && num <= 5) {
+            changeStep(num);
+          }
+        }
+      });
+    }
+
+    let toastTimer;
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const text = document.getElementById('toast-message');
+      if (!toast || !text) return;
+      text.textContent = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      }, 2600);
+    }
+  </script>
+</body>
+</html>

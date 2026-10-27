@@ -49,7 +49,11 @@ A principal fraqueza do SFA é o Total Blocking Time (TBT). Como o navegador bai
 
 ## 4. O Ciclo de Refatoração ("Surgical Strike")
 Ao ser instruído para refatorar ou adicionar código:
+0. **Passo Zero Inviolável: Backup Imediato**:
+   - ANTES de qualquer edição ou novo build, verifique se a versão ativa atual (`FACIU-vX.Y.Z.html`) já foi copiada para `backups/FACIU-vX.Y.Z.html`. Se não foi, copie-a imediatamente.
+   - NUNCA delete versões anteriores com `Remove-Item`, `os.remove`, `rm` ou `del`. Todas as versões anteriores devem ser preservadas em `backups/`.
 1. **Leia Estreito (Read Narrow)**: Identifique o escopo exato no monolito e leia apenas a função alvo e suas dependências diretas.
 2. **Entenda a Intenção**: Se estiver consertando algo, certifique-se de que a falha não é no seu entendimento das Regras de Negócio, e sim no código.
 3. **Não Reescreva o Mundo**: Modifique ou fragmente estritamente o bloco solicitado.
-4. **Validação**: Por não haver testes unitários robustos num arquivo solto, crie sempre passos claros para validação manual visual na tela.
+4. **Validação**: Por não haver testes unitários robustos num arquivo solto, crie sempre passos claros para validação manual visual na tela e execute os testes automatizados.
+

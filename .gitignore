@@ -1,0 +1,31 @@
+# Dependências
+node_modules/
+
+# Backups de versões antigas (rastreados via git lfs ou mantidos localmente)
+backups/
+
+# Artefatos de teste
+tests-e2e/playwright-report/
+tests-e2e/test-results/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# Cache Python
+__pycache__/
+*.pyc
+
+# Capturas de tela e relatórios de imagem
+tests-e2e/screenshots/
+*.png
+
+# Scratch files e arquivos temporários locais
+.scratch/
+.claude/
+
+
+.github/

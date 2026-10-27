@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FACIU v6.31.3 · Protótipo da Nova Tela Inicial | Brava Energia</title>
+  
+  <!-- Inter & Montserrat Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:ital,wght@1,800;1,900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            brand: ['Montserrat', 'sans-serif'],
+          },
+          colors: {
+            brava: {
+              navy: '#221C4F',        // Roxo/Azul Marinho Corporativo Brava
+              navyDark: '#1A0572',    // Marinho Escuro de Profundidade
+              navy2: '#3A3372',       // Marinho Secundário
+              lime: '#C6E600',        // Verde Limão Elétrico Brava Oficial
+              limeHover: '#D6F220',   // Hover do Verde Limão
+              line: '#E4E6EF',        // Linha/Borda Padrão
+              bg: '#F4F5FA',          // Fundo Claro Padrão do FACIU
+              card: '#FFFFFF',        // Fundo de Cartão
+              text: '#1B1B29',        // Texto Escuro
+              muted: '#4B4F66',       // Texto Suave / Legenda
+            }
+          },
+          boxShadow: {
+            'glow-lime': '0 0 24px rgba(198, 230, 0, 0.35)',
+            'glow-navy': '0 12px 36px rgba(34, 28, 79, 0.22)',
+            'soft-card': '0 6px 24px rgba(34, 28, 79, 0.05)',
+            'elevated': '0 14px 40px rgba(34, 28, 79, 0.10)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --navy: #221C4F;
+      --navy2: #3A3372;
+      --lime: #C6E600;
+      --line: #E4E6EF;
+      --bg: #F4F5FA;
+      --card: #FFFFFF;
+      --text: #1B1B29;
+      --muted: #4B4F66;
+    }
+    ::-webkit-scrollbar { height: 6px; width: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb { background: rgba(198, 230, 0, 0.35); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(198, 230, 0, 0.7); }
+    .snap-x { scroll-snap-type: x mandatory; }
+    .snap-start { scroll-snap-align: start; }
+    .gradient-brava {
+      background: linear-gradient(135deg, #221C4F 0%, #1A0572 100%);
+    }
+    .gradient-hero {
+      background: radial-gradient(circle at 90% 10%, rgba(198, 230, 0, 0.12) 0%, transparent 60%),
+                  linear-gradient(135deg, #221C4F 0%, #180945 60%, #110536 100%);
+    }
+  </style>
+</head>
+<body class="bg-brava-bg text-brava-text font-sans min-h-screen flex flex-col antialiased selection:bg-brava-lime selection:text-brava-navy pb-24">
+
+  <!-- Barra Superior de Navegação (Padrão Corporativo Brava Energia) -->
+  <header class="gradient-brava text-white px-6 py-3.5 shadow-md border-b border-white/10 sticky top-0 z-40">
+    <div class="max-w-[1600px] mx-auto flex items-center justify-between gap-4">
+      
+      <!-- Logotipo Oficial da Brava & Título da Aplicação -->
+      <div class="flex items-center gap-6">
+        <div class="flex items-center cursor-pointer group" onclick="showToast('Brava Energia · Sistema de SMS Onshore/Offshore')">
+          <img id="header-brand-logo" alt="Brava Energia" class="h-8 w-auto object-contain filter drop-shadow group-hover:scale-105 transition-transform duration-200">
+        </div>
+
+        <div class="border-l border-white/15 pl-6 hidden sm:block">
+          <div class="flex items-center gap-2">
+            <h1 class="text-base font-extrabold tracking-tight text-white">FACIU</h1>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-brava-lime text-brava-navy border border-brava-lime/40">PROTÓTIPO v6.31.3</span>
+          </div>
+          <p class="text-xs text-slate-300 font-light">Ferramenta de Análise de Causas e Investigação Unificada</p>
+        </div>
+      </div>
+
+      <!-- Ações de Apoio no Cabeçalho -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button onclick="openModal('modal-monitor')" class="flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg text-slate-200 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors">
+          <i data-lucide="folder-sync" class="w-3.5 h-3.5 text-brava-lime"></i>
+          <span class="hidden md:inline">Monitor de Pasta</span>
+        </button>
+
+        <button onclick="openModal('modal-help')" class="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-lg text-slate-200 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors">
+          <i data-lucide="book-open" class="w-3.5 h-3.5 text-brava-lime"></i>
+          <span class="hidden md:inline">Central de Ajuda</span>
+        </button>
+
+        <button onclick="openModal('modal-app-help')" class="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-lg text-slate-200 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors">
+          <i data-lucide="help-circle" class="w-3.5 h-3.5 text-purple-300"></i>
+          <span class="hidden md:inline">Ajuda da Aplicação</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Espaço de Trabalho Principal -->
+  <main class="flex-1 max-w-[1600px] w-full mx-auto p-4 sm:p-6 lg:p-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- COLUNA PRINCIPAL: Destaque da Investigação & Metodologia (~75%) -->
+      <div class="lg:col-span-9 space-y-6">
+        
+        <!-- Faixa de Boas-vindas e Contextualização -->
+        <div class="space-y-1.5">
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-purple-100/90 text-brava-navy border border-purple-200 text-[11px] font-bold tracking-wider uppercase">
+            <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-brava-navy"></i>
+            Ambiente Local de Apoio à Investigação · Padrão PG-CORP-SMS-015
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
+            <div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-brava-navy tracking-tight">
+                Bem-vindo(a) ao FACIU
+              </h2>
+              <p class="text-sm text-brava-muted mt-0.5">
+                Escolha como deseja iniciar, retomar ou consultar uma investigação de incidente.
+              </p>
+            </div>
+
+            <!-- Busca Rápida de Estudos -->
+            <div class="relative min-w-[260px] max-w-sm">
+              <input 
+                id="search-input"
+                type="text" 
+                placeholder="Filtrar por identificador, ativo ou título..." 
+                class="w-full bg-white text-sm text-brava-text placeholder-slate-400 pl-9 pr-4 py-2 rounded-xl border border-brava-line shadow-soft-card focus:outline-none focus:ring-2 focus:ring-brava-lime focus:border-transparent transition-all"
+                oninput="filterInvestigations(this.value)"
+              >
+              <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAINEL DE DESTAQUE: INVESTIGAÇÃO ATIVA (HERO CARD) -->
+        <div id="investigation-card" class="gradient-hero rounded-3xl p-5 sm:p-7 text-white shadow-glow-navy border border-white/10 transition-all duration-300 relative overflow-hidden">
+          
+          <!-- Efeito de Iluminação de Fundo -->
+          <div class="absolute -right-20 -top-20 w-80 h-80 bg-brava-lime/10 rounded-full blur-3xl pointer-events-none"></div>
+
+          <!-- Cabeçalho do Card da Investigação -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-white/10">
+            <div class="flex items-start gap-3.5">
+              <div class="p-3 bg-white/10 rounded-2xl border border-white/15 text-brava-lime flex-shrink-0 mt-0.5 shadow-inner">
+                <i data-lucide="folder-open" class="w-6 h-6"></i>
+              </div>
+              <div class="space-y-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-xs font-bold uppercase tracking-wider text-slate-300" id="card-status-label">Status da Investigação Ativa</span>
+                  <span id="badge-phase" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brava-lime/20 text-brava-lime border border-brava-lime/30">
+                    Etapa 3 de 5 · Plano de Ação
+                  </span>
+                  <span id="badge-method" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-white/10 text-white border border-white/20">
+                    Árvore de Causas + 5 Porquês
+                  </span>
+                </div>
+                <h3 id="card-title" class="text-base sm:text-lg font-bold text-white leading-snug">
+                  CII-2026-OP-055 · Desarme Involuntário do Turbogerador TG-01 por Queda de Pressão no Óleo Lubrificante
+                </h3>
+                <p id="card-meta" class="text-xs text-slate-300 flex items-center gap-3 flex-wrap">
+                  <span><strong class="text-white">Instalação:</strong> FPSO Brava Spirit</span>
+                  <span>•</span>
+                  <span><strong class="text-white">Líder da Comissão:</strong> Marcelo Vasconcelos (Engenharia de Confiabilidade)</span>
+                  <span>•</span>
+                  <span><strong class="text-white">Gravado no Navegador:</strong> Hoje, 14:32</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="flex-shrink-0 self-end md:self-center flex items-center gap-2">
+              <button 
+                onclick="simulateContinueInvestigation()"
+                class="flex items-center gap-2 bg-brava-lime text-brava-navy hover:bg-brava-limeHover px-5 py-2.5 rounded-xl font-extrabold text-xs tracking-wide shadow-md hover:shadow-lg transition-all transform active:scale-95"
+              >
+                <i data-lucide="arrow-right-circle" class="w-4 h-4 text-brava-navy"></i>
+                Continuar Investigação
+              </button>
+            </div>
+          </div>
+
+          <!-- Esteira Oficial de 5 Etapas do FACIU -->
+          <div class="py-5" id="stepper-container">
+            <div class="flex items-center justify-between w-full gap-1 sm:gap-2 select-none overflow-x-auto pb-1">
+              
+              <!-- Etapa 1: Triagem & Classificação -->
+              <div onclick="selectStep(1)" id="step-btn-1" class="cursor-pointer group flex-1 min-w-[100px] p-2.5 sm:p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-center flex flex-col items-center gap-1">
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-400/30 flex items-center justify-center shrink-0">
+                  <i data-lucide="clipboard-check" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+                </div>
+                <span class="font-medium text-slate-200 text-[11px] sm:text-xs truncate w-full text-center">1. Triagem</span>
+                <span class="text-[9px] sm:text-[10px] text-emerald-400 font-bold flex items-center gap-0.5">
+                  <i data-lucide="check" class="w-2.5 h-2.5"></i> Concluída
+                </span>
+              </div>
+
+              <div class="flex items-center justify-center shrink-0 px-0.5">
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500"></i>
+              </div>
+
+              <!-- Etapa 2: Estruturação Causal -->
+              <div onclick="selectStep(2)" id="step-btn-2" class="cursor-pointer group flex-1 min-w-[100px] p-2.5 sm:p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-center flex flex-col items-center gap-1">
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-400/30 flex items-center justify-center shrink-0">
+                  <i data-lucide="git-branch" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+                </div>
+                <span class="font-medium text-slate-200 text-[11px] sm:text-xs truncate w-full text-center">2. Estrutura Causal</span>
+                <span class="text-[9px] sm:text-[10px] text-emerald-400 font-bold flex items-center gap-0.5">
+                  <i data-lucide="check" class="w-2.5 h-2.5"></i> Árvore Pronta
+                </span>
+              </div>
+
+              <div class="flex items-center justify-center shrink-0 px-0.5">
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500"></i>
+              </div>
+
+              <!-- Etapa 3: Plano de Ação (ETAPA ATIVA ATUAL) -->
+              <div onclick="selectStep(3)" id="step-btn-3" class="cursor-pointer flex-1 min-w-[110px] p-2.5 sm:p-3 rounded-2xl bg-brava-lime/15 border-2 border-brava-lime ring-2 ring-brava-lime/30 shadow-glow-lime text-center flex flex-col items-center gap-1 transition-all">
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-brava-lime text-brava-navy flex items-center justify-center font-extrabold shadow-md shrink-0">
+                  <i data-lucide="list-todo" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+                </div>
+                <span class="font-extrabold text-white text-[11px] sm:text-xs truncate w-full text-center">3. Plano de Ação</span>
+                <span class="text-[9px] sm:text-[10px] text-brava-lime font-bold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-brava-lime animate-ping"></span>
+                  Em Formulação
+                </span>
+              </div>
+
+              <div class="flex items-center justify-center shrink-0 px-0.5">
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500"></i>
+              </div>
+
+              <!-- Etapa 4: Auditoria IA -->
+              <div onclick="selectStep(4)" id="step-btn-4" class="cursor-pointer group flex-1 min-w-[100px] p-2.5 sm:p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-center flex flex-col items-center gap-1 opacity-80 hover:opacity-100">
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-700/50 flex items-center justify-center text-slate-400 group-hover:text-white shrink-0">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+                </div>
+                <span class="font-medium text-slate-300 text-[11px] sm:text-xs truncate w-full text-center">4. Auditoria IA</span>
+                <span class="text-[9px] sm:text-[10px] text-slate-400">Pendente</span>
+              </div>
+
+              <div class="flex items-center justify-center shrink-0 px-0.5">
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500"></i>
+              </div>
+
+              <!-- Etapa 5: Emissão do RIA Oficial -->
+              <div onclick="selectStep(5)" id="step-btn-5" class="cursor-pointer group flex-1 min-w-[100px] p-2.5 sm:p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-center flex flex-col items-center gap-1 opacity-70 hover:opacity-100">
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-700/50 flex items-center justify-center text-slate-400 group-hover:text-white shrink-0">
+                  <i data-lucide="file-check-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+                </div>
+                <span class="font-medium text-slate-300 text-[11px] sm:text-xs truncate w-full text-center">5. Emissão RIA</span>
+                <span class="text-[9px] sm:text-[10px] text-slate-400">PDF Oficial</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARROSSEL DE CONHECIMENTO METODOLÓGICO -->
+          <div class="pt-5 border-t border-white/10">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="p-1.5 rounded-lg bg-brava-lime/20 text-brava-lime border border-brava-lime/30">
+                    <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i>
+                  </span>
+                  <h4 class="font-bold text-white text-xs sm:text-sm uppercase tracking-wider">
+                    Dicas Técnicas &amp; Metodologia de Investigação
+                  </h4>
+                </div>
+                <p class="text-[11px] text-slate-300 mt-0.5 ml-7">
+                  Diretrizes corporativas para ligações causais, planos de ação e auditoria do FORM-CORP-SMS-088.
+                </p>
+              </div>
+
+              <!-- Filtros e Controles de Navegação -->
+              <div class="flex items-center gap-2 self-start sm:self-auto">
+                <div class="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10 text-xs">
+                  <button id="filter-btn-all" onclick="filterTips('all')" class="px-2.5 py-1 rounded-lg font-bold text-brava-navy bg-brava-lime shadow-sm transition-all text-[11px]">
+                    Todas (7)
+                  </button>
+                  <button id="filter-btn-conceito" onclick="filterTips('conceito')" class="px-2.5 py-1 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all text-[11px]">
+                    Metodologia (4)
+                  </button>
+                  <button id="filter-btn-uso" onclick="filterTips('uso')" class="px-2.5 py-1 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all text-[11px]">
+                    Sistema (3)
+                  </button>
+                </div>
+
+                <div class="flex items-center gap-1">
+                  <button onclick="scrollTips('left')" title="Rolar para esquerda" class="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 border border-white/10 transition-all">
+                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                  </button>
+                  <button onclick="scrollTips('right')" title="Rolar para direita" class="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 border border-white/10 transition-all">
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Faixa Horizontal de Cartões -->
+            <div id="tips-carousel" class="flex items-stretch gap-3.5 overflow-x-auto pb-2.5 pt-1 scroll-smooth snap-x">
+
+              <!-- CARTÃO 1: Ligação Causal Estrita -->
+              <div data-category="conceito" onclick="showTipModal('causal-link')" class="tip-card flex-shrink-0 w-[290px] sm:w-[320px] snap-start group cursor-pointer p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-brava-lime/60 transition-all shadow-sm flex flex-col justify-between">
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-brava-lime/20 text-brava-lime border border-brava-lime/30">
+                      <i data-lucide="git-commit" class="w-2.5 h-2.5"></i> Árvore de Causas
+                    </span>
+                    <span class="text-[10px] text-brava-lime font-mono font-bold">PADRÃO ESTREITO</span>
+                  </div>
+                  <h5 class="font-bold text-white text-xs sm:text-sm group-hover:text-brava-lime transition-colors flex items-center justify-between">
+                    Ligação Causal Direta
+                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-brava-lime transition-transform"></i>
+                  </h5>
+                  <p class="text-xs text-slate-300 leading-relaxed line-clamp-2">
+                    Arestas partem da causa antecedente para o efeito subsequente. Teste <em>Conditio Sine Qua Non</em> obrigatório.
+                  </p>
+                </div>
+                <div class="pt-2.5 mt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
+                  <span class="text-emerald-400 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i> 100% Causal</span>
+                  <span class="text-brava-lime font-semibold group-hover:underline">Ver detalhes &rarr;</span>
+                </div>
+              </div>
+
+              <!-- CARTÃO 2: Criar sem Gerenciar -->
+              <div data-category="conceito" onclick="showTipModal('action-plan')" class="tip-card flex-shrink-0 w-[290px] sm:w-[320px] snap-start group cursor-pointer p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-brava-lime/60 transition-all shadow-sm flex flex-col justify-between">
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                      <i data-lucide="check-square" class="w-2.5 h-2.5"></i> Plano de Ação
+                    </span>
+                    <span class="text-[10px] text-slate-300 font-mono">TABELA 4.7</span>
+                  </div>
+                  <h5 class="font-bold text-white text-xs sm:text-sm group-hover:text-brava-lime transition-colors flex items-center justify-between">
+                    Criar sem Gerenciar
+                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-brava-lime transition-transform"></i>
+                  </h5>
+                  <p class="text-xs text-slate-300 leading-relaxed line-clamp-2">
+                    Foco na formulação técnica da recomendação: Tipo (Preventiva/Corretiva), Responsável, Prazo e Critério de Eficácia.
+                  </p>
+                </div>
+                <div class="pt-2.5 mt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
+                  <span class="text-cyan-400 flex items-center gap-1"><i data-lucide="shield" class="w-3 h-3"></i> Gestão Corporativa</span>
+                  <span class="text-brava-lime font-semibold group-hover:underline">Ver requisitos &rarr;</span>
+                </div>
+              </div>
+
+              <!-- CARTÃO 3: Auditor IA -->
+              <div data-category="uso" onclick="showTipModal('ai-auditor')" class="tip-card flex-shrink-0 w-[290px] sm:w-[320px] snap-start group cursor-pointer p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-brava-lime/60 transition-all shadow-sm flex flex-col justify-between">
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-200 border border-purple-400/30">
+                      <i data-lucide="sparkles" class="w-2.5 h-2.5"></i> IA Integrada
+                    </span>
+                    <span class="text-[10px] text-brava-lime font-mono">3 MODOS</span>
+                  </div>
+                  <h5 class="font-bold text-white text-xs sm:text-sm group-hover:text-brava-lime transition-colors flex items-center justify-between">
+                    Auditor IA Avançado
+                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-brava-lime transition-transform"></i>
+                  </h5>
+                  <p class="text-xs text-slate-300 leading-relaxed line-clamp-2">
+                    Avalia inconsistências investigativas, barreiras de segurança e conformidade estrita antes de liberar o RIA.
+                  </p>
+                </div>
+                <div class="pt-2.5 mt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
+                  <span class="text-purple-300 flex items-center gap-1"><i data-lucide="lock" class="w-3 h-3"></i> Bloqueador Ativo</span>
+                  <span class="text-brava-lime font-semibold group-hover:underline">Como funciona &rarr;</span>
+                </div>
+              </div>
+
+              <!-- CARTÃO 4: Importação Automática de CII -->
+              <div data-category="uso" onclick="showTipModal('cii-import')" class="tip-card flex-shrink-0 w-[290px] sm:w-[320px] snap-start group cursor-pointer p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-brava-lime/60 transition-all shadow-sm flex flex-col justify-between">
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                      <i data-lucide="file-code-2" class="w-2.5 h-2.5"></i> Automação
+                    </span>
+                    <span class="text-[10px] text-cyan-300 font-mono">CII HTML</span>
+                  </div>
+                  <h5 class="font-bold text-white text-xs sm:text-sm group-hover:text-brava-lime transition-colors flex items-center justify-between">
+                    Início Rápido com CII
+                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-brava-lime transition-transform"></i>
+                  </h5>
+                  <p class="text-xs text-slate-300 leading-relaxed line-clamp-2">
+                    Carregue o comunicado inicial em HTML emitido pela operação para pré-popular instalação, data e histórico.
+                  </p>
+                </div>
+                <div class="pt-2.5 mt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
+                  <span class="text-emerald-400 flex items-center gap-1"><i data-lucide="zap" class="w-3 h-3"></i> Integração Direta</span>
+                  <span class="text-brava-lime font-semibold group-hover:underline">Ver formato &rarr;</span>
+                </div>
+              </div>
+
+              <!-- CARTÃO 5: Teste do Portanto (5 Porquês) -->
+              <div data-category="conceito" onclick="showTipModal('portanto')" class="tip-card flex-shrink-0 w-[290px] sm:w-[320px] snap-start group cursor-pointer p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-brava-lime/60 transition-all shadow-sm flex flex-col justify-between">
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-200 border border-purple-400/30">
+                      <i data-lucide="help-circle" class="w-2.5 h-2.5"></i> 5 Porquês
+                    </span>
+                    <span class="text-[10px] text-slate-300 font-mono">VALIDAÇÃO</span>
+                  </div>
+                  <h5 class="font-bold text-white text-xs sm:text-sm group-hover:text-brava-lime transition-colors flex items-center justify-between">
+                    Teste do Portanto
+                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-brava-lime transition-transform"></i>
+                  </h5>
+                  <p class="text-xs text-slate-300 leading-relaxed line-clamp-2">
+                    Inverta a leitura da causa-raiz até o evento topo com 'Portanto' para certificar que nenhum elo causal foi ignorado.
+                  </p>
+                </div>
+                <div class="pt-2.5 mt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
+                  <span class="text-slate-300 flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3 text-emerald-400"></i> Lógica Reversa</span>
+                  <span class="text-brava-lime font-semibold group-hover:underline">Ver método &rarr;</span>
+                </div>
+              </div>
+
+              <!-- CARTÃO 6: Desfazer e Histórico -->
+              <div data-category="uso" onclick="showTipModal('undo-redo')" class="tip-card flex-shrink-0 w-[290px] sm:w-[320px] snap-start group cursor-pointer p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-brava-lime/60 transition-all shadow-sm flex flex-col justify-between">
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                      <i data-lucide="undo-2" class="w-2.5 h-2.5"></i> Histórico
+                    </span>
+                    <span class="text-[10px] text-slate-300 font-mono">CTRL+Z</span>
+                  </div>
+                  <h5 class="font-bold text-white text-xs sm:text-sm group-hover:text-brava-lime transition-colors flex items-center justify-between">
+                    Desfazer &amp; Refazer
+                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-brava-lime transition-transform"></i>
+                  </h5>
+                  <p class="text-xs text-slate-300 leading-relaxed line-clamp-2">
+                    Histórico imutável de até 40 estados. Use Ctrl+Z e Ctrl+Y para recuperar nós ou ações alteradas acidentalmente.
+                  </p>
+                </div>
+                <div class="pt-2.5 mt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
+                  <span class="text-cyan-400 flex items-center gap-1"><i data-lucide="history" class="w-3 h-3"></i> 40 Restaurações</span>
+                  <span class="text-brava-lime font-semibold group-hover:underline">Ver atalhos &rarr;</span>
+                </div>
+              </div>
+
+              <!-- CARTÃO 7: Monitor de Pasta Local -->
+              <div data-category="uso" onclick="showTipModal('folder-sync')" class="tip-card flex-shrink-0 w-[290px] sm:w-[320px] snap-start group cursor-pointer p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-brava-lime/60 transition-all shadow-sm flex flex-col justify-between">
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                      <i data-lucide="hard-drive" class="w-2.5 h-2.5"></i> Armazenamento
+                    </span>
+                    <span class="text-[10px] text-slate-300 font-mono">DISCO LOCAL</span>
+                  </div>
+                  <h5 class="font-bold text-white text-xs sm:text-sm group-hover:text-brava-lime transition-colors flex items-center justify-between">
+                    Sincronização em Disco
+                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-brava-lime transition-transform"></i>
+                  </h5>
+                  <p class="text-xs text-slate-300 leading-relaxed line-clamp-2">
+                    Vincule seu arquivo no disco do computador para salvar cada modificação em tempo real com segurança total.
+                  </p>
+                </div>
+                <div class="pt-2.5 mt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
+                  <span class="text-emerald-400 flex items-center gap-1"><i data-lucide="save" class="w-3 h-3"></i> Autoguarda</span>
+                  <span class="text-brava-lime font-semibold group-hover:underline">Configurar &rarr;</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Faixa de Normas Corporativas -->
+        <div class="bg-white rounded-2xl p-4 shadow-soft-card border border-brava-line flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-brava-muted">
+          <div class="flex items-center gap-3">
+            <span class="p-2 bg-emerald-50 text-emerald-700 rounded-xl">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+            </span>
+            <span>
+              <strong class="text-brava-navy">Padrão Corporativo Brava Energia:</strong> Conforme PG-CORP-SMS-015 Rev. 07 e formulário oficial RIA FORM-CORP-SMS-088 Rev. 08.
+            </span>
+          </div>
+          <button onclick="openModal('modal-help')" class="flex-shrink-0 text-brava-navy font-bold hover:text-brava-navy2 hover:underline">
+            Consultar Padrão de SMS &rarr;
+          </button>
+        </div>
+
+      </div>
+
+      <!-- COLUNA LATERAL: INÍCIO RÁPIDO (~25%) -->
+      <div class="lg:col-span-3 space-y-6">
+        
+        <div class="bg-white rounded-3xl p-6 shadow-elevated border border-brava-line sticky top-24">
+          
+          <!-- Cabeçalho do Card Lateral -->
+          <div class="flex items-center justify-between pb-4 border-b border-brava-line mb-5">
+            <div>
+              <h3 class="text-xl font-extrabold text-brava-navy tracking-tight">Início Rápido</h3>
+              <p class="text-xs text-brava-muted mt-0.5">Ações para iniciar ou abrir estudos</p>
+            </div>
+            <div class="w-2.5 h-2.5 rounded-full bg-brava-lime ring-4 ring-lime-100" title="Aplicação Pronta"></div>
+          </div>
+
+          <!-- Lista Vertical de Ações -->
+          <div class="space-y-3">
+            
+            <!-- 1. Nova Investigação (Destaque Principal) -->
+            <button 
+              onclick="openModal('modal-new-investigation')"
+              class="w-full group flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50/60 hover:from-brava-navy hover:to-brava-navy2 border border-purple-200/80 hover:border-transparent transition-all duration-200 shadow-sm hover:shadow-md text-left"
+            >
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-brava-navy text-brava-lime group-hover:bg-brava-lime group-hover:text-brava-navy flex items-center justify-center flex-shrink-0 transition-colors shadow-sm font-bold">
+                  <i data-lucide="file-plus-2" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-extrabold text-sm text-brava-navy group-hover:text-white transition-colors">Nova Investigação</h4>
+                  <p class="text-[11px] text-brava-muted group-hover:text-purple-200 transition-colors">Estudo em branco do zero</p>
+                </div>
+              </div>
+              <i data-lucide="arrow-right" class="w-4 h-4 text-purple-400 group-hover:text-brava-lime group-hover:translate-x-1 transition-all"></i>
+            </button>
+
+            <!-- 2. Novo a partir de CII -->
+            <button 
+              onclick="triggerCiiUpload()"
+              class="w-full group flex items-center justify-between p-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-brava-line hover:border-brava-navy transition-all duration-200 shadow-sm hover:shadow text-left"
+            >
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-purple-100/70 text-brava-navy group-hover:bg-brava-navy group-hover:text-white flex items-center justify-center flex-shrink-0 transition-colors">
+                  <i data-lucide="file-text" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-brava-text">Novo a partir de CII</h4>
+                  <p class="text-[11px] text-brava-muted">Importar comunicado (.html)</p>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-300 group-hover:text-brava-navy group-hover:translate-x-1 transition-all"></i>
+            </button>
+
+            <!-- 3. Importar Investigação JSON -->
+            <button 
+              onclick="triggerJsonUpload()"
+              class="w-full group flex items-center justify-between p-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-brava-line hover:border-brava-navy transition-all duration-200 shadow-sm hover:shadow text-left"
+            >
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-purple-100/70 text-brava-navy group-hover:bg-brava-navy group-hover:text-white flex items-center justify-center flex-shrink-0 transition-colors">
+                  <i data-lucide="upload" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-brava-text">Importar Estudo</h4>
+                  <p class="text-[11px] text-brava-muted">Carregar arquivo salvo (.json)</p>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-300 group-hover:text-brava-navy group-hover:translate-x-1 transition-all"></i>
+            </button>
+
+            <!-- 4. Central de Ajuda Técnica -->
+            <button 
+              onclick="openModal('modal-help')"
+              class="w-full group flex items-center justify-between p-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-brava-line hover:border-brava-navy transition-all duration-200 shadow-sm hover:shadow text-left"
+            >
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-purple-100/70 text-brava-navy group-hover:bg-brava-navy group-hover:text-white flex items-center justify-center flex-shrink-0 transition-colors">
+                  <i data-lucide="book-open" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-brava-text">Central de Ajuda</h4>
+                  <p class="text-[11px] text-brava-muted">Padrão PG-CORP-SMS-015</p>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-300 group-hover:text-brava-navy group-hover:translate-x-1 transition-all"></i>
+            </button>
+
+            <!-- 5. Ajuda da Aplicação -->
+            <button 
+              onclick="openModal('modal-app-help')"
+              class="w-full group flex items-center justify-between p-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-brava-line hover:border-brava-navy transition-all duration-200 shadow-sm hover:shadow text-left"
+            >
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-purple-100/70 text-brava-navy group-hover:bg-brava-navy group-hover:text-white flex items-center justify-center flex-shrink-0 transition-colors">
+                  <i data-lucide="help-circle" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-brava-text">Ajuda da Aplicação</h4>
+                  <p class="text-[11px] text-brava-muted">Guia de telas, campos e botões</p>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-slate-300 group-hover:text-brava-navy group-hover:translate-x-1 transition-all"></i>
+            </button>
+
+          </div>
+
+          <!-- Indicador de Persistência e Arquitetura -->
+          <div class="mt-6 pt-4 border-t border-brava-line">
+            <div class="flex items-center justify-between text-xs text-brava-muted mb-1.5 font-medium">
+              <span>Banco Local IndexedDB</span>
+              <span class="text-brava-navy font-bold">100% Protegido</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+              <div class="bg-brava-lime h-full rounded-full w-full"></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Rodapé Institucional -->
+  <footer class="mt-auto border-t border-brava-line bg-white/90 backdrop-blur py-4 px-6 text-xs text-brava-muted">
+    <div class="max-w-[1600px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      
+      <div class="flex flex-wrap items-center gap-4 sm:gap-6">
+        <div class="flex items-center gap-1.5 text-brava-text">
+          <i data-lucide="info" class="w-3.5 h-3.5 text-brava-navy"></i>
+          <span>O botão <strong>Salvar</strong> mantém o estudo armazenado localmente neste navegador com persistência IndexedDB.</span>
+        </div>
+        <div class="flex items-center gap-1.5 text-brava-text">
+          <i data-lucide="lock" class="w-3.5 h-3.5 text-emerald-600"></i>
+          <span>Exporte <strong>JSON</strong> para manter uma cópia portátil ou transferir entre computadores da comissão.</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 text-[11px] font-mono text-brava-navy bg-purple-50 px-2.5 py-1 rounded-md border border-purple-200">
+          <span class="w-2 h-2 rounded-full bg-brava-lime animate-pulse"></span>
+          FACIU v6.31.3 · Single-File App (SFA)
+        </span>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- BARRA FLUTUANTE DE SIMULAÇÃO DE CENÁRIOS (HABILITADA PARA VALIDAÇÃO) -->
+  <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 gradient-brava text-white px-5 py-2.5 rounded-full shadow-2xl border border-white/20 backdrop-blur flex items-center gap-4 text-xs">
+    <div class="flex items-center gap-2 font-bold text-brava-lime">
+      <i data-lucide="sliders" class="w-4 h-4"></i>
+      <span>Simulação de Cenários:</span>
+    </div>
+    
+    <div class="flex items-center gap-1.5 bg-black/30 p-1 rounded-full border border-white/10">
+      <button onclick="setScenario('active')" id="btn-scen-active" class="px-3.5 py-1 rounded-full bg-brava-lime font-bold text-brava-navy transition-all shadow-sm">
+        Estudo Ativo (CII-055)
+      </button>
+      <button onclick="setScenario('empty')" id="btn-scen-empty" class="px-3.5 py-1 rounded-full text-slate-300 hover:text-white transition-all">
+        Sem Estudo (Primeiro Acesso)
+      </button>
+      <button onclick="setScenario('ready')" id="btn-scen-ready" class="px-3.5 py-1 rounded-full text-slate-300 hover:text-white transition-all">
+        Pronto para Emissão (Etapa 5)
+      </button>
+    </div>
+
+    <button onclick="openModal('modal-viability')" class="ml-2 text-brava-lime hover:underline flex items-center gap-1 font-bold">
+      <i data-lucide="file-check" class="w-3.5 h-3.5"></i>
+      Parecer Técnico
+    </button>
+  </div>
+
+  <!-- MODAL: Dica / Metodologia Detalhada -->
+  <div id="modal-tip-detail" class="fixed inset-0 bg-brava-navy/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-brava-line transform transition-all animate-in fade-in zoom-in duration-150">
+      <div class="flex items-center justify-between pb-3 border-b border-brava-line">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 bg-purple-100 text-brava-navy rounded-xl">
+            <i data-lucide="book-marked" class="w-5 h-5"></i>
+          </div>
+          <h3 id="tip-modal-title" class="font-extrabold text-brava-navy text-base">Detalhes da Metodologia</h3>
+        </div>
+        <button onclick="closeModal('modal-tip-detail')" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="py-4 space-y-3 text-xs text-brava-text leading-relaxed max-h-[60vh] overflow-y-auto">
+        <p id="tip-modal-body">Carregando...</p>
+      </div>
+
+      <div class="flex justify-end pt-3 border-t border-brava-line">
+        <button onclick="closeModal('modal-tip-detail')" class="px-5 py-2 rounded-xl text-xs font-bold bg-brava-navy text-white hover:bg-brava-navy2">
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Parecer de Viabilidade Técnica -->
+  <div id="modal-viability" class="fixed inset-0 bg-brava-navy/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-brava-line">
+      <div class="flex items-center justify-between pb-3 border-b border-brava-line">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 bg-emerald-100 text-emerald-800 rounded-xl">
+            <i data-lucide="check-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-brava-navy text-base">Parecer de Viabilidade Técnica de Integração</h3>
+            <p class="text-xs text-brava-muted">Avaliação do Redesign da Tela Inicial para o Monólito SFA do FACIU</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-viability')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <div class="py-4 space-y-4 text-xs text-brava-text max-h-[65vh] overflow-y-auto">
+        <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-1">
+          <b class="text-emerald-900 text-sm flex items-center gap-1.5"><i data-lucide="badge-check" class="w-4 h-4"></i> Veredito: 100% Viável e Altamente Recomendado</b>
+          <p class="text-slate-700 leading-relaxed">
+            A proposta é totalmente compatível com a arquitetura SFA (Single-File Architecture), Tailwind CSS e Lucide Icons já utilizados no FACIU. Não requer nenhuma nova biblioteca externa ou etapa de compilação.
+          </p>
+        </div>
+
+        <div class="space-y-2">
+          <strong class="text-brava-navy block text-xs uppercase tracking-wider">Principais Ganhos Identificados:</strong>
+          <ul class="space-y-1.5 list-disc pl-4 text-slate-700">
+            <li><strong>Valorização do Estudo Ativo:</strong> Substitui a área discreta anterior por um painel de destaque com os metadados vitais do incidente (CII, título, instalação, líder e status).</li>
+            <li><strong>Esteira das 5 Etapas Oficiais:</strong> Fornece orientação visual clara sobre em qual fase a investigação se encontra (Triagem &rarr; Estrutura Causal &rarr; Plano de Ação &rarr; Auditoria IA &rarr; Emissão RIA).</li>
+            <li><strong>Carrossel de Conhecimento Causal:</strong> Apresenta os conceitos fundamentais (Ligação Causal, Criar sem Gerenciar, Auditor IA e Teste do Portanto) no primeiro ponto de contato do investigador.</li>
+            <li><strong>Início Rápido Lateral:</strong> Concentra ações primárias (Novo Estudo, Novo por CII, Importar JSON e Ajudas) de forma ergonômica e despoluída.</li>
+          </ul>
+        </div>
+
+        <div class="space-y-2">
+          <strong class="text-brava-navy block text-xs uppercase tracking-wider">Alinhamentos Aplicados neste Protótipo:</strong>
+          <ul class="space-y-1.5 list-disc pl-4 text-slate-700">
+            <li>Adoção rigorosa do padrão de cores corporativo da Brava Energia (Deep Navy #221C4F e Electric Lime #C6E600).</li>
+            <li>Padronização 100% em português brasileiro (PT-BR), alinhado ao glossário do SGSO e FORM-CORP-SMS-088.</li>
+            <li>Inclusão de estado vazio amigável quando não houver estudo ativo gravado no navegador.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-3 border-t border-brava-line">
+        <button onclick="closeModal('modal-viability')" class="px-5 py-2 rounded-xl text-xs font-bold bg-brava-navy text-white hover:bg-brava-navy2">Fechar Parecer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Confirmação de Nova Investigação -->
+  <div id="modal-new-investigation" class="fixed inset-0 bg-brava-navy/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-brava-line">
+      <div class="flex items-center justify-between pb-3 border-b border-brava-line">
+        <h3 class="font-extrabold text-brava-navy text-base">Iniciar Nova Investigação</h3>
+        <button onclick="closeModal('modal-new-investigation')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="py-4 space-y-3 text-xs text-brava-text">
+        <div class="p-3 bg-amber-50 text-amber-900 rounded-xl border border-amber-200 flex items-start gap-2">
+          <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 shrink-0 mt-0.5"></i>
+          <span>Se você já possuir um estudo em andamento neste computador, lembre-se de exportar o arquivo JSON antes de iniciar um novo estudo em branco.</span>
+        </div>
+        <p>Você será direcionado para a <strong>Etapa 1 (Triagem &amp; Classificação)</strong> para o preenchimento dos dados do evento e nomeação da comissão multidisciplinar.</p>
+      </div>
+      <div class="flex justify-end gap-2 pt-3 border-t border-brava-line">
+        <button onclick="closeModal('modal-new-investigation')" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700">Cancelar</button>
+        <button onclick="showToast('Iniciando estudo em branco... (Redirecionando para Etapa 1)'); closeModal('modal-new-investigation');" class="px-5 py-2 rounded-xl text-xs font-bold bg-brava-navy text-white hover:bg-brava-navy2">Confirmar Início</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICAÇÃO TOAST -->
+  <div id="toast" class="fixed bottom-20 right-6 z-50 gradient-brava text-white px-4 py-3 rounded-2xl shadow-2xl border border-white/20 flex items-center gap-3 text-xs transform transition-all translate-y-20 opacity-0 pointer-events-none">
+    <i data-lucide="check-circle-2" class="w-4 h-4 text-brava-lime"></i>
+    <span id="toast-msg">Mensagem do Sistema</span>
+  </div>
+
+  <!-- LÓGICA E DADOS DO PROTÓTIPO -->
+  <script>
+    // Logotipo Oficial da Brava Energia em Base64
+    const BRAVA_LOGO_BASE64 = "data:image/png;base64,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";
+
+    // Inicialização do Logotipo Oficial
+    function initBrandLogo() {
+      const img = document.getElementById('header-brand-logo');
+      if (img) img.src = BRAVA_LOGO_BASE64;
+    }
+
+    // Banco de Dados de Metodologia e Dicas do FACIU
+    const TIPS_DB = {
+      'causal-link': {
+        title: 'Regra Fundamental da Ligação Causal Direta',
+        body: `
+          <div class="space-y-3">
+            <p>Na Árvore de Causas do FACIU (versão 6.31.3+), todas as conexões entre nós seguem estritamente o modelo de <strong>Ligação Causal Direta</strong> (<code>kind: 'causal'</code>).</p>
+            <div class="p-3 bg-purple-50 rounded-xl border border-purple-200">
+              <strong class="text-brava-navy block mb-1">Teste da Condição Necessária (Conditio Sine Qua Non):</strong>
+              <p>Formule sempre a pergunta de validação: <em>"Se o fato antecedente NÃO tivesse ocorrido, o fato subsequente teria acontecido?"</em></p>
+              <ul class="list-disc pl-4 mt-1.5 space-y-1">
+                <li>Se a resposta for <strong>NÃO</strong>: a ligação é causal legítima e indispensável.</li>
+                <li>Se a resposta for <strong>SIM</strong>: o fato não é causa necessária e não deve ser conectado diretamente.</li>
+              </ul>
+            </div>
+            <p>As setas partem da base da causa para o topo do efeito, eliminando bifurcações soltas e garantindo coerência integral com o padrão PG-CORP-SMS-015.</p>
+          </div>
+        `
+      },
+      'action-plan': {
+        title: 'Filosofia Técnica: Criar sem Gerenciar',
+        body: `
+          <div class="space-y-3">
+            <p>O FACIU é uma ferramenta focada em <strong>investigação e análise de causa-raiz</strong>. Seu compromisso no Plano de Ação é garantir rigor técnico na formulação das recomendações para a <strong>Tabela 4.7 do formulário oficial RIA</strong> (FORM-CORP-SMS-088 Rev. 08).</p>
+            <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+              <strong class="text-emerald-900 block mb-1">Os 5 Requisitos de Ouro de Cada Ação:</strong>
+              <ol class="list-decimal pl-4 mt-1 space-y-1">
+                <li><strong>Vínculo Obrigatório com Causa-Raiz:</strong> rastreabilidade direta sem ações órfãs.</li>
+                <li><strong>Tipo da Ação:</strong> Preventiva, Corretiva ou de Abrangência.</li>
+                <li><strong>Responsável Designado:</strong> cargo ou responsável operacional claro.</li>
+                <li><strong>Prazo Exequível:</strong> fundamentado tecnicamente pela comissão.</li>
+                <li><strong>Critério de Eficácia Observável:</strong> métrica explícita de verificação após implantação.</li>
+              </ol>
+            </div>
+            <p class="text-brava-muted">O acompanhamento de execução de tarefas (aberto, em andamento, concluído) compete aos sistemas corporativos de gestão de ações da Brava Energia.</p>
+          </div>
+        `
+      },
+      'ai-auditor': {
+        title: 'Auditor IA em 3 Dimensões',
+        body: `
+          <div class="space-y-3">
+            <p>O Auditor IA integrado ao FACIU realiza varreduras automáticas de qualidade antes da liberação do relatório oficial, operando em 3 modalidades:</p>
+            <ul class="list-disc pl-4 space-y-2">
+              <li><strong>Inconsistências Lógicas:</strong> identifica contradições factuais, saltos na cronologia e hipóteses descartadas sem justificativa registrada.</li>
+              <li><strong>Barreiras de Segurança:</strong> avalia falhas em barreiras de engenharia, controle e fatores humanos/organizacionais.</li>
+              <li><strong>Liberação Documental do RIA:</strong> auditoria completa de preenchimento para emissão do PDF com selo verde de conformidade.</li>
+            </ul>
+            <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
+              <strong class="text-amber-900 block mb-1">Validador de Prontidão (validateAuditReadiness):</strong>
+              <p>Exige os dados mínimos estruturados (título, descrição, causas e ações) para evitar relatórios inconsistentes.</p>
+            </div>
+          </div>
+        `
+      },
+      'cii-import': {
+        title: 'Importação do Comunicado Inicial de Incidente (CII em .html)',
+        body: `
+          <div class="space-y-3">
+            <p>Ganhe agilidade importando o arquivo HTML do comunicado preliminar gerado no local da ocorrência.</p>
+            <p>O leitor inteligente do FACIU realiza a extração automática de:</p>
+            <ul class="list-disc pl-4 space-y-1">
+              <li>Identificação da Instalação e Ativo envolvido</li>
+              <li>Data e hora exata da ocorrência</li>
+              <li>Descrição inicial do evento fático</li>
+              <li>Classificação de severidade pela Matriz Corporativa</li>
+            </ul>
+            <p>Elimina retrabalho de digitação manual e inicia a triagem com dados consistentes da operação.</p>
+          </div>
+        `
+      },
+      'portanto': {
+        title: 'Teste do Portanto (Validação Causal Reversa)',
+        body: `
+          <div class="space-y-3">
+            <p>Para atestar a consistência de uma linha de porquês, leia a cadeia causal no sentido inverso utilizando a conjunção explicativa <strong>"Portanto"</strong>:</p>
+            <div class="p-3 bg-purple-50 rounded-xl border border-purple-200 font-mono text-[11px] text-brava-navy">
+              Filtro duplex saturado <br>&darr; PORTANTO<br>
+              Houve restrição de fluxo de óleo lubrificante <br>&darr; PORTANTO<br>
+              Queda de pressão no mancal principal <br>&darr; PORTANTO<br>
+              Desarme protetivo do turbogerador TG-01.
+            </div>
+            <p>Se a relação de causa e efeito permanecer incontestável em cada degrau, a cadeia é consistente e não contém saltos investigativos.</p>
+          </div>
+        `
+      },
+      'undo-redo': {
+        title: 'Histórico Completo com Desfazer/Refazer (Ctrl+Z / Ctrl+Y)',
+        body: `
+          <div class="space-y-3">
+            <p>O FACIU conta com um gerenciador central de histórico que registra até <strong>40 estados imutáveis</strong> em memória.</p>
+            <ul class="list-disc pl-4 space-y-1.5">
+              <li><strong>Ctrl + Z:</strong> desfaz a última alteração (exclusão de nó, conexão, ação ou edição de texto).</li>
+              <li><strong>Ctrl + Y ou Ctrl + Shift + Z:</strong> refaz a ação desfeita.</li>
+              <li><strong>Notificações Interativas:</strong> avisos na tela trazem o botão "Desfazer" para reversão imediata com 1 clique.</li>
+            </ul>
+          </div>
+        `
+      },
+      'folder-sync': {
+        title: 'Monitor de Pasta Local (Gravação Direta em Disco)',
+        body: `
+          <div class="space-y-3">
+            <p>Trabalhe com a tranquilidade da gravação automática e transparente diretamente no disco do seu computador.</p>
+            <p>Ao vincular um arquivo através do <strong>Monitor de Pasta</strong>, a aplicação utiliza a API do navegador para persistir cada alteração em tempo real no arquivo físico selecionado.</p>
+            <p>Em paralelo, o banco local <strong>IndexedDB</strong> garante armazenamento seguro de alta capacidade, permitindo salvar imagens, árvore e histórico completos.</p>
+          </div>
+        `
+      }
+    };
+
+    // Controle dos Cenários de Simulação Interativa
+    function setScenario(scen) {
+      document.getElementById('btn-scen-active').className = scen === 'active' ? 'px-3.5 py-1 rounded-full bg-brava-lime font-bold text-brava-navy transition-all shadow-sm' : 'px-3.5 py-1 rounded-full text-slate-300 hover:text-white transition-all';
+      document.getElementById('btn-scen-empty').className = scen === 'empty' ? 'px-3.5 py-1 rounded-full bg-brava-lime font-bold text-brava-navy transition-all shadow-sm' : 'px-3.5 py-1 rounded-full text-slate-300 hover:text-white transition-all';
+      document.getElementById('btn-scen-ready').className = scen === 'ready' ? 'px-3.5 py-1 rounded-full bg-brava-lime font-bold text-brava-navy transition-all shadow-sm' : 'px-3.5 py-1 rounded-full text-slate-300 hover:text-white transition-all';
+
+      const cardTitle = document.getElementById('card-title');
+      const cardMeta = document.getElementById('card-meta');
+      const badgePhase = document.getElementById('badge-phase');
+      const stepper = document.getElementById('stepper-container');
+      const statusLabel = document.getElementById('card-status-label');
+
+      if (scen === 'active') {
+        statusLabel.textContent = 'Status da Investigação Ativa';
+        badgePhase.textContent = 'Etapa 3 de 5 · Plano de Ação';
+        badgePhase.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-brava-lime/20 text-brava-lime border border-brava-lime/30';
+        cardTitle.textContent = 'CII-2026-OP-055 · Desarme Involuntário do Turbogerador TG-01 por Queda de Pressão no Óleo Lubrificante';
+        cardMeta.innerHTML = '<span><strong class="text-white">Instalação:</strong> FPSO Brava Spirit</span><span>•</span><span><strong class="text-white">Líder da Comissão:</strong> Marcelo Vasconcelos (Engenharia de Confiabilidade)</span><span>•</span><span><strong class="text-white">Gravado no Navegador:</strong> Hoje, 14:32</span>';
+        stepper.style.display = '';
+        selectStep(3);
+        showToast('Cenário ativo: Estudo em andamento na Etapa 3 (Plano de Ação)');
+      } else if (scen === 'empty') {
+        statusLabel.textContent = 'Nenhuma Investigação Ativa no Navegador';
+        badgePhase.textContent = 'Aguardando Início';
+        badgePhase.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/10 text-slate-300 border border-white/20';
+        cardTitle.textContent = 'Inicie uma Nova Investigação ou Importe um Estudo Salvo';
+        cardMeta.innerHTML = '<span>Utilize os botões do <strong>Início Rápido</strong> ao lado para iniciar um estudo em branco ou carregar um arquivo JSON / Comunicado Inicial (.html).</span>';
+        stepper.style.display = 'none';
+        showToast('Cenário ativo: Primeiro acesso (sem estudo em andamento)');
+      } else if (scen === 'ready') {
+        statusLabel.textContent = 'Status da Investigação Ativa';
+        badgePhase.textContent = 'Etapa 5 de 5 · Pronto para Emissão';
+        badgePhase.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-400/20 text-emerald-300 border border-emerald-400/30';
+        cardTitle.textContent = 'CII-2026-MN-019 · Parada Não Planejada da Bomba de Injeção de Sequestrante de H2S (P-3101B)';
+        cardMeta.innerHTML = '<span><strong class="text-white">Instalação:</strong> Plataforma P-50</span><span>•</span><span><strong class="text-white">Auditoria IA:</strong> 100% Verde</span><span>•</span><span><strong class="text-white">Verificação:</strong> 0 Pendências</span>';
+        stepper.style.display = '';
+        selectStep(5);
+        showToast('Cenário ativo: Estudo aprovado na Auditoria IA e pronto para emissão');
+      }
+    }
+
+    // Seleção de Etapa no Painel
+    function selectStep(stepNum) {
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById('step-btn-' + i);
+        if (!btn) continue;
+        if (i === stepNum) {
+          btn.className = 'cursor-pointer flex-1 min-w-[110px] p-2.5 sm:p-3 rounded-2xl bg-brava-lime/15 border-2 border-brava-lime ring-2 ring-brava-lime/30 shadow-glow-lime text-center flex flex-col items-center gap-1 transition-all';
+        } else {
+          btn.className = 'cursor-pointer group flex-1 min-w-[100px] p-2.5 sm:p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all text-center flex flex-col items-center gap-1 opacity-80 hover:opacity-100';
+        }
+      }
+      showToast('Navegando na esteira para a Etapa ' + stepNum + ' do FACIU');
+    }
+
+    // Rolagem e Filtro do Carrossel de Dicas
+    function scrollTips(dir) {
+      const el = document.getElementById('tips-carousel');
+      el.scrollBy({ left: dir === 'left' ? -330 : 330, behavior: 'smooth' });
+    }
+
+    function filterTips(cat) {
+      document.getElementById('filter-btn-all').className = cat === 'all' ? 'px-2.5 py-1 rounded-lg font-bold text-brava-navy bg-brava-lime shadow-sm transition-all text-[11px]' : 'px-2.5 py-1 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all text-[11px]';
+      document.getElementById('filter-btn-conceito').className = cat === 'conceito' ? 'px-2.5 py-1 rounded-lg font-bold text-brava-navy bg-brava-lime shadow-sm transition-all text-[11px]' : 'px-2.5 py-1 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all text-[11px]';
+      document.getElementById('filter-btn-uso').className = cat === 'uso' ? 'px-2.5 py-1 rounded-lg font-bold text-brava-navy bg-brava-lime shadow-sm transition-all text-[11px]' : 'px-2.5 py-1 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all text-[11px]';
+
+      const cards = document.querySelectorAll('.tip-card');
+      cards.forEach(c => {
+        c.style.display = (cat === 'all' || c.dataset.category === cat) ? 'flex' : 'none';
+      });
+    }
+
+    function filterInvestigations(query) {
+      const q = query.toLowerCase();
+      const card = document.getElementById('investigation-card');
+      if (!q) { card.style.opacity = '1'; return; }
+      const match = card.textContent.toLowerCase().includes(q);
+      card.style.opacity = match ? '1' : '0.35';
+    }
+
+    // Abertura e Fechamento de Modais
+    function openModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.add('hidden');
+    }
+
+    function showTipModal(key) {
+      const tip = TIPS_DB[key];
+      if (!tip) return;
+      document.getElementById('tip-modal-title').textContent = tip.title;
+      document.getElementById('tip-modal-body').innerHTML = tip.body;
+      openModal('modal-tip-detail');
+    }
+
+    // Ações Simuladas
+    function simulateContinueInvestigation() {
+      showToast('Retomando investigação ativa... (Abrindo Etapa 3 - Plano de Ação)');
+    }
+
+    function triggerCiiUpload() {
+      showToast('Abrindo seletor de arquivo de Comunicado CII (.html)...');
+    }
+
+    function triggerJsonUpload() {
+      showToast('Abrindo seletor de arquivo JSON do FACIU...');
+    }
+
+    // Notificações Toast
+    let toastTimer = null;
+    function showToast(msg) {
+      clearTimeout(toastTimer);
+      const t = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = msg;
+      t.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      t.classList.add('translate-y-0', 'opacity-100');
+      toastTimer = setTimeout(() => {
+        t.classList.remove('translate-y-0', 'opacity-100');
+        t.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      }, 3500);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initBrandLogo();
+      if (window.lucide) lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

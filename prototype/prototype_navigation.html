@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FACIU · Protótipo de Barra Superior & Guias de Navegação (3 Variantes)</title>
+
+  <!-- Typography: Inter, Montserrat (Logo Brava) & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Montserrat:ital,wght@1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Custom Configuration -->
+  <script>
+    window.tailwind = window.tailwind || {};
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            brand: ['Montserrat', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brava: {
+              navy: '#120e2e',
+              deep: '#0b0820',
+              surface: '#1b1540',
+              yellow: '#d4fb21',
+              lime: '#cbf720',
+              purple: '#5e3da8',
+              purpleLight: '#7950dc',
+              purpleSoft: '#f5f0ff',
+              border: '#2c2260',
+            }
+          },
+          boxShadow: {
+            'glow-lime': '0 0 18px rgba(212, 251, 33, 0.45)',
+            'glow-purple': '0 0 20px rgba(94, 61, 168, 0.35)',
+            'subtle': '0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.03)',
+            'floating': '0 12px 32px -4px rgba(18, 14, 46, 0.18), 0 4px 12px -2px rgba(0, 0, 0, 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Transições suaves de tema */
+    *, *::before, *::after {
+      transition-property: background-color, border-color, color, fill, stroke;
+      transition-duration: 150ms;
+      transition-timing-function: ease-in-out;
+    }
+
+    ::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.35);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(100, 116, 139, 0.6);
+    }
+
+    /* Pulsing Green Status Dot */
+    @keyframes pulse-emerald {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.85); }
+    }
+    .status-pulse {
+      animation: pulse-emerald 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    /* Active Step Elevation */
+    .step-active-shadow {
+      box-shadow: 0 4px 14px -2px rgba(18, 14, 46, 0.35);
+    }
+
+    /* Shimmer de Auditoria IA */
+    @keyframes shimmer-ai {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .ai-shimmer {
+      background: linear-gradient(90deg, rgba(212,251,33,0.1) 0%, rgba(212,251,33,0.3) 50%, rgba(212,251,33,0.1) 100%);
+      background-size: 200% 100%;
+      animation: shimmer-ai 3s infinite;
+    }
+
+    /* Variantes visibilidade */
+    .variant-container {
+      display: none;
+    }
+    .variant-container.active-variant {
+      display: block;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-brava-yellow selection:text-slate-950 pb-28">
+
+  <!-- ========================================================================= -->
+  <!-- VARIANTE A: DUAL-BAR CORPORATIVO BRAVA (Evolução Refinada do Modelo)      -->
+  <!-- ========================================================================= -->
+  <div id="variant-A" class="variant-container active-variant">
+    <!-- BARRA 1: Governança, Identidade & Ferramentas Globais (h-12 / 48px) -->
+    <header class="bg-brava-navy border-b border-brava-border/80 sticky top-0 z-40 shadow-sm">
+      <div class="max-w-[1780px] mx-auto px-4 sm:px-6 h-12 flex items-center justify-between gap-3 select-none">
+        
+        <!-- Esquerda: Brand Brava + FACIU + Estudo Ativo -->
+        <div class="flex items-center gap-2.5 shrink-0">
+          <button onclick="showToast('Brava Energia · Sistema de Confiabilidade & Investigação')" class="h-8 flex items-center gap-1.5 px-2 rounded-lg hover:bg-white/5 transition-all group" title="Brava Energia - Confiabilidade Operacional">
+            <span class="font-brand italic font-black text-lg tracking-tight text-brava-yellow group-hover:scale-105 transition-transform">BRAVA</span>
+            <span class="text-[8px] uppercase tracking-wider text-slate-300 font-semibold border-l border-white/20 pl-1.5 hidden sm:inline">energia</span>
+          </button>
+
+          <div class="h-4 w-px bg-white/20"></div>
+
+          <div class="flex items-center gap-1.5">
+            <span class="font-black text-sm text-white tracking-tight">FACIU</span>
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-white/10 text-slate-300 border border-white/15">v6.32.1</span>
+          </div>
+
+          <!-- Estudo Ativo com Pill Interativo -->
+          <button onclick="openStudyInfoModal()" class="hidden lg:flex items-center h-8 gap-2 px-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-slate-300 transition-colors" title="Ver detalhes da investigação ativa">
+            <i data-lucide="folder-git-2" class="w-3.5 h-3.5 text-brava-yellow"></i>
+            <span class="font-mono font-bold text-white text-[11px]" id="varA-study-id">CII-2026-OP-055</span>
+            <span class="text-slate-400 text-[11px] truncate max-w-[180px]">• Turbogerador TG-01</span>
+            <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400"></i>
+          </button>
+        </div>
+
+        <!-- Direita: Utilitários & Ações -->
+        <div class="flex items-center gap-2 shrink-0">
+          <!-- Status: Sincronizado -->
+          <button onclick="checkSyncStatus()" class="h-8 flex items-center gap-1.5 px-2.5 rounded-lg bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-500/30 text-xs font-semibold text-emerald-300 transition-all" title="Armazenamento local sincronizado. Clique para testar.">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 status-pulse"></span>
+            <span class="text-[11px]">Sincronizado</span>
+          </button>
+
+          <div class="h-4 w-px bg-white/20 hidden sm:block"></div>
+
+          <!-- Utilitários -->
+          <div class="h-8 flex items-center bg-white/10 p-0.5 rounded-lg border border-white/15 gap-0.5">
+            <button onclick="openModal('modal-help')" class="w-7 h-7 flex items-center justify-center rounded-md text-slate-200 hover:text-white hover:bg-white/15 transition-all" title="Central de Ajuda">
+              <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+            </button>
+            <button onclick="exportJSONBackup()" class="w-7 h-7 flex items-center justify-center rounded-md text-slate-200 hover:text-white hover:bg-white/15 transition-all" title="Baixar Backup Portátil (.JSON)">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            </button>
+            <button onclick="showDiskStatus()" class="h-7 flex items-center gap-1 px-1.5 rounded-md text-slate-200 hover:text-white hover:bg-white/15 transition-all text-xs" title="Monitor de Disco Local">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <i data-lucide="hard-drive" class="w-3.5 h-3.5"></i>
+              <span class="text-[11px] font-medium hidden md:inline">Disco</span>
+            </button>
+            <button onclick="toggleDarkMode()" class="w-7 h-7 flex items-center justify-center rounded-md text-slate-200 hover:text-white hover:bg-white/15 transition-all" title="Alternar Modo Escuro/Claro">
+              <i data-lucide="moon" class="w-3.5 h-3.5 theme-toggle-icon"></i>
+            </button>
+            <button onclick="openModal('modal-settings')" class="w-7 h-7 flex items-center justify-center rounded-md text-slate-200 hover:text-white hover:bg-white/15 transition-all" title="Configurações de IA">
+              <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- Histórico Desfazer/Refazer -->
+          <div class="h-8 flex items-center bg-white/10 p-0.5 rounded-lg border border-white/15 gap-0.5">
+            <button onclick="triggerUndo()" class="w-7 h-7 flex items-center justify-center rounded-md text-slate-200 hover:text-white hover:bg-white/15 transition-all" title="Desfazer (Ctrl+Z)">
+              <i data-lucide="undo-2" class="w-3.5 h-3.5"></i>
+            </button>
+            <button onclick="triggerRedo()" class="w-7 h-7 flex items-center justify-center rounded-md text-slate-400 hover:text-slate-200 hover:bg-white/15 transition-all" title="Refazer (Ctrl+Y)">
+              <i data-lucide="redo-2" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- Botão Novo -->
+          <button onclick="newStudy()" class="h-8 flex items-center gap-1.5 px-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold text-xs border border-white/20 transition-all active:scale-95">
+            <i data-lucide="plus" class="w-3.5 h-3.5 text-brava-yellow"></i>
+            <span>Novo</span>
+          </button>
+
+          <!-- Salvar (CTA Primário) -->
+          <button onclick="saveInvestigation()" class="h-8 flex items-center gap-1.5 px-3.5 rounded-lg bg-brava-lime hover:bg-brava-yellow text-slate-950 font-bold text-xs shadow-glow-lime transition-all active:scale-95 border border-lime-400/60" title="Salvar alterações no navegador (Ctrl+S)">
+            <i data-lucide="save" class="w-3.5 h-3.5 text-slate-950"></i>
+            <span>Salvar</span>
+            <kbd class="hidden sm:inline-block px-1 py-0.2 rounded bg-black/15 text-[9px] font-mono font-bold tracking-tight text-slate-900 border border-black/10">Ctrl+S</kbd>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- BARRA 2: Stepper Metodológico + Subguias Contextuais + Integridade (h-11 / 44px) -->
+    <nav class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-subtle sticky top-12 z-30">
+      <div class="max-w-[1780px] mx-auto px-4 sm:px-6 py-1 flex items-center justify-between gap-3 overflow-x-auto">
+        <!-- 5 Passos Metodológicos -->
+        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <!-- Passo 1 -->
+          <button onclick="changeStep(1)" class="varA-step-btn group flex items-center gap-2 px-2.5 py-1 rounded-xl transition-all border border-transparent hover:border-slate-200 dark:hover:border-slate-700" data-step="1">
+            <div class="step-badge w-5 h-5 rounded-full flex items-center justify-center font-bold text-[10px] bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800">
+              <i data-lucide="check" class="w-3 h-3"></i>
+            </div>
+            <div class="text-left">
+              <span class="step-title font-semibold text-xs text-slate-700 dark:text-slate-300 block leading-tight">1. Triagem</span>
+              <span class="step-sub text-[9px] text-emerald-600 dark:text-emerald-400 font-medium block leading-none">Concluída</span>
+            </div>
+          </button>
+
+          <div class="w-5 h-[2px] bg-emerald-400 dark:bg-emerald-600 rounded-full hidden md:block"></div>
+
+          <!-- Passo 2: Estudo (Com Toolset) -->
+          <button onclick="changeStep(2)" class="varA-step-btn group flex items-center gap-2 px-2.5 py-1 rounded-xl transition-all border border-transparent hover:border-slate-200 dark:hover:border-slate-700" data-step="2">
+            <div class="step-badge w-5 h-5 rounded-full flex items-center justify-center font-bold text-[10px] bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800">
+              <i data-lucide="check" class="w-3 h-3"></i>
+            </div>
+            <div class="text-left">
+              <span class="step-title font-semibold text-xs text-slate-700 dark:text-slate-300 block leading-tight">2. Estudo</span>
+              <span class="step-sub text-[9px] text-emerald-600 dark:text-emerald-400 font-medium block leading-none">Concluído</span>
+            </div>
+          </button>
+
+          <div class="w-5 h-[2px] bg-emerald-400 dark:bg-emerald-600 rounded-full hidden md:block"></div>
+
+          <!-- Passo 3 -->
+          <button onclick="changeStep(3)" class="varA-step-btn group flex items-center gap-2 px-2.5 py-1 rounded-xl transition-all border border-transparent hover:border-slate-200 dark:hover:border-slate-700" data-step="3">
+            <div class="step-badge w-5 h-5 rounded-full flex items-center justify-center font-bold text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-700">3</div>
+            <div class="text-left">
+              <span class="step-title font-semibold text-xs text-slate-700 dark:text-slate-300 block leading-tight">3. RIA</span>
+              <span class="step-sub text-[9px] text-slate-400 block leading-none">Rascunho</span>
+            </div>
+          </button>
+
+          <div class="w-5 h-[2px] bg-slate-200 dark:bg-slate-800 rounded-full hidden md:block"></div>
+
+          <!-- Passo 4: Verificação (Ativo na demonstração) -->
+          <button onclick="changeStep(4)" class="varA-step-btn group flex items-center gap-2 px-3 py-1 rounded-xl transition-all bg-brava-navy dark:bg-brava-surface text-white step-active-shadow border border-slate-800 dark:border-brava-border" data-step="4">
+            <div class="step-badge w-5 h-5 rounded-full flex items-center justify-center font-black text-[10px] bg-brava-yellow text-slate-950">4</div>
+            <div class="text-left">
+              <span class="step-title font-bold text-xs text-white block leading-tight">4. Verificação</span>
+              <span class="step-sub text-[9px] text-brava-yellow font-semibold block leading-none">Etapa Atual</span>
+            </div>
+          </button>
+
+          <div class="w-5 h-[2px] bg-slate-200 dark:bg-slate-800 rounded-full hidden md:block"></div>
+
+          <!-- Passo 5 -->
+          <button onclick="changeStep(5)" class="varA-step-btn group flex items-center gap-2 px-2.5 py-1 rounded-xl transition-all border border-transparent hover:border-slate-200 dark:hover:border-slate-700 opacity-70 hover:opacity-100" data-step="5">
+            <div class="step-badge w-5 h-5 rounded-full flex items-center justify-center font-bold text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-300 dark:border-slate-700">5</div>
+            <div class="text-left">
+              <span class="step-title font-semibold text-xs text-slate-600 dark:text-slate-400 block leading-tight">5. Emissão</span>
+              <span class="step-sub text-[9px] text-slate-400 block leading-none">Pendente</span>
+            </div>
+          </button>
+        </div>
+
+        <!-- Subguias contextuais quando Passo 2 estiver selecionado (animado) -->
+        <div id="varA-subtabs" class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200 dark:border-slate-700 hidden">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-1">Ferramentas:</span>
+          <button onclick="setEstudoTool('cronologia')" class="varA-subtab px-2.5 py-0.5 rounded-lg text-xs font-semibold bg-brava-navy text-white" data-tool="cronologia">Cronologia</button>
+          <button onclick="setEstudoTool('arvore')" class="varA-subtab px-2.5 py-0.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900" data-tool="arvore">Árvore</button>
+          <button onclick="setEstudoTool('whys')" class="varA-subtab px-2.5 py-0.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900" data-tool="whys">5 Porquês</button>
+          <button onclick="setEstudoTool('raias')" class="varA-subtab px-2.5 py-0.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900" data-tool="raias">Raias</button>
+          <button onclick="setEstudoTool('portanto')" class="varA-subtab px-2.5 py-0.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900" data-tool="portanto">Portanto</button>
+          <button onclick="setEstudoTool('plano')" class="varA-subtab px-2.5 py-0.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900" data-tool="plano">Ações</button>
+        </div>
+
+        <!-- Integridade Global (lado direito) -->
+        <div class="flex items-center gap-3 pl-3 border-l border-slate-200 dark:border-slate-800 shrink-0">
+          <div class="text-right">
+            <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block leading-tight">Integridade</span>
+            <span class="text-xs font-black text-slate-900 dark:text-white font-mono leading-none">39% CONCLUÍDO</span>
+          </div>
+          <div class="w-20 bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden border border-slate-200 dark:border-slate-700">
+            <div class="bg-gradient-to-r from-brava-yellow to-brava-lime h-full w-[39%] rounded-full"></div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- VARIANTE B: UNIFIED COMMAND RIBBON (Barra Única Integrada / Cockpit)       -->
+  <!-- ========================================================================= -->
+  <div id="variant-B" class="variant-container">
+    <header class="bg-brava-deep text-white border-b border-brava-border/90 sticky top-0 z-40 shadow-md">
+      <div class="max-w-[1780px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4 select-none">
+        
+        <!-- Esquerda: Brand + Estudo Ativo Condensado -->
+        <div class="flex items-center gap-3 shrink-0">
+          <button onclick="showToast('Brava Energia · Cockpit Integrado')" class="flex items-center gap-1 group">
+            <span class="font-brand italic font-black text-xl text-brava-yellow group-hover:scale-105 transition-transform">BRAVA</span>
+            <span class="font-bold text-xs bg-white/10 text-slate-300 px-1.5 py-0.5 rounded ml-1 font-mono">FACIU</span>
+          </button>
+
+          <div class="h-5 w-px bg-white/20"></div>
+
+          <!-- Study Switcher Compacto -->
+          <div class="flex items-center gap-1.5 bg-white/5 hover:bg-white/10 px-2.5 py-1 rounded-lg border border-white/10 text-xs cursor-pointer transition-colors" onclick="openStudyInfoModal()">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 status-pulse"></span>
+            <span class="font-mono font-bold text-white text-[11px]">CII-2026-OP-055</span>
+            <span class="text-slate-400 text-[11px] hidden xl:inline truncate max-w-[140px]">TG-01</span>
+            <i data-lucide="chevrons-up-down" class="w-3 h-3 text-slate-400"></i>
+          </div>
+        </div>
+
+        <!-- Centro: Stepper Segmentado Compacto (Mac/Linear style) -->
+        <div class="flex items-center bg-white/10 p-1 rounded-2xl border border-white/15 gap-1 shrink-0 overflow-x-auto">
+          <!-- Step 1 -->
+          <button onclick="changeStep(1)" class="varB-step-btn flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all text-slate-300 hover:text-white hover:bg-white/10" data-step="1">
+            <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>Triagem</span>
+          </button>
+          <!-- Step 2 -->
+          <button onclick="changeStep(2)" class="varB-step-btn flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all text-slate-300 hover:text-white hover:bg-white/10" data-step="2">
+            <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>Estudo</span>
+          </button>
+          <!-- Step 3 -->
+          <button onclick="changeStep(3)" class="varB-step-btn flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all text-slate-300 hover:text-white hover:bg-white/10" data-step="3">
+            <span class="w-4 h-4 rounded-full bg-white/20 text-[10px] flex items-center justify-center font-bold">3</span>
+            <span>RIA</span>
+          </button>
+          <!-- Step 4 (Ativo) -->
+          <button onclick="changeStep(4)" class="varB-step-btn flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-brava-yellow text-slate-950 shadow-glow-lime" data-step="4">
+            <span class="w-4 h-4 rounded-full bg-slate-950 text-brava-yellow text-[10px] flex items-center justify-center font-black">4</span>
+            <span>Verificação</span>
+            <span class="px-1.5 py-0.2 bg-black/20 rounded-full text-[9px] font-mono">17</span>
+          </button>
+          <!-- Step 5 -->
+          <button onclick="changeStep(5)" class="varB-step-btn flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-white/10" data-step="5">
+            <span class="w-4 h-4 rounded-full bg-white/10 text-[10px] flex items-center justify-center font-bold">5</span>
+            <span>Emissão</span>
+          </button>
+        </div>
+
+        <!-- Direita: Integridade Radial + Utilitários + Salvar -->
+        <div class="flex items-center gap-2 shrink-0">
+          <!-- Mini Integridade Radial -->
+          <div class="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-xl bg-white/5 border border-white/10" title="Integridade: 39% (17 pendências)">
+            <div class="relative w-6 h-6 flex items-center justify-center">
+              <svg class="w-6 h-6 -rotate-90">
+                <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.15)" stroke-width="2.5" fill="none"></circle>
+                <circle cx="12" cy="12" r="10" stroke="#d4fb21" stroke-width="2.5" stroke-dasharray="62.8" stroke-dashoffset="38.3" stroke-linecap="round" fill="none"></circle>
+              </svg>
+              <span class="absolute text-[8px] font-mono font-black text-brava-yellow">39</span>
+            </div>
+            <div class="text-left hidden lg:block">
+              <span class="text-[9px] uppercase tracking-wider text-slate-400 block leading-tight">Auditoria</span>
+              <span class="text-[10px] font-bold text-rose-300 leading-none">17 bloqueios</span>
+            </div>
+          </div>
+
+          <!-- Ações em Ícones -->
+          <div class="flex items-center bg-white/10 p-0.5 rounded-lg border border-white/15">
+            <button onclick="showDiskStatus()" class="w-7 h-7 flex items-center justify-center rounded-md text-slate-200 hover:text-white hover:bg-white/15" title="Disco Local">
+              <i data-lucide="hard-drive" class="w-3.5 h-3.5 text-emerald-400"></i>
+            </button>
+            <button onclick="toggleDarkMode()" class="w-7 h-7 flex items-center justify-center rounded-md text-slate-200 hover:text-white hover:bg-white/15" title="Tema">
+              <i data-lucide="sun-moon" class="w-3.5 h-3.5 theme-toggle-icon"></i>
+            </button>
+            <button onclick="triggerUndo()" class="w-7 h-7 flex items-center justify-center rounded-md text-slate-200 hover:text-white hover:bg-white/15" title="Desfazer">
+              <i data-lucide="undo-2" class="w-3.5 h-3.5"></i>
+            </button>
+            <button onclick="openModal('modal-settings')" class="w-7 h-7 flex items-center justify-center rounded-md text-slate-200 hover:text-white hover:bg-white/15" title="Mais opções">
+              <i data-lucide="more-horizontal" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- Salvar Rápido -->
+          <button onclick="saveInvestigation()" class="h-8 flex items-center gap-1.5 px-3 rounded-xl bg-brava-lime hover:bg-brava-yellow text-slate-950 font-bold text-xs shadow-glow-lime transition-all active:scale-95">
+            <i data-lucide="save" class="w-3.5 h-3.5"></i>
+            <span class="hidden md:inline">Salvar</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra Flutuante Contextual de Ferramentas quando no Passo 2 -->
+      <div id="varB-subtabs" class="bg-brava-surface/90 border-t border-brava-border/60 px-6 py-1.5 flex items-center justify-center gap-2 hidden">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mr-2">Ferramentas de Causa:</span>
+        <button onclick="setEstudoTool('cronologia')" class="varB-subtab px-3 py-1 rounded-lg text-xs font-bold bg-white/20 text-white" data-tool="cronologia">Cronologia</button>
+        <button onclick="setEstudoTool('arvore')" class="varB-subtab px-3 py-1 rounded-lg text-xs font-medium text-slate-300 hover:text-white" data-tool="arvore">Árvore</button>
+        <button onclick="setEstudoTool('whys')" class="varB-subtab px-3 py-1 rounded-lg text-xs font-medium text-slate-300 hover:text-white" data-tool="whys">5 Porquês</button>
+        <button onclick="setEstudoTool('raias')" class="varB-subtab px-3 py-1 rounded-lg text-xs font-medium text-slate-300 hover:text-white" data-tool="raias">Raias</button>
+        <button onclick="setEstudoTool('portanto')" class="varB-subtab px-3 py-1 rounded-lg text-xs font-medium text-slate-300 hover:text-white" data-tool="portanto">Portanto</button>
+        <button onclick="setEstudoTool('plano')" class="varB-subtab px-3 py-1 rounded-lg text-xs font-medium text-slate-300 hover:text-white" data-tool="plano">Plano de Ação</button>
+      </div>
+    </header>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- VARIANTE C: WORKSTATION TOOL HUB (Foco Operacional / Abas Superiores)     -->
+  <!-- ========================================================================= -->
+  <div id="variant-C" class="variant-container">
+    <!-- Linha 1: Top Bar Editorial Focada no Estudo (h-11 / 44px) -->
+    <header class="bg-slate-900 dark:bg-black text-white border-b border-slate-800 sticky top-0 z-40">
+      <div class="max-w-[1780px] mx-auto px-4 sm:px-6 h-11 flex items-center justify-between gap-3 select-none">
+        
+        <!-- Esquerda: Marca + Seletor Rico de Estudo -->
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-1.5 cursor-pointer" onclick="showToast('FACIU Workstation')">
+            <span class="font-brand italic font-black text-lg text-brava-yellow">BRAVA</span>
+            <span class="text-xs font-bold text-slate-400 border-l border-slate-700 pl-2">FACIU HUB</span>
+          </div>
+
+          <div class="h-4 w-px bg-slate-700"></div>
+
+          <!-- Estudo com Dropdown Rápido e Tags de Risco -->
+          <div class="flex items-center gap-2 px-2 py-0.5 rounded-lg bg-slate-800/80 border border-slate-700 hover:border-brava-yellow/50 transition-colors cursor-pointer" onclick="openStudyInfoModal()">
+            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+            <span class="font-mono font-bold text-white text-xs">CII-2026-OP-055</span>
+            <span class="text-slate-400 text-xs hidden md:inline truncate max-w-[200px]">• Turbogerador TG-01 (Nível 4)</span>
+            <span class="px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 text-[10px] font-bold border border-rose-500/30">Crítico</span>
+          </div>
+        </div>
+
+        <!-- Direita: Auditoria Rápida + Ações Rápidas -->
+        <div class="flex items-center gap-2">
+          <!-- Widget de Bloqueios Clicável -->
+          <button onclick="changeStep(4)" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-950/40 border border-rose-500/30 text-rose-300 hover:bg-rose-900/40 text-xs font-semibold transition-colors" title="Clique para ver os 17 bloqueios da verificação">
+            <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-rose-400"></i>
+            <span>17 Bloqueios</span>
+            <span class="text-slate-400 font-normal">| 39% pronto</span>
+          </button>
+
+          <div class="h-4 w-px bg-slate-700"></div>
+
+          <button onclick="toggleDarkMode()" class="w-7 h-7 flex items-center justify-center rounded-lg text-slate-300 hover:text-white hover:bg-slate-800" title="Tema">
+            <i data-lucide="moon" class="w-3.5 h-3.5 theme-toggle-icon"></i>
+          </button>
+          
+          <button onclick="saveInvestigation()" class="h-7 flex items-center gap-1.5 px-3 rounded-lg bg-brava-lime hover:bg-brava-yellow text-slate-950 font-bold text-xs shadow-glow-lime transition-all">
+            <i data-lucide="save" class="w-3.5 h-3.5"></i>
+            <span>Salvar</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Linha 2: Barra Híbrida de Navegação (Trilha de Passos + Abas de Ferramentas com Badges) -->
+    <nav class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-11 z-30 shadow-subtle">
+      <div class="max-w-[1780px] mx-auto px-4 sm:px-6 h-11 flex items-center justify-between gap-3 overflow-x-auto">
+        
+        <!-- Esquerda: Trilha Breadcrumb Oficial das 5 Etapas -->
+        <div class="flex items-center gap-1 shrink-0 text-xs text-slate-500 font-medium border-r border-slate-200 dark:border-slate-800 pr-3">
+          <button onclick="changeStep(1)" class="varC-step-btn hover:text-slate-900 dark:hover:text-white flex items-center gap-1 px-1.5 py-0.5 rounded" data-step="1">
+            <i data-lucide="check" class="w-3 h-3 text-emerald-500"></i> Triagem
+          </button>
+          <span>›</span>
+          <button onclick="changeStep(2)" class="varC-step-btn hover:text-slate-900 dark:hover:text-white flex items-center gap-1 px-1.5 py-0.5 rounded" data-step="2">
+            <i data-lucide="check" class="w-3 h-3 text-emerald-500"></i> Estudo
+          </button>
+          <span>›</span>
+          <button onclick="changeStep(3)" class="varC-step-btn hover:text-slate-900 dark:hover:text-white flex items-center gap-1 px-1.5 py-0.5 rounded" data-step="3">
+            RIA
+          </button>
+          <span>›</span>
+          <button onclick="changeStep(4)" class="varC-step-btn font-bold text-brava-purple dark:text-brava-yellow bg-brava-purple/10 dark:bg-brava-yellow/10 px-2 py-0.5 rounded flex items-center gap-1 border border-brava-purple/20 dark:border-brava-yellow/20" data-step="4">
+            Verificação
+          </button>
+          <span>›</span>
+          <button onclick="changeStep(5)" class="varC-step-btn hover:text-slate-900 dark:hover:text-white flex items-center gap-1 px-1.5 py-0.5 rounded opacity-60" data-step="5">
+            Emissão
+          </button>
+        </div>
+
+        <!-- Centro: Abas de Trabalho de Alta Produtividade (Abas Superiores com Contadores Reais) -->
+        <div class="flex items-center gap-1.5 shrink-0 overflow-x-auto py-1">
+          <button onclick="changeStep(2); setEstudoTool('cronologia');" class="varC-tab-btn flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-brava-purple" data-tool="cronologia">
+            <i data-lucide="clock" class="w-3.5 h-3.5 text-blue-500"></i>
+            <span>Cronologia</span>
+            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-mono">14 fatos</span>
+          </button>
+
+          <button onclick="changeStep(2); setEstudoTool('arvore');" class="varC-tab-btn flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-brava-purple" data-tool="arvore">
+            <i data-lucide="git-fork" class="w-3.5 h-3.5 text-emerald-500"></i>
+            <span>Árvore de Causas</span>
+            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-mono">3 raízes</span>
+          </button>
+
+          <button onclick="changeStep(2); setEstudoTool('whys');" class="varC-tab-btn flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-brava-purple" data-tool="whys">
+            <i data-lucide="help-circle" class="w-3.5 h-3.5 text-amber-500"></i>
+            <span>5 Porquês</span>
+            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 font-mono">2 ramos</span>
+          </button>
+
+          <button onclick="changeStep(2); setEstudoTool('raias');" class="varC-tab-btn flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-brava-purple" data-tool="raias">
+            <i data-lucide="columns-3" class="w-3.5 h-3.5 text-purple-500"></i>
+            <span>Raias</span>
+          </button>
+
+          <button onclick="changeStep(2); setEstudoTool('portanto');" class="varC-tab-btn flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-brava-purple" data-tool="portanto">
+            <i data-lucide="check-square" class="w-3.5 h-3.5 text-indigo-500"></i>
+            <span>Portanto</span>
+            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 font-bold">OK</span>
+          </button>
+
+          <button onclick="changeStep(2); setEstudoTool('plano');" class="varC-tab-btn flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:border-brava-purple" data-tool="plano">
+            <i data-lucide="clipboard-check" class="w-3.5 h-3.5 text-rose-500"></i>
+            <span>Plano de Ação</span>
+            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 font-mono">5 ações</span>
+          </button>
+        </div>
+
+        <!-- Direita: Atalho para Verificação / Emissão -->
+        <div class="flex items-center gap-2 pl-3 border-l border-slate-200 dark:border-slate-800 shrink-0">
+          <button onclick="changeStep(4)" class="px-2.5 py-1 rounded-lg bg-brava-navy dark:bg-brava-surface text-white text-xs font-bold hover:opacity-90 flex items-center gap-1.5">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-brava-yellow"></i>
+            <span class="hidden sm:inline">Verificação Final</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- CANVAS DINÂMICO DE CONTEÚDO (Interativo conforme Etapa e Ferramenta)      -->
+  <!-- ========================================================================= -->
+  <main class="max-w-[1780px] w-full mx-auto px-4 sm:px-6 pt-4 pb-8 space-y-4">
+    
+    <!-- Banner de Comparação do Protótipo -->
+    <div class="bg-gradient-to-r from-brava-navy via-slate-900 to-brava-surface text-white p-3.5 rounded-2xl border border-brava-border flex items-center justify-between gap-4 shadow-sm">
+      <div class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-xl bg-brava-yellow text-slate-950 flex items-center justify-center font-black text-sm shrink-0" id="banner-variant-badge">A</span>
+        <div>
+          <h2 class="text-sm font-extrabold text-white flex items-center gap-2" id="banner-variant-title">
+            Variante A: Dual-Bar Corporativo Brava
+          </h2>
+          <p class="text-xs text-slate-300 font-light" id="banner-variant-desc">
+            Separação limpa entre governança global (Barra 1) e esteira metodológica dos 5 passos (Barra 2).
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <span class="text-xs text-slate-400 hidden sm:inline">Alterne no rodapé ou use:</span>
+        <kbd class="px-2 py-1 rounded bg-white/10 text-xs font-mono font-bold text-brava-yellow border border-white/15">←</kbd>
+        <kbd class="px-2 py-1 rounded bg-white/10 text-xs font-mono font-bold text-brava-yellow border border-white/15">→</kbd>
+      </div>
+    </div>
+
+    <!-- TELA DA ETAPA 4: VERIFICAÇÃO & INTEGRIDADE (TELA PRINCIPAL DE AVALIAÇÃO) -->
+    <section id="screen-step-4" class="space-y-4">
+      <!-- Card Superior de Integridade -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4">
+        <div class="flex items-center gap-4 flex-wrap sm:flex-nowrap">
+          <div class="flex flex-col items-center justify-center w-16 h-14 rounded-2xl bg-brava-navy dark:bg-brava-surface text-white border border-slate-800 dark:border-brava-border shadow-xs shrink-0 relative overflow-hidden">
+            <span class="text-lg font-black text-white font-mono tracking-tight">39%</span>
+            <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-black/40">
+              <div class="bg-brava-yellow h-full w-[39%]"></div>
+            </div>
+          </div>
+          <div class="space-y-1">
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <h3 class="text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">Integridade do Estudo</h3>
+              <span class="px-2.5 py-0.5 rounded-lg text-xs font-bold bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-800">
+                17 bloqueio(s) para emissão
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Auditoria contínua de regras metodológicas, consistência das hipóteses e evidências obrigatórias conforme PG-CORP-SMS-015.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 flex-wrap ml-auto">
+          <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-xs font-bold text-emerald-800 dark:text-emerald-300">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
+            <span>11 atendidos</span>
+          </div>
+          <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-xs font-bold text-amber-800 dark:text-amber-300">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 dark:text-amber-400"></i>
+            <span>0 alertas</span>
+          </div>
+          <button onclick="runAIAudit()" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-brava-purple hover:bg-brava-purpleLight text-white text-xs font-bold shadow-glow-purple transition-all ai-shimmer">
+            <i data-lucide="sparkles" class="w-4 h-4 text-brava-yellow"></i>
+            <span>Auditor IA</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabela de Regras e Bloqueios -->
+      <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div class="px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+          <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Regras Metodológicas Avaliadas</h4>
+          <span class="text-xs font-mono text-slate-400">28 itens verificados</span>
+        </div>
+        <div class="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+          <div class="p-3.5 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-rose-100 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold text-xs">✕</span>
+              <div>
+                <span class="font-bold text-slate-900 dark:text-white block">Causa Raiz sem Ação Vinculada no Plano</span>
+                <span class="text-slate-500 dark:text-slate-400 text-[11px]">A causa primária #C-03 (Fadiga térmica da tubulação de selagem) não possui ação corretiva cadastrada.</span>
+              </div>
+            </div>
+            <button onclick="changeStep(2); setEstudoTool('plano');" class="px-3 py-1 rounded-lg text-xs font-bold text-brava-purple dark:text-brava-yellow bg-purple-50 dark:bg-white/5 border border-purple-200 dark:border-white/10 hover:bg-purple-100">
+              Corrigir na Etapa 2 →
+            </button>
+          </div>
+
+          <div class="p-3.5 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-rose-100 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold text-xs">✕</span>
+              <div>
+                <span class="font-bold text-slate-900 dark:text-white block">Teste do Portanto Incompleto na Árvore</span>
+                <span class="text-slate-500 dark:text-slate-400 text-[11px]">2 nós causais intermediários não passaram pelo crivo formal de lógica causal reversa.</span>
+              </div>
+            </div>
+            <button onclick="changeStep(2); setEstudoTool('portanto');" class="px-3 py-1 rounded-lg text-xs font-bold text-brava-purple dark:text-brava-yellow bg-purple-50 dark:bg-white/5 border border-purple-200 dark:border-white/10 hover:bg-purple-100">
+              Validar Portanto →
+            </button>
+          </div>
+
+          <div class="p-3.5 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-xs">✓</span>
+              <div>
+                <span class="font-bold text-slate-900 dark:text-white block">Cronologia com Marcos e Evidências</span>
+                <span class="text-slate-500 dark:text-slate-400 text-[11px]">14 fatos encadeados cronologicamente com responsáveis e registros anexados.</span>
+              </div>
+            </div>
+            <span class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">Atendido</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TELA DA ETAPA 2: ESTUDO CAUSAL & FERRAMENTAS -->
+    <section id="screen-step-2" class="space-y-4 hidden">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between gap-4">
+        <div>
+          <h3 class="text-base font-extrabold text-slate-900 dark:text-white tracking-tight" id="active-tool-title">
+            Cronologia dos Fatos
+          </h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400" id="active-tool-desc">
+            Sequenciamento temporal com marcos operacionais, desvios e evidências.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+            Ferramenta 1 de 6
+          </span>
+        </div>
+      </div>
+
+      <!-- Canvas de Visualização da Ferramenta -->
+      <div id="tool-canvas-content" class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm min-h-[360px]">
+        <!-- Conteúdo injetado via JS -->
+      </div>
+    </section>
+
+    <!-- TELAS GENÉRICAS PARA PASSOS 1, 3 E 5 -->
+    <section id="screen-step-1" class="space-y-4 hidden">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm text-center py-16">
+        <i data-lucide="clipboard-check" class="w-12 h-12 text-emerald-500 mx-auto mb-3"></i>
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Etapa 1: Triagem & Classificação Inicial</h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto mt-1">
+          Evento classificado como Nível 4 (Incidente de Alto Potencial). Comissão de Investigação designada conforme procedimento PG-CORP-SMS-015.
+        </p>
+        <button onclick="changeStep(2)" class="mt-4 px-4 py-2 rounded-xl bg-brava-navy dark:bg-brava-surface text-white text-xs font-bold">
+          Avançar para Estudo Causal →
+        </button>
+      </div>
+    </section>
+
+    <section id="screen-step-3" class="space-y-4 hidden">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm text-center py-16">
+        <i data-lucide="file-text" class="w-12 h-12 text-blue-500 mx-auto mb-3"></i>
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Etapa 3: Rascunho do RIA (Relatório de Investigação)</h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto mt-1">
+          Estruturação preliminar dos textos, síntese do incidente e prévia do documento executivo de investigação.
+        </p>
+        <button onclick="changeStep(4)" class="mt-4 px-4 py-2 rounded-xl bg-brava-navy dark:bg-brava-surface text-white text-xs font-bold">
+          Avançar para Verificação →
+        </button>
+      </div>
+    </section>
+
+    <section id="screen-step-5" class="space-y-4 hidden">
+      <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm text-center py-16">
+        <i data-lucide="award" class="w-12 h-12 text-purple-500 mx-auto mb-3"></i>
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Etapa 5: Emissão & Assinatura Oficial</h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto mt-1">
+          Geração do PDF oficial com hash de integridade, assinaturas da comissão e arquivamento formal.
+        </p>
+        <div class="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 text-xs font-semibold">
+          <i data-lucide="alert-triangle" class="w-4 h-4"></i> Bloqueado: resolva os 17 bloqueios na Etapa 4 primeiro.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- FLOATING PROTOTYPE SWITCHER (Conforme especificação da Skill Prototype)    -->
+  <!-- ========================================================================= -->
+  <div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 bg-slate-900/95 dark:bg-black/95 text-white p-2 rounded-2xl border border-white/20 shadow-floating backdrop-blur-md select-none max-w-[95vw]">
+    
+    <!-- Seta Anterior -->
+    <button onclick="cycleVariant(-1)" class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center transition-all" title="Variante Anterior (←)">
+      <i data-lucide="chevron-left" class="w-4 h-4 text-white"></i>
+    </button>
+
+    <!-- Indicador da Variante Ativa -->
+    <div class="px-2 text-center">
+      <div class="text-[9px] font-mono uppercase tracking-wider text-brava-yellow font-bold flex items-center justify-center gap-1">
+        <span>PROTÓTIPO DE NAVEGAÇÃO</span>
+        <span class="text-slate-400">•</span>
+        <span id="switcher-variant-code" class="text-white font-black">VARIANTE A</span>
+      </div>
+      <div class="text-xs font-extrabold text-white truncate max-w-[260px] sm:max-w-[340px]" id="switcher-variant-name">
+        Dual-Bar Corporativo Brava
+      </div>
+    </div>
+
+    <!-- Seta Próxima -->
+    <button onclick="cycleVariant(1)" class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center transition-all" title="Próxima Variante (→)">
+      <i data-lucide="chevron-right" class="w-4 h-4 text-white"></i>
+    </button>
+
+    <div class="h-6 w-px bg-white/20 mx-1"></div>
+
+    <!-- Botões Rápidos A / B / C -->
+    <div class="flex items-center gap-1 bg-white/10 p-1 rounded-xl">
+      <button onclick="setVariant('A')" id="btn-quick-A" class="w-7 h-7 rounded-lg text-xs font-bold transition-all bg-brava-yellow text-slate-950 shadow-xs">A</button>
+      <button onclick="setVariant('B')" id="btn-quick-B" class="w-7 h-7 rounded-lg text-xs font-medium text-slate-300 hover:text-white">B</button>
+      <button onclick="setVariant('C')" id="btn-quick-C" class="w-7 h-7 rounded-lg text-xs font-medium text-slate-300 hover:text-white">C</button>
+    </div>
+
+    <div class="h-6 w-px bg-white/20 mx-1"></div>
+
+    <!-- Toggle Inspecionar Estado -->
+    <button onclick="toggleStateDrawer()" class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-[11px] font-bold text-slate-200 hover:text-white flex items-center gap-1.5 transition-all">
+      <i data-lucide="code" class="w-3.5 h-3.5 text-brava-yellow"></i>
+      <span class="hidden sm:inline">Estado</span>
+    </button>
+  </div>
+
+  <!-- DRAWER FLUTUANTE DE ESTADO (Para conferência em tempo real) -->
+  <div id="state-drawer" class="fixed bottom-20 right-4 z-50 w-80 bg-slate-900 text-white rounded-2xl border border-slate-700 shadow-2xl p-4 text-xs font-mono hidden">
+    <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-700 font-bold text-brava-yellow">
+      <span>ESTADO ATIVO DO PROTÓTIPO</span>
+      <button onclick="toggleStateDrawer()" class="text-slate-400 hover:text-white">✕</button>
+    </div>
+    <div class="space-y-1.5 text-slate-300">
+      <div><strong>variant:</strong> <span id="state-var" class="text-brava-lime">A</span></div>
+      <div><strong>activeStep:</strong> <span id="state-step" class="text-brava-yellow">4</span></div>
+      <div><strong>activeTool:</strong> <span id="state-tool" class="text-blue-300">cronologia</span></div>
+      <div><strong>integrityScore:</strong> <span class="text-emerald-400">39%</span></div>
+      <div><strong>bloqueios:</strong> <span class="text-rose-400">17</span></div>
+      <div><strong>theme:</strong> <span id="state-theme">light</span></div>
+      <div><strong>studyId:</strong> <span class="text-white">CII-2026-OP-055</span></div>
+    </div>
+  </div>
+
+  <!-- MODAL: DETALHES DO ESTUDO ATIVO -->
+  <div id="modal-study-info" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-brava-navy text-brava-yellow flex items-center justify-center font-bold">
+            <i data-lucide="folder-git-2" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Investigação Ativa</h3>
+            <span class="text-xs text-slate-400 font-mono">CII-2026-OP-055</span>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-study-info')" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-lg font-bold">✕</button>
+      </div>
+
+      <div class="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2 text-xs">
+        <div><strong>Título:</strong> Falha de Lubrificação no Mancal Principal do Turbogerador TG-01</div>
+        <div><strong>Localidade:</strong> FPSO Atlanta · Brava Energia Offshore</div>
+        <div><strong>Data do Evento:</strong> 22/09/2026 14:32 BRT</div>
+        <div><strong>Líder da Comissão:</strong> Rafael T. Rocha (Eng. de Confiabilidade)</div>
+        <div><strong>Status Metodológico:</strong> Em fase de verificação final pré-RIA</div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal('modal-study-info')" class="px-4 py-2 rounded-xl bg-brava-navy dark:bg-brava-surface text-white text-xs font-bold">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-slate-950 text-white px-4 py-2.5 rounded-2xl border border-slate-700 shadow-2xl flex items-center gap-2 text-xs font-semibold transform transition-all duration-200 translate-y-20 opacity-0 pointer-events-none">
+    <i data-lucide="check-circle" class="w-4 h-4 text-brava-lime"></i>
+    <span id="toast-message">Operação realizada com sucesso!</span>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: CONTROLE DAS VARIANTES, ESTADO, TECLADO E TELAS              -->
+  <!-- ========================================================================= -->
+  <script>
+    // Configurações das Variantes
+    const VARIANTS = {
+      'A': {
+        name: 'Dual-Bar Corporativo Brava',
+        code: 'VARIANTE A',
+        desc: 'Separação limpa entre governança global (Barra 1) e esteira metodológica dos 5 passos (Barra 2).'
+      },
+      'B': {
+        name: 'Unified Command Ribbon (Cockpit)',
+        code: 'VARIANTE B',
+        desc: 'Densidade máxima de tela com barra única de 56px e esteira segmentada integrada.'
+      },
+      'C': {
+        name: 'Workstation Tool Hub Tabs',
+        code: 'VARIANTE C',
+        desc: 'Abas operacionais de alta produtividade com contadores de fatos e trilha breadcrumb.'
+      }
+    };
+
+    // Estado da Aplicação Protótipo
+    const state = {
+      variant: 'A',
+      activeStep: 4,
+      activeTool: 'cronologia',
+      theme: 'light'
+    };
+
+    function safeCreateIcons() {
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        try { window.lucide.createIcons(); } catch (e) {}
+      }
+    }
+
+    // Inicialização
+    window.addEventListener('DOMContentLoaded', () => {
+      // 1. Ler variante da URL se houver
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlVariant = urlParams.get('variant');
+      if (urlVariant && ['A', 'B', 'C'].includes(urlVariant.toUpperCase())) {
+        state.variant = urlVariant.toUpperCase();
+      }
+
+      // 2. Aplicar variante e passo inicial
+      applyVariant(state.variant);
+      changeStep(state.activeStep);
+      setEstudoTool(state.activeTool);
+
+      // 3. Inicializar ícones Lucide com segurança
+      safeCreateIcons();
+
+      // 4. Listeners de teclado
+      setupKeyboardNavigation();
+    });
+
+    // Troca de Variante
+    function setVariant(varKey) {
+      if (!VARIANTS[varKey]) return;
+      state.variant = varKey;
+
+      // Atualiza URL sem recarregar página
+      const url = new URL(window.location);
+      url.searchParams.set('variant', varKey);
+      window.history.replaceState({}, '', url);
+
+      applyVariant(varKey);
+      showToast(`Alternado para: ${VARIANTS[varKey].name}`);
+    }
+
+    function cycleVariant(direction) {
+      const keys = ['A', 'B', 'C'];
+      let idx = keys.indexOf(state.variant);
+      idx = (idx + direction + keys.length) % keys.length;
+      setVariant(keys[idx]);
+    }
+
+    function applyVariant(varKey) {
+      // Ocultar todos os containers de variante
+      document.querySelectorAll('.variant-container').forEach(el => {
+        el.classList.remove('active-variant');
+      });
+
+      // Mostrar o selecionado
+      const activeEl = document.getElementById(`variant-${varKey}`);
+      if (activeEl) activeEl.classList.add('active-variant');
+
+      // Atualizar Floating Switcher
+      document.getElementById('switcher-variant-code').textContent = VARIANTS[varKey].code;
+      document.getElementById('switcher-variant-name').textContent = VARIANTS[varKey].name;
+
+      // Atualizar botões rápidos A/B/C no switcher
+      ['A', 'B', 'C'].forEach(k => {
+        const btn = document.getElementById(`btn-quick-${k}`);
+        if (k === varKey) {
+          btn.className = 'w-7 h-7 rounded-lg text-xs font-bold transition-all bg-brava-yellow text-slate-950 shadow-xs';
+        } else {
+          btn.className = 'w-7 h-7 rounded-lg text-xs font-medium text-slate-300 hover:text-white';
+        }
+      });
+
+      // Atualizar Banner
+      document.getElementById('banner-variant-badge').textContent = varKey;
+      document.getElementById('banner-variant-title').textContent = `${VARIANTS[varKey].code}: ${VARIANTS[varKey].name}`;
+      document.getElementById('banner-variant-desc').textContent = VARIANTS[varKey].desc;
+
+      // Atualizar estado no drawer
+      document.getElementById('state-var').textContent = varKey;
+
+      // Re-renderizar ícones Lucide da nova barra
+      setTimeout(() => safeCreateIcons(), 50);
+    }
+
+    // Navegação de Passos (1 a 5)
+    function changeStep(stepNum) {
+      state.activeStep = stepNum;
+      document.getElementById('state-step').textContent = stepNum;
+
+      // Ocultar todas as telas de passos
+      for (let i = 1; i <= 5; i++) {
+        const s = document.getElementById(`screen-step-${i}`);
+        if (s) s.classList.add('hidden');
+      }
+
+      // Mostrar tela ativa
+      const activeScreen = document.getElementById(`screen-step-${stepNum}`);
+      if (activeScreen) activeScreen.classList.remove('hidden');
+
+      // Atualizar visual dos botões no Stepper da Variante A
+      document.querySelectorAll('.varA-step-btn').forEach(btn => {
+        const num = parseInt(btn.dataset.step);
+        if (num === stepNum) {
+          btn.className = 'varA-step-btn group flex items-center gap-2 px-3 py-1 rounded-xl transition-all bg-brava-navy dark:bg-brava-surface text-white step-active-shadow border border-slate-800 dark:border-brava-border';
+          const sub = btn.querySelector('.step-sub');
+          if (sub) {
+            sub.textContent = 'Etapa Atual';
+            sub.className = 'step-sub text-[9px] text-brava-yellow font-semibold block leading-none';
+          }
+        } else if (num < stepNum) {
+          btn.className = 'varA-step-btn group flex items-center gap-2 px-2.5 py-1 rounded-xl transition-all border border-transparent hover:border-slate-200 dark:hover:border-slate-700';
+          const sub = btn.querySelector('.step-sub');
+          if (sub) {
+            sub.textContent = 'Concluída';
+            sub.className = 'step-sub text-[9px] text-emerald-600 dark:text-emerald-400 font-medium block leading-none';
+          }
+        } else {
+          btn.className = 'varA-step-btn group flex items-center gap-2 px-2.5 py-1 rounded-xl transition-all border border-transparent hover:border-slate-200 dark:hover:border-slate-700 opacity-70';
+          const sub = btn.querySelector('.step-sub');
+          if (sub) {
+            sub.textContent = 'Pendente';
+            sub.className = 'step-sub text-[9px] text-slate-400 block leading-none';
+          }
+        }
+      });
+
+      // Se for Passo 2, mostrar subguias de ferramentas na Variante A e B
+      const varASubtabs = document.getElementById('varA-subtabs');
+      if (varASubtabs) {
+        if (stepNum === 2) varASubtabs.classList.remove('hidden');
+        else varASubtabs.classList.add('hidden');
+      }
+
+      const varBSubtabs = document.getElementById('varB-subtabs');
+      if (varBSubtabs) {
+        if (stepNum === 2) varBSubtabs.classList.remove('hidden');
+        else varBSubtabs.classList.add('hidden');
+      }
+
+      // Atualizar Variante B step buttons
+      document.querySelectorAll('.varB-step-btn').forEach(btn => {
+        const num = parseInt(btn.dataset.step);
+        if (num === stepNum) {
+          btn.className = 'varB-step-btn flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-brava-yellow text-slate-950 shadow-glow-lime';
+        } else {
+          btn.className = 'varB-step-btn flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all text-slate-300 hover:text-white hover:bg-white/10';
+        }
+      });
+
+      safeCreateIcons();
+    }
+
+    // Ferramentas da Etapa 2 (Estudo Causal)
+    const TOOLS_DATA = {
+      'cronologia': {
+        title: 'Cronologia dos Fatos & Marcos Operacionais',
+        desc: 'Sequenciamento temporal com 14 marcos auditados, registros SCADA e evidências documentais.',
+        content: `
+          <div class="space-y-3">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
+              <span class="text-xs font-bold uppercase text-slate-400 font-mono">Linha do Tempo Causal</span>
+              <button onclick="showToast('Adicionar fato')" class="px-2.5 py-1 rounded-lg bg-brava-navy text-white text-xs font-bold">+ Adicionar Marco</button>
+            </div>
+            <div class="space-y-2 font-sans text-xs">
+              <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 flex items-start gap-3">
+                <span class="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 font-mono font-bold text-[11px]">14:28:10</span>
+                <div>
+                  <strong class="text-slate-900 dark:text-white">Alarme de Alta Temperatura no Mancal #2 do TG-01</strong>
+                  <p class="text-slate-500 dark:text-slate-400 mt-0.5">Pressão do óleo lubrificante caiu de 3.2 bar para 1.8 bar em 45 segundos. Evidência: Log SCADA 1428-A.</p>
+                </div>
+              </div>
+              <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 flex items-start gap-3">
+                <span class="px-2 py-0.5 rounded bg-rose-100 dark:bg-rose-900/50 text-rose-800 dark:text-rose-300 font-mono font-bold text-[11px]">14:32:00</span>
+                <div>
+                  <strong class="text-slate-900 dark:text-white">Trip de Emergência do Turbogerador & Blackout Parcial</strong>
+                  <p class="text-slate-500 dark:text-slate-400 mt-0.5">Atuação do sistema de proteção por sobreaquecimento. Perda de 22 MW de geração offshore.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      'arvore': {
+        title: 'Árvore de Causas (Lógica Formal & Hipóteses)',
+        desc: 'Mapeamento visual hierárquico com 3 causas-raízes identificadas e 2 nós pendentes de teste do portanto.',
+        content: `
+          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 text-xs space-y-3">
+            <div class="flex items-center gap-2 text-rose-500 font-bold">
+              <i data-lucide="alert-octagon" class="w-4 h-4"></i> Evento de Topo: Trip do Turbogerador TG-01
+            </div>
+            <div class="pl-6 border-l-2 border-slate-300 dark:border-slate-700 space-y-2">
+              <div class="p-2.5 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+                <span class="text-slate-400 font-mono">Fator Causal 1:</span> Despressurização súbita da linha de óleo de selagem.
+              </div>
+              <div class="p-2.5 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+                <span class="text-slate-400 font-mono">Fator Causal 2:</span> Trinca por fadiga térmica no flange de conexão da bomba secundária.
+              </div>
+              <div class="p-2.5 bg-amber-50 dark:bg-amber-950/40 rounded-lg border border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300">
+                <span class="font-bold font-mono">Causa Raiz #C-03:</span> Especificação de torque de aperto em desacordo com boletim técnico do fabricante.
+              </div>
+            </div>
+          </div>
+        `
+      },
+      'whys': {
+        title: '5 Porquês Metodológicos',
+        desc: 'Encadeamento dos porquês para validação da profundidade da causa-raiz.',
+        content: `
+          <div class="space-y-2 text-xs">
+            <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl"><strong>1. Por que o mancal aqueceu?</strong> Porque faltou vazão adequada de óleo lubrificante.</div>
+            <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl"><strong>2. Por que faltou vazão?</strong> Porque ocorreu vazamento no flange da linha de retorno.</div>
+            <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl"><strong>3. Por que o flange vazou?</strong> Porque os prisioneiros afrouxaram por vibração e fadiga.</div>
+            <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl"><strong>4. Por que afrouxaram?</strong> Porque o torque aplicado na última parada seguiu padrão antigo.</div>
+            <div class="p-2.5 bg-emerald-50 dark:bg-emerald-950/50 rounded-xl border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300">
+              <strong>5. Por que seguiu padrão antigo?</strong> O procedimento de manutenção preventiva não foi revisado após a emissão da Nota Técnica NT-088.
+            </div>
+          </div>
+        `
+      },
+      'raias': {
+        title: 'Diagrama de Raias (Swimlanes)',
+        desc: 'Distribuição dos fatos por departamentos (Operação, Manutenção, Engenharia, SMS).',
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700">
+              <strong class="text-blue-500 block mb-2">Operação</strong>
+              <p class="text-slate-600 dark:text-slate-300">Identificação de alarmes e partida da bomba reserva.</p>
+            </div>
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700">
+              <strong class="text-purple-500 block mb-2">Manutenção</strong>
+              <p class="text-slate-600 dark:text-slate-300">Aperto de torque e substituição do elemento filtrante.</p>
+            </div>
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700">
+              <strong class="text-emerald-500 block mb-2">Engenharia</strong>
+              <p class="text-slate-600 dark:text-slate-300">Revisão do boletim técnico e análise de vibração.</p>
+            </div>
+          </div>
+        `
+      },
+      'portanto': {
+        title: 'Teste do Portanto (Validação Causal Reversa)',
+        desc: 'Se a causa ocorreu, PORTANTO o efeito deveria ter ocorrido obrigatoriamente.',
+        content: `
+          <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl border border-emerald-300 dark:border-emerald-800 text-xs text-emerald-900 dark:text-emerald-200 space-y-2">
+            <p><strong>Causa:</strong> Trinca no flange provocou perda de pressão de óleo...</p>
+            <p class="font-bold">PORTANTO: Houve atrito no mancal e sobreaquecimento.</p>
+            <span class="inline-block px-2 py-0.5 rounded bg-emerald-200 dark:bg-emerald-800 text-emerald-900 dark:text-emerald-100 font-bold text-[10px]">Lógica Causal Válida ✓</span>
+          </div>
+        `
+      },
+      'plano': {
+        title: 'Plano de Ação Corretiva & Preventiva (5W2H)',
+        desc: '5 ações registradas com responsável, prazo e vínculo direto às causas-raízes.',
+        content: `
+          <div class="space-y-2 text-xs">
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <div>
+                <strong class="text-slate-900 dark:text-white block">Ação #01: Substituição dos prisioneiros por liga ASTM A193 B7</strong>
+                <span class="text-slate-500">Resp: Eng. Mecânica (Carlos) • Prazo: 30/10/2026</span>
+              </div>
+              <span class="px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 font-bold">Concluída</span>
+            </div>
+            <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <div>
+                <strong class="text-slate-900 dark:text-white block">Ação #02: Atualização do procedimento POP-MAN-042</strong>
+                <span class="text-slate-500">Resp: Coordenação de Confiabilidade • Prazo: 15/11/2026</span>
+              </div>
+              <span class="px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 font-bold">Em andamento</span>
+            </div>
+          </div>
+        `
+      }
+    };
+
+    function setEstudoTool(toolKey) {
+      if (!TOOLS_DATA[toolKey]) return;
+      state.activeTool = toolKey;
+      document.getElementById('state-tool').textContent = toolKey;
+
+      const data = TOOLS_DATA[toolKey];
+      const titleEl = document.getElementById('active-tool-title');
+      const descEl = document.getElementById('active-tool-desc');
+      const canvasEl = document.getElementById('tool-canvas-content');
+
+      if (titleEl) titleEl.textContent = data.title;
+      if (descEl) descEl.textContent = data.desc;
+      if (canvasEl) canvasEl.innerHTML = data.content;
+
+      // Atualizar botões de subguias na Variante A
+      document.querySelectorAll('.varA-subtab').forEach(b => {
+        if (b.dataset.tool === toolKey) {
+          b.className = 'varA-subtab px-2.5 py-0.5 rounded-lg text-xs font-bold bg-brava-navy text-white';
+        } else {
+          b.className = 'varA-subtab px-2.5 py-0.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900';
+        }
+      });
+
+      // Atualizar botões de subguias na Variante B
+      document.querySelectorAll('.varB-subtab').forEach(b => {
+        if (b.dataset.tool === toolKey) {
+          b.className = 'varB-subtab px-3 py-1 rounded-lg text-xs font-bold bg-white/20 text-white';
+        } else {
+          b.className = 'varB-subtab px-3 py-1 rounded-lg text-xs font-medium text-slate-300 hover:text-white';
+        }
+      });
+
+      safeCreateIcons();
+    }
+
+    // Navegação via teclado
+    function setupKeyboardNavigation() {
+      window.addEventListener('keydown', (e) => {
+        if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+        // Setas Esquerda / Direita para ciclar variantes
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          cycleVariant(-1);
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          cycleVariant(1);
+        }
+        // Números 1 a 5 para trocar etapas
+        else if (['1', '2', '3', '4', '5'].includes(e.key)) {
+          changeStep(parseInt(e.key));
+        }
+        // Ctrl+S para salvar
+        else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+          e.preventDefault();
+          saveInvestigation();
+        }
+      });
+    }
+
+    // Funções de Utilitários
+    function toggleDarkMode() {
+      const html = document.documentElement;
+      html.classList.toggle('dark');
+      const isDark = html.classList.contains('dark');
+      state.theme = isDark ? 'dark' : 'light';
+      document.getElementById('state-theme').textContent = state.theme;
+      showToast(isDark ? 'Modo Escuro Ativado' : 'Modo Claro Ativado');
+    }
+
+    function saveInvestigation() {
+      showToast('Investigação salva no armazenamento local!');
+    }
+
+    function checkSyncStatus() {
+      showToast('Armazenamento local verificado: 100% sincronizado.');
+    }
+
+    function showDiskStatus() {
+      showToast('Disco Local: Pasta "C:\\FACIU_Estudos" conectada e ativa.');
+    }
+
+    function exportJSONBackup() {
+      showToast('Exportando backup CII-2026-OP-055.json...');
+    }
+
+    function triggerUndo() {
+      showToast('Desfazer (Ctrl+Z) executado.');
+    }
+
+    function triggerRedo() {
+      showToast('Refazer (Ctrl+Y) executado.');
+    }
+
+    function newStudy() {
+      showToast('Criar novo estudo em branco.');
+    }
+
+    function runAIAudit() {
+      showToast('Auditor de IA analisando consistência causal...');
+    }
+
+    function openStudyInfoModal() {
+      openModal('modal-study-info');
+    }
+
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('hidden');
+    }
+
+    function toggleStateDrawer() {
+      const el = document.getElementById('state-drawer');
+      if (el) el.classList.toggle('hidden');
+    }
+
+    let toastTimer;
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const text = document.getElementById('toast-message');
+      if (!toast || !text) return;
+      text.textContent = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      }, 2400);
+    }
+
+    // Expor globalmente no window para compatibilidade com handlers e testes
+    window.setVariant = setVariant;
+    window.cycleVariant = cycleVariant;
+    window.changeStep = changeStep;
+    window.setEstudoTool = setEstudoTool;
+    window.toggleDarkMode = toggleDarkMode;
+    window.saveInvestigation = saveInvestigation;
+    window.checkSyncStatus = checkSyncStatus;
+    window.showDiskStatus = showDiskStatus;
+    window.exportJSONBackup = exportJSONBackup;
+    window.triggerUndo = triggerUndo;
+    window.triggerRedo = triggerRedo;
+    window.newStudy = newStudy;
+    window.runAIAudit = runAIAudit;
+    window.openStudyInfoModal = openStudyInfoModal;
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+    window.toggleStateDrawer = toggleStateDrawer;
+    window.showToast = showToast;
+  </script>
+</body>
+</html>

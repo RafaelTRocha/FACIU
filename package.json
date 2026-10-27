@@ -1,0 +1,53 @@
+{
+  "name": "faciu",
+  "version": "1.0.0",
+  "description": "> Aplicação *Single-File* (SFA / Zero-Backend) para investigação e análise de acidentes e incidentes industriais no padrão corporativo da **Brava Energia**, convergindo metodologias de Árvore de Causas e 5 Porquês na emissão oficial do **RIA (FORM-CORP-SMS-088 Rev. 08)**.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "bun tests/test_v6_41_3_webhook_blocking_equality.js",
+    "test:all": "bun tests/test_v6_41_3_webhook_blocking_equality.js && bun tests/test_v6_41_2_step5_buttons_always_visible.js && bun tests/test_v6_41_1_emission_exclusivity_and_humanized_terms.js && bun tests/test_v6_41_0_webhook_and_commission.js && bun tests/test_v6_40_15_code_review_and_console_fixes.js && bun tests/test_v6_40_14_na_options_and_chronology_warning.js && bun tests/test_v6_40_13_commission_error_handling.js && bun tests/test_v6_40_12_commission_tag_prefill.js && bun tests/test_v6_40_11_commission_tags_anti_slop.js && bun tests/test_v6_40_8_tree_professional_visual.js && bun tests/test_v6_40_7_ria_required_fields.js",
+    "test:v6413": "bun tests/test_v6_41_3_webhook_blocking_equality.js",
+    "test:v6412": "bun tests/test_v6_41_2_step5_buttons_always_visible.js",
+    "test:v6411": "bun tests/test_v6_41_1_emission_exclusivity_and_humanized_terms.js",
+    "test:v6410": "bun tests/test_v6_41_0_webhook_and_commission.js",
+    "test:v64015": "bun tests/test_v6_40_15_code_review_and_console_fixes.js",
+    "test:v64014": "bun tests/test_v6_40_14_na_options_and_chronology_warning.js",
+    "test:v64013": "bun tests/test_v6_40_13_commission_error_handling.js",
+    "test:v64012": "bun tests/test_v6_40_12_commission_tag_prefill.js",
+    "test:v64011": "bun tests/test_v6_40_11_commission_tags_anti_slop.js",
+    "test:v64010": "bun tests/test_v6_40_10_swiss_technical_minimalism.js",
+    "test:v6409": "bun tests/test_v6_40_9_svg_card_nodes.js",
+    "test:v6408": "bun tests/test_v6_40_8_tree_professional_visual.js",
+    "test:v6407": "bun tests/test_v6_40_7_ria_required_fields.js",
+    "test:v6406": "bun tests/test_v6_40_6_visual_polish.js",
+    "test:v6405": "bun tests/test_v6_40_5_ria_improvements.js",
+    "test:v6404": "bun tests/test_v6_40_4_study_menu_zindex.js",
+    "test:v6403": "bun tests/test_v6_40_3_offshore_onshore_settings.js",
+    "test:v6402": "bun tests/test_v6_40_2_audit_fixes.js",
+    "test:v6401": "bun tests/test_v6_40_1_review_fixes.js",
+    "test:v6400": "bun tests/test_v6_40_0_rev8_matrix_and_real_zero.js",
+    "backup": "bun scripts/bump_version.js --dry-run",
+    "bump:patch": "bun scripts/bump_version.js patch",
+    "bump:minor": "bun scripts/bump_version.js minor",
+    "bump:major": "bun scripts/bump_version.js major"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RafaelTRocha/FACIU.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/RafaelTRocha/FACIU/issues"
+  },
+  "homepage": "https://github.com/RafaelTRocha/FACIU#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.6.2"
+  }
+}

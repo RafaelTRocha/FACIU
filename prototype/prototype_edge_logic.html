@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PROTÓTIPO: Conexão por Arraste de Portas ("Bolinhas") + Lógica OU/E na Linha</title>
+  <!-- Cytoscape.js CDN para execução standalone zero-dependência -->
+  <script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --surface-elevated: #FFFFFF;
+      --border: rgba(15, 23, 42, 0.08);
+      --border-focus: #4F46E5;
+      --text: #0F172A;
+      --text-muted: #64748B;
+      --navy: #0E1D3C;
+      --lime: #C6E600;
+      --indigo: #6366F1;
+      --amber: #F59E0B;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 4px 16px -2px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+      --shadow-lg: 0 12px 32px -4px rgba(15, 23, 42, 0.12);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --bg: #090D16;
+      --surface: #111827;
+      --surface-elevated: #1F2937;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --navy: #1E293B;
+      --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Topbar */
+    header {
+      height: 52px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 10;
+    }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .badge-proto {
+      background: #EEF2FF;
+      color: #4F46E5;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      border: 1px solid #C7D2FE;
+    }
+    .header-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn {
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn:hover {
+      background: rgba(15, 23, 42, 0.04);
+      border-color: rgba(15, 23, 42, 0.16);
+    }
+    .btn:active {
+      transform: scale(0.97);
+    }
+    .btn-primary {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+    .btn-primary:hover {
+      background: #1e293b;
+    }
+
+    /* Main Area */
+    .workspace {
+      flex: 1;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #cy {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      background-image: radial-gradient(rgba(100, 116, 139, 0.18) 1px, transparent 0);
+      background-size: 20px 20px;
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+    }
+
+    /* Floating Hint banner */
+    .canvas-hint {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #334155;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 15;
+      pointer-events: none;
+    }
+    .canvas-hint b { color: #4F46E5; }
+
+    /* Overlay de Portas de Conexão ("Bolinhas" interativas estilo Lucid) */
+    #portOverlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 25;
+    }
+    .node-port {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: #C6E600;
+      border: 2.5px solid #0E1D3C;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(198, 230, 0, 0.95);
+      cursor: crosshair;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+      transition: transform 0.12s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.12s, background 0.12s;
+      z-index: 50;
+    }
+    /* Área de toque expandida para 44x44px (padrão WCAG e interface-design) */
+    .node-port::after {
+      content: '';
+      position: absolute;
+      top: -14px; left: -14px; right: -14px; bottom: -14px;
+      border-radius: 50%;
+      background: transparent;
+    }
+    .node-port:hover {
+      transform: translate(-50%, -50%) scale(1.45);
+      background: #D9F920;
+      box-shadow: 0 0 16px rgba(198, 230, 0, 1), 0 0 0 4px rgba(198, 230, 0, 0.35);
+    }
+    .node-port:active {
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    /* SVG para a Linha de Arraste em Tempo Real */
+    #dragSvg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 35;
+    }
+    .drag-line {
+      fill: none;
+      stroke: #4F46E5;
+      stroke-width: 2.5px;
+      stroke-dasharray: 6 3;
+      animation: dashMove 0.8s linear infinite;
+    }
+    @keyframes dashMove {
+      from { stroke-dashoffset: 18; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* Floating Toolbar de Aresta */
+    .edge-floating-card {
+      position: absolute;
+      bottom: 84px;
+      left: 50%;
+      transform: translateX(-50%) translateY(0);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+      transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .edge-floating-card[hidden] {
+      opacity: 0;
+      transform: translateX(-50%) translateY(12px);
+      pointer-events: none;
+    }
+    .card-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+    .seg-control {
+      display: inline-flex;
+      background: var(--bg);
+      padding: 3px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      gap: 2px;
+    }
+    .seg-btn {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 4px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .seg-btn:hover { color: var(--text); }
+    .seg-btn.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+      font-weight: 700;
+    }
+    .seg-btn.active.logic-ou {
+      color: #4F46E5;
+    }
+    .seg-btn.active.logic-e {
+      color: #059669;
+    }
+
+    /* Switcher Flutuante de Variantes (Padrão UI.md) */
+    .prototype-switcher {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0E1D3C;
+      color: #FFFFFF;
+      padding: 6px 14px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.3);
+      z-index: 100;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .proto-nav-btn {
+      background: transparent;
+      border: none;
+      color: #C6E600;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      transition: background 0.15s;
+    }
+    .proto-nav-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .proto-label-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 320px;
+    }
+    .proto-variant-id {
+      font-size: 10px;
+      font-weight: 700;
+      color: #C6E600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .proto-variant-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #F8FAFC;
+    }
+
+    /* Painel Lateral de Estado em Tempo Real */
+    .state-inspector {
+      width: 310px;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      z-index: 20;
+    }
+    .inspector-head {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .inspector-head h3 {
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .inspector-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .info-callout {
+      background: #F1F5F9;
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #334155;
+      border-left: 3px solid #4F46E5;
+    }
+    pre {
+      background: #0F172A;
+      color: #E2E8F0;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      overflow-x: auto;
+      max-height: 240px;
+    }
+    .edge-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 6px;
+      background: var(--bg);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .edge-list-item:hover {
+      border-color: #4F46E5;
+      background: var(--surface);
+    }
+    .edge-list-item.selected {
+      border-color: #4F46E5;
+      background: #EEF2FF;
+    }
+    .pill {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 999px;
+    }
+    .pill-ou { background: #EEF2FF; color: #4F46E5; border: 1px solid #C7D2FE; }
+    .pill-e { background: #ECFDF5; color: #059669; border: 1px solid #A7F3D0; }
+    .pill-direct { background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; }
+
+    /* SVG Overlay para o Arco da Variante B */
+    #arcCanvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-brand">
+      <span class="badge-proto">Protótipo Funcional</span>
+      <h1 class="header-title">Conexão por Arraste de Portas ("Bolinhas") + Lógica OU/E na Linha</h1>
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="resetLayout()">Restaurar Posições</button>
+      <button class="btn btn-primary" onclick="addHypothesis()">+ Nova Hipótese</button>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <!-- Canvas Cytoscape -->
+    <div id="cy"></div>
+    
+    <!-- Camada SVG para o Arco da Variante B -->
+    <svg id="arcCanvas"></svg>
+
+    <!-- Camada SVG para a Seta de Arraste em Tempo Real -->
+    <svg id="dragSvg">
+      <defs>
+        <marker id="dragArrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+          <polygon points="0 0, 8 4, 0 8" fill="#4F46E5" />
+        </marker>
+      </defs>
+      <path id="activeDragPath" class="drag-line" marker-end="url(#dragArrow)" d="" style="display:none;"></path>
+    </svg>
+
+    <!-- Overlay de Portas Interativas ("Bolinhas" no hover do bloco) -->
+    <div id="portOverlay"></div>
+
+    <!-- Dica de Uso -->
+    <div class="canvas-hint">
+      <span>💡 Passe o mouse sobre qualquer bloco para ver as <b>bolinhas</b> de conexão. Clique, segure e arraste até outro bloco para ligar!</span>
+    </div>
+
+    <!-- Barra Flutuante de Edição da Aresta Selecionada -->
+    <div id="edgeToolbar" class="edge-floating-card" hidden>
+      <span class="card-title" id="edgeSelectedLabel">Aresta</span>
+      
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:12px; color:var(--text-muted); font-weight:600;">Operador Lógico:</span>
+        <div class="seg-control">
+          <button class="seg-btn" id="btnLogicNone" onclick="setLogic('none')">Direta</button>
+          <button class="seg-btn" id="btnLogicOU" onclick="setLogic('OU')">OU (Alternativas)</button>
+          <button class="seg-btn" id="btnLogicE" onclick="setLogic('E')">E (Combinada)</button>
+        </div>
+      </div>
+
+      <div style="width:1px; height:24px; background:var(--border);"></div>
+
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:12px; color:var(--text-muted); font-weight:600;">Natureza:</span>
+        <div class="seg-control">
+          <button class="seg-btn active" id="btnKindCausal" onclick="setKind('causal')">Causal (RIA)</button>
+          <button class="seg-btn" id="btnKindCorr" onclick="setKind('correlation')">Correlação</button>
+        </div>
+      </div>
+
+      <button class="btn" style="color:#EF4444; border-color:#FCA5A5;" onclick="deleteSelectedEdge()">Excluir</button>
+    </div>
+
+    <!-- Painel Lateral de Diagnóstico e Estado -->
+    <aside class="state-inspector">
+      <div class="inspector-head">
+        <h3>Inspeção de Estado</h3>
+        <span style="font-size:11px; color:var(--text-muted);" id="nodesCount">4 nós</span>
+      </div>
+      <div class="inspector-body">
+        <div class="info-callout" id="variantExplainer">
+          <!-- Texto dinâmico da variante -->
+        </div>
+
+        <div>
+          <h4 style="font-size:11.5px; font-weight:700; margin-bottom:8px; color:var(--text-muted); text-transform:uppercase;">Arestas Atuais</h4>
+          <div id="edgesList"></div>
+        </div>
+
+        <div>
+          <h4 style="font-size:11.5px; font-weight:700; margin-bottom:8px; color:var(--text-muted); text-transform:uppercase;">Payload state.tree.edges</h4>
+          <pre id="jsonViewer">{}</pre>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Switcher Flutuante de Variantes (Padrão UI.md) -->
+  <div class="prototype-switcher">
+    <button class="proto-nav-btn" onclick="prevVariant()" title="Variante Anterior">◀</button>
+    <div class="proto-label-wrap">
+      <span class="proto-variant-id" id="protoVariantKey">Variante A (Escolhida)</span>
+      <span class="proto-variant-title" id="protoVariantTitle">Badge / Rótulo Interativo na Aresta</span>
+    </div>
+    <button class="proto-nav-btn" onclick="nextVariant()" title="Próxima Variante">▶</button>
+  </div>
+
+  <script>
+    // --- ESTADO DO PROTÓTIPO ---
+    const VARIANTS = [
+      {
+        key: 'A',
+        title: 'Badge / Rótulo Interativo na Aresta (Opção Escolhida)',
+        desc: '<strong>Variante A (Badge na Linha):</strong> Cada aresta direta exibe a pílula centralizada [OU] ou [E]. Ao conectar dois blocos pelo arraste das bolinhas, a lógica OU é aplicada automaticamente para hipóteses e a linha ganha o badge interativo!'
+      },
+      {
+        key: 'B',
+        title: 'Arco de Bifurcação Estilizado (FTA Clássico)',
+        desc: '<strong>Variante B (Arco na Ramificação):</strong> Quando duas ou mais arestas irmãs saem de uma Causa com lógica OU, um arco curvo sutil desenhado na junção conecta as linhas.'
+      },
+      {
+        key: 'C',
+        title: 'Barra Flutuante com Segmented Control e Halo',
+        desc: '<strong>Variante C (Controle Tátil):</strong> As arestas permanecem minimalistas. Clicar em qualquer aresta ativa a barra flutuante #edgeToolbar com o controle segmentado instantâneo.'
+      }
+    ];
+
+    let currentVariantIdx = 0;
+    let cy = null;
+    let selectedEdgeId = null;
+
+    // Estado do Arraste de Conexão
+    let activeHoverNodeId = null;
+    let isConnecting = false;
+    let connectSourceId = null;
+    let connectStartCoords = { x: 0, y: 0 };
+
+    // Dados iniciais da Árvore de Causas
+    let state = {
+      nodes: [
+        { id: 'evt', kind: 'evt', label: 'Incêndio no Selo da Bomba P-201', code: 'ET', pos: { x: 120, y: 220 } },
+        { id: 'ci1', kind: 'imediata', label: 'Vazamento de Hidrocarboneto Quente', code: 'CI', pos: { x: 380, y: 220 } },
+        { id: 'h1', kind: 'hipotese', label: 'H1: Falha do O-ring por degradação térmica', code: 'H1', pos: { x: 680, y: 130 } },
+        { id: 'h2', kind: 'hipotese', label: 'H2: Desalinhamento dinâmico do eixo', code: 'H2', pos: { x: 680, y: 220 } },
+        { id: 'h3', kind: 'hipotese', label: 'H3: Sobrepressão transitória na sucção', code: 'H3', pos: { x: 680, y: 310 } }
+      ],
+      edges: [
+        { id: 'e1', source: 'evt', target: 'ci1', kind: 'causal', logic: 'none' },
+        { id: 'e2', source: 'ci1', target: 'h1', kind: 'causal', logic: 'OU' },
+        { id: 'e3', source: 'ci1', target: 'h2', kind: 'causal', logic: 'OU' },
+        { id: 'e4', source: 'ci1', target: 'h3', kind: 'causal', logic: 'OU' }
+      ]
+    };
+
+    const KIND_COLORS = {
+      evt: { bg: '#221C4F', text: '#FFFFFF', border: '#17113D' },
+      imediata: { bg: '#D3455B', text: '#FFFFFF', border: '#B93046' },
+      hipotese: { bg: '#FDF0EC', text: '#221C4F', border: '#E29D86' },
+      contrib: { bg: '#FEF8EA', text: '#221C4F', border: '#E7C776' },
+      raiz: { bg: '#EAFAF0', text: '#221C4F', border: '#79C998' }
+    };
+
+    function initCytoscape() {
+      cy = cytoscape({
+        container: document.getElementById('cy'),
+        boxSelectionEnabled: false,
+        autounselectify: false,
+        style: [
+          {
+            selector: 'node',
+            style: {
+              'shape': 'round-rectangle',
+              'background-color': ele => KIND_COLORS[ele.data('kind')]?.bg || '#FFFFFF',
+              'border-color': ele => KIND_COLORS[ele.data('kind')]?.border || '#CBD5E1',
+              'border-width': 1.5,
+              'width': 180,
+              'height': 56,
+              'label': ele => `[${ele.data('code')}] ${ele.data('label')}`,
+              'color': ele => KIND_COLORS[ele.data('kind')]?.text || '#0F172A',
+              'font-size': 10,
+              'font-weight': 600,
+              'text-valign': 'center',
+              'text-halign': 'center',
+              'text-wrap': 'wrap',
+              'text-max-width': 160,
+              'padding': '6px'
+            }
+          },
+          {
+            selector: 'node:selected',
+            style: {
+              'border-color': '#C6E600',
+              'border-width': 2.5,
+              'shadow-blur': 12,
+              'shadow-color': 'rgba(198, 230, 0, 0.4)',
+              'shadow-opacity': 0.8
+            }
+          },
+          {
+            selector: 'node.target-hover',
+            style: {
+              'border-color': '#38BDF8',
+              'border-width': 3,
+              'shadow-blur': 16,
+              'shadow-color': 'rgba(56, 189, 248, 0.6)'
+            }
+          },
+          {
+            selector: 'edge',
+            style: {
+              'width': 2,
+              'line-color': '#64748B',
+              'target-arrow-color': '#64748B',
+              'target-arrow-shape': 'triangle',
+              'arrow-scale': 0.75,
+              'curve-style': 'bezier',
+              'font-size': 9.5,
+              'font-weight': 700
+            }
+          },
+          // Lógica OU (Variante A e C)
+          {
+            selector: 'edge[logic="OU"]',
+            style: {
+              'line-color': '#4F46E5',
+              'target-arrow-color': '#4F46E5',
+              'width': 2.2,
+              'label': ele => (currentVariantKey() === 'A' ? 'OU' : ''),
+              'text-background-color': '#FFFFFF',
+              'text-background-opacity': 1,
+              'text-background-padding': '4px',
+              'text-background-shape': 'roundrectangle',
+              'text-border-color': '#C7D2FE',
+              'text-border-width': 1,
+              'color': '#4F46E5'
+            }
+          },
+          // Lógica E
+          {
+            selector: 'edge[logic="E"]',
+            style: {
+              'line-color': '#059669',
+              'target-arrow-color': '#059669',
+              'width': 2.2,
+              'label': ele => (currentVariantKey() === 'A' ? 'E' : ''),
+              'text-background-color': '#FFFFFF',
+              'text-background-opacity': 1,
+              'text-background-padding': '4px',
+              'text-background-shape': 'roundrectangle',
+              'text-border-color': '#A7F3D0',
+              'text-border-width': 1,
+              'color': '#059669'
+            }
+          },
+          // Aresta de Correlação
+          {
+            selector: 'edge[kind="correlation"]',
+            style: {
+              'line-style': 'dashed',
+              'line-dash-pattern': [6, 4],
+              'line-color': '#6366F1',
+              'target-arrow-color': '#6366F1'
+            }
+          },
+          // Aresta Selecionada
+          {
+            selector: 'edge:selected',
+            style: {
+              'line-color': '#2563EB',
+              'target-arrow-color': '#2563EB',
+              'width': 3.5,
+              'shadow-blur': 10,
+              'shadow-color': 'rgba(37, 99, 235, 0.4)',
+              'shadow-opacity': 0.8
+            }
+          }
+        ]
+      });
+
+      renderGraph();
+
+      // Eventos de Seleção de Aresta
+      cy.on('tap', 'edge', function(evt) {
+        selectEdge(evt.target.id());
+      });
+
+      cy.on('tap', function(evt) {
+        if (evt.target === cy) {
+          deselectEdge();
+        }
+      });
+
+      // Eventos para posicionamento dinâmico das Portas ("Bolinhas") no Hover
+      cy.on('mouseover', 'node', function(evt) {
+        if (isConnecting) return;
+        showPortsForNode(evt.target);
+      });
+
+      cy.on('mouseout', 'node', function(evt) {
+        if (isConnecting) return;
+        scheduleHidePorts();
+      });
+
+      cy.on('drag', 'node', function() {
+        hidePorts();
+      });
+
+      cy.on('position', 'node', function(evt) {
+        if (activeHoverNodeId === evt.target.id() && !isConnecting) {
+          updatePortsPosition(evt.target);
+        }
+        updateArcOverlay();
+      });
+
+      cy.on('pan zoom', function() {
+        if (activeHoverNodeId && !isConnecting) {
+          const n = cy.getElementById(activeHoverNodeId);
+          if (n && n.length > 0) updatePortsPosition(n);
+        }
+        updateArcOverlay();
+      });
+
+      cy.fit(null, 50);
+      updateArcOverlay();
+    }
+
+    function renderGraph() {
+      cy.elements().remove();
+
+      const cyNodes = state.nodes.map(n => ({
+        group: 'nodes',
+        data: { id: n.id, kind: n.kind, label: n.label, code: n.code },
+        position: n.pos ? { x: n.pos.x, y: n.pos.y } : undefined
+      }));
+
+      const cyEdges = state.edges.map(e => ({
+        group: 'edges',
+        data: { id: e.id, source: e.source, target: e.target, kind: e.kind, logic: e.logic }
+      }));
+
+      cy.add([...cyNodes, ...cyEdges]);
+      updateInspector();
+      updateArcOverlay();
+    }
+
+    // --- GERENCIADOR DE PORTAS DE CONEXÃO ("BOLINHAS") ---
+    let hidePortsTimer = null;
+    let isMouseOverPort = false;
+
+    function scheduleHidePorts() {
+      clearTimeout(hidePortsTimer);
+      hidePortsTimer = setTimeout(() => {
+        if (!isConnecting && !isMouseOverPort) {
+          hidePorts();
+        }
+      }, 500); // 500ms de tolerância suave para o mouse transitar até a bolinha
+    }
+
+    function showPortsForNode(cyNode) {
+      clearTimeout(hidePortsTimer);
+      activeHoverNodeId = cyNode.id();
+      updatePortsPosition(cyNode);
+    }
+
+    function updatePortsPosition(cyNode) {
+      const overlay = document.getElementById('portOverlay');
+      overlay.innerHTML = '';
+
+      // Usar renderedPosition e dimensões renderizadas exatas para coincidir perfeitamente com o contorno visual
+      const pos = cyNode.renderedPosition();
+      const w = cyNode.renderedOuterWidth ? cyNode.renderedOuterWidth() : (cyNode.renderedWidth() || 180);
+      const h = cyNode.renderedOuterHeight ? cyNode.renderedOuterHeight() : (cyNode.renderedHeight() || 56);
+      const halfW = w / 2;
+      const halfH = h / 2;
+
+      // 4 Portas nos 4 lados: Direita (Saída principal), Topo, Fundo, Esquerda
+      const ports = [
+        { side: 'right', x: pos.x + halfW, y: pos.y, title: 'Conectar para a direita (Saída)' },
+        { side: 'top', x: pos.x, y: pos.y - halfH, title: 'Conectar para cima' },
+        { side: 'bottom', x: pos.x, y: pos.y + halfH, title: 'Conectar para baixo' },
+        { side: 'left', x: pos.x - halfW, y: pos.y, title: 'Conectar para a esquerda' }
+      ];
+
+      ports.forEach(p => {
+        const dot = document.createElement('div');
+        dot.className = 'node-port';
+        dot.style.left = p.x + 'px';
+        dot.style.top = p.y + 'px';
+        dot.title = p.title;
+
+        dot.addEventListener('mouseenter', () => {
+          isMouseOverPort = true;
+          clearTimeout(hidePortsTimer);
+        });
+
+        dot.addEventListener('mouseleave', () => {
+          isMouseOverPort = false;
+          scheduleHidePorts();
+        });
+
+        // Iniciar arraste da seta
+        dot.addEventListener('mousedown', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          clearTimeout(hidePortsTimer);
+          isMouseOverPort = true;
+          startConnecting(cyNode.id(), p.x, p.y);
+        });
+
+        overlay.appendChild(dot);
+      });
+    }
+
+    function hidePorts() {
+      activeHoverNodeId = null;
+      isMouseOverPort = false;
+      document.getElementById('portOverlay').innerHTML = '';
+    }
+
+    // --- MECÂNICA DE ARRASTE DA SETA (DRAG-TO-CONNECT) ---
+    function startConnecting(sourceNodeId, startX, startY) {
+      isConnecting = true;
+      connectSourceId = sourceNodeId;
+      connectStartCoords = { x: startX, y: startY };
+
+      // Desabilitar panning e movimentação de nós durante o arraste da conexão
+      cy.panningEnabled(false);
+      cy.userPanningEnabled(false);
+      cy.boxSelectionEnabled(false);
+      cy.autoungrabify(true);
+
+      const path = document.getElementById('activeDragPath');
+      path.style.display = 'block';
+      updateDragPath(startX, startY);
+
+      window.addEventListener('mousemove', onConnectingMove);
+      window.addEventListener('mouseup', onConnectingUp);
+    }
+
+    function onConnectingMove(e) {
+      if (!isConnecting) return;
+      const containerRect = document.getElementById('cy').getBoundingClientRect();
+      const curX = e.clientX - containerRect.left;
+      const curY = e.clientY - containerRect.top;
+
+      updateDragPath(curX, curY);
+
+      // Destaque magnético no nó alvo
+      try {
+        if (typeof cy.nodes().removeClass === 'function') cy.nodes().removeClass('target-hover');
+        else if (typeof cy.$ === 'function') cy.$('.target-hover').removeClass('target-hover');
+      } catch(e) {}
+      const targetNode = getNodeUnderPoint(curX, curY);
+      if (targetNode && targetNode.id() !== connectSourceId) {
+        targetNode.addClass('target-hover');
+      }
+    }
+
+    function updateDragPath(curX, curY) {
+      const path = document.getElementById('activeDragPath');
+      const startX = connectStartCoords.x;
+      const startY = connectStartCoords.y;
+
+      // Desenhar curva Bezier suave orientada ao fluxo
+      const deltaX = Math.abs(curX - startX);
+      const cp1X = startX + Math.max(40, deltaX * 0.5);
+      const cp2X = curX - Math.max(40, deltaX * 0.5);
+
+      path.setAttribute('d', `M ${startX} ${startY} C ${cp1X} ${startY}, ${cp2X} ${curY}, ${curX} ${curY}`);
+    }
+
+    function onConnectingUp(e) {
+      if (!isConnecting) return;
+      window.removeEventListener('mousemove', onConnectingMove);
+      window.removeEventListener('mouseup', onConnectingUp);
+
+      const containerRect = document.getElementById('cy').getBoundingClientRect();
+      const curX = e.clientX - containerRect.left;
+      const curY = e.clientY - containerRect.top;
+
+      const targetNode = getNodeUnderPoint(curX, curY);
+      try {
+        if (typeof cy.nodes().removeClass === 'function') cy.nodes().removeClass('target-hover');
+        else if (typeof cy.$ === 'function') cy.$('.target-hover').removeClass('target-hover');
+      } catch(e) {}
+
+      const path = document.getElementById('activeDragPath');
+      path.style.display = 'none';
+      path.setAttribute('d', '');
+
+      isConnecting = false;
+      isMouseOverPort = false;
+      cy.panningEnabled(true);
+      cy.userPanningEnabled(true);
+      cy.autoungrabify(false);
+
+      if (targetNode && targetNode.id() !== connectSourceId) {
+        finishConnection(connectSourceId, targetNode.id());
+      }
+      hidePorts();
+    }
+
+    function getNodeUnderPoint(rx, ry) {
+      // Snapping magnético com tolerância expandida de 20px
+      for (let n of cy.nodes()) {
+        const pos = n.renderedPosition();
+        const w = n.renderedOuterWidth ? n.renderedOuterWidth() : (n.renderedWidth() || 180);
+        const h = n.renderedOuterHeight ? n.renderedOuterHeight() : (n.renderedHeight() || 56);
+        const halfW = w / 2 + 20;
+        const halfH = h / 2 + 20;
+        if (rx >= pos.x - halfW && rx <= pos.x + halfW && ry >= pos.y - halfH && ry <= pos.y + halfH) {
+          return n;
+        }
+      }
+      return null;
+    }
+
+    function finishConnection(sourceId, targetId) {
+      const exists = state.edges.some(e => e.source === sourceId && e.target === targetId);
+      if (exists) {
+        alert('Esta ligação já existe na árvore!');
+        return;
+      }
+
+      const targetNode = state.nodes.find(n => n.id === targetId);
+      const newEdgeId = 'e_' + Date.now();
+
+      // Opção A: se o alvo for Hipótese ou se já houver outras ramificações saindo do pai, aplica OU automaticamente
+      const siblingsCount = state.edges.filter(e => e.source === sourceId).length;
+      const defaultLogic = (targetNode?.kind === 'hipotese' || siblingsCount >= 1) ? 'OU' : 'none';
+
+      const newEdge = {
+        id: newEdgeId,
+        source: sourceId,
+        target: targetId,
+        kind: 'causal',
+        logic: defaultLogic
+      };
+
+      state.edges.push(newEdge);
+      renderGraph();
+
+      // Selecionar a nova aresta criada para feedback imediato
+      selectEdge(newEdgeId);
+    }
+
+    // --- SELEÇÃO E EDIÇÃO DA ARESTA ---
+    function selectEdge(edgeId) {
+      selectedEdgeId = edgeId;
+      cy.edges().unselect();
+      const edge = cy.getElementById(edgeId);
+      if (edge && edge.length > 0) edge.select();
+
+      const edgeData = state.edges.find(e => e.id === edgeId);
+      if (!edgeData) return;
+
+      const toolbar = document.getElementById('edgeToolbar');
+      toolbar.hidden = false;
+
+      const sourceNode = state.nodes.find(n => n.id === edgeData.source);
+      const targetNode = state.nodes.find(n => n.id === edgeData.target);
+      document.getElementById('edgeSelectedLabel').textContent = 
+        `[${sourceNode?.code || 'Origem'}] ➔ [${targetNode?.code || 'Destino'}]`;
+
+      // Atualizar botões de lógica
+      ['btnLogicNone', 'btnLogicOU', 'btnLogicE'].forEach(id => document.getElementById(id).classList.remove('active', 'logic-ou', 'logic-e'));
+      if (edgeData.logic === 'OU') {
+        document.getElementById('btnLogicOU').classList.add('active', 'logic-ou');
+      } else if (edgeData.logic === 'E') {
+        document.getElementById('btnLogicE').classList.add('active', 'logic-e');
+      } else {
+        document.getElementById('btnLogicNone').classList.add('active');
+      }
+
+      document.getElementById('btnKindCausal').classList.toggle('active', edgeData.kind === 'causal');
+      document.getElementById('btnKindCorr').classList.toggle('active', edgeData.kind === 'correlation');
+
+      updateInspector();
+    }
+
+    function deselectEdge() {
+      selectedEdgeId = null;
+      document.getElementById('edgeToolbar').hidden = true;
+      cy.edges().unselect();
+      updateInspector();
+    }
+
+    function setLogic(logicType) {
+      if (!selectedEdgeId) return;
+      const edge = state.edges.find(e => e.id === selectedEdgeId);
+      if (!edge) return;
+
+      edge.logic = logicType;
+
+      if (currentVariantKey() === 'B') {
+        state.edges.filter(e => e.source === edge.source).forEach(sibling => {
+          sibling.logic = logicType;
+          cy.getElementById(sibling.id).data('logic', logicType);
+        });
+      } else {
+        cy.getElementById(edge.id).data('logic', logicType);
+      }
+
+      selectEdge(selectedEdgeId);
+      updateInspector();
+      updateArcOverlay();
+    }
+
+    function setKind(kindType) {
+      if (!selectedEdgeId) return;
+      const edge = state.edges.find(e => e.id === selectedEdgeId);
+      if (!edge) return;
+      edge.kind = kindType;
+      cy.getElementById(edge.id).data('kind', kindType);
+      selectEdge(selectedEdgeId);
+      updateInspector();
+    }
+
+    function deleteSelectedEdge() {
+      if (!selectedEdgeId) return;
+      state.edges = state.edges.filter(e => e.id !== selectedEdgeId);
+      cy.remove(cy.getElementById(selectedEdgeId));
+      deselectEdge();
+      updateInspector();
+      updateArcOverlay();
+    }
+
+    function addHypothesis() {
+      const id = 'h' + (state.nodes.length);
+      const newY = 130 + (state.nodes.length - 2) * 90;
+      const newNode = {
+        id,
+        kind: 'hipotese',
+        label: `H${state.nodes.length - 1}: Nova hipótese adicionada`,
+        code: `H${state.nodes.length - 1}`,
+        pos: { x: 680, y: newY }
+      };
+      state.nodes.push(newNode);
+
+      renderGraph();
+    }
+
+    function resetLayout() {
+      state.nodes.forEach((n, idx) => {
+        if (n.id === 'evt') n.pos = { x: 120, y: 220 };
+        else if (n.id === 'ci1') n.pos = { x: 380, y: 220 };
+        else {
+          n.pos = { x: 680, y: 130 + (idx - 2) * 90 };
+        }
+      });
+      renderGraph();
+      cy.fit(null, 50);
+    }
+
+    // --- ARCO DE BIFURCAÇÃO (VARIANTE B) ---
+    function updateArcOverlay() {
+      const svg = document.getElementById('arcCanvas');
+      svg.innerHTML = '';
+      if (currentVariantKey() !== 'B') return;
+
+      const groups = {};
+      state.edges.forEach(e => {
+        if (e.logic === 'OU' || e.logic === 'E') {
+          if (!groups[e.source]) groups[e.source] = [];
+          groups[e.source].push(e);
+        }
+      });
+
+      Object.entries(groups).forEach(([sourceId, edges]) => {
+        if (edges.length < 2) return;
+
+        const sourceNode = cy.getElementById(sourceId);
+        if (!sourceNode || sourceNode.length === 0) return;
+
+        const srcPos = sourceNode.renderedPosition();
+        const forkX = srcPos.x + 85;
+        const topY = Math.min(...edges.map(e => cy.getElementById(e.target).renderedPosition().y)) * 0.45 + srcPos.y * 0.55;
+        const botY = Math.max(...edges.map(e => cy.getElementById(e.target).renderedPosition().y)) * 0.45 + srcPos.y * 0.55;
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const d = `M ${forkX - 4} ${topY} Q ${forkX + 16} ${(topY + botY) / 2} ${forkX - 4} ${botY}`;
+        path.setAttribute('d', d);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', '#4F46E5');
+        path.setAttribute('stroke-width', '2.5');
+        path.setAttribute('stroke-linecap', 'round');
+        svg.appendChild(path);
+
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', forkX + 22);
+        text.setAttribute('y', (topY + botY) / 2 + 4);
+        text.setAttribute('font-size', '11');
+        text.setAttribute('font-weight', '800');
+        text.setAttribute('fill', '#4F46E5');
+        text.textContent = edges[0].logic;
+        svg.appendChild(text);
+      });
+    }
+
+    // --- SWITCHER DE VARIANTES ---
+    function currentVariantKey() {
+      return VARIANTS[currentVariantIdx].key;
+    }
+
+    function applyVariant(idx) {
+      currentVariantIdx = idx;
+      const v = VARIANTS[currentVariantIdx];
+      document.getElementById('protoVariantKey').textContent = `Variante ${v.key}${v.key === 'A' ? ' (Escolhida)' : ''}`;
+      document.getElementById('protoVariantTitle').textContent = v.title;
+      document.getElementById('variantExplainer').innerHTML = v.desc;
+
+      if (v.key === 'A') {
+        cy.style()
+          .selector('edge[logic="OU"]').style({ 'label': 'OU' })
+          .selector('edge[logic="E"]').style({ 'label': 'E' })
+          .update();
+      } else {
+        cy.style()
+          .selector('edge[logic="OU"]').style({ 'label': '' })
+          .selector('edge[logic="E"]').style({ 'label': '' })
+          .update();
+      }
+
+      updateArcOverlay();
+      updateInspector();
+    }
+
+    function nextVariant() {
+      applyVariant((currentVariantIdx + 1) % VARIANTS.length);
+    }
+
+    function prevVariant() {
+      applyVariant((currentVariantIdx - 1 + VARIANTS.length) % VARIANTS.length);
+    }
+
+    // --- ATUALIZADOR DO INSPECTOR ---
+    function updateInspector() {
+      document.getElementById('nodesCount').textContent = `${state.nodes.length} nós, ${state.edges.length} arestas`;
+      document.getElementById('jsonViewer').textContent = JSON.stringify(state.edges, null, 2);
+
+      const list = document.getElementById('edgesList');
+      list.innerHTML = '';
+      state.edges.forEach(e => {
+        const item = document.createElement('div');
+        item.className = 'edge-list-item' + (e.id === selectedEdgeId ? ' selected' : '');
+        item.onclick = () => selectEdge(e.id);
+
+        const label = document.createElement('span');
+        label.style.fontWeight = '600';
+        label.textContent = `${e.source} ➔ ${e.target}`;
+
+        const pill = document.createElement('span');
+        pill.className = 'pill ' + (e.logic === 'OU' ? 'pill-ou' : (e.logic === 'E' ? 'pill-e' : 'pill-direct'));
+        pill.textContent = e.logic === 'none' ? 'Direta' : e.logic;
+
+        item.appendChild(label);
+        item.appendChild(pill);
+        list.appendChild(item);
+      });
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'ArrowRight') nextVariant();
+      if (e.key === 'ArrowLeft') prevVariant();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initCytoscape();
+      applyVariant(0);
+    });
+  </script>
+</body>
+</html>
